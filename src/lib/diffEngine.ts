@@ -201,16 +201,16 @@ export class ZeroExtrapolationDiffEngine {
 
   static deriveEntityGaps(brand: ScrapedPayload, comp: ScrapedPayload): EntityGap[] {
     const candidateEntities = [
-      { name: "GraphQL & REST API", cat: "Developer Experience", weight: "CRITICAL" as const, rel: "High search frequency for API-first architecture queries", plan: "Add dedicated API docs snippet on homepage" },
-      { name: "Real-time Webhooks", cat: "Integrations", weight: "CRITICAL" as const, rel: "Evaluated by AI when answering automation prompts", plan: "Mention bidirectional event webhooks in features" },
-      { name: "SOC-2 Type II & GDPR", cat: "Security", weight: "HIGH" as const, rel: "Required filter for enterprise B2B search comparisons", plan: "Create security trust center link" },
-      { name: "SAML SSO & SCIM", cat: "Enterprise Readiness", weight: "HIGH" as const, rel: "Key criterion for IT procurement citations", plan: "Include user provisioning in enterprise tier table" },
-      { name: "Semantic Indexing", cat: "AI Architecture", weight: "MEDIUM" as const, rel: "Differentiator in AI infrastructure category prompts", plan: "Explain data vectorization workflow" },
-      { name: "PostgreSQL & Snowflake Sync", cat: "Data Infrastructure", weight: "MEDIUM" as const, rel: "Frequently cited in data warehouse integration queries", plan: "Highlight warehouse connector compatibility" }
+      { entityName: "GraphQL & REST API", category: "Developer Experience", citationWeight: "CRITICAL" as const, searchRelevance: "High search frequency for API-first architecture queries", actionPlan: "Add dedicated API docs snippet on homepage" },
+      { entityName: "Real-time Webhooks", category: "Integrations", citationWeight: "CRITICAL" as const, searchRelevance: "Evaluated by AI when answering automation prompts", actionPlan: "Mention bidirectional event webhooks in features" },
+      { entityName: "SOC-2 Type II & GDPR", category: "Security", citationWeight: "HIGH" as const, searchRelevance: "Required filter for enterprise B2B search comparisons", actionPlan: "Create security trust center link" },
+      { entityName: "SAML SSO & SCIM", category: "Enterprise Readiness", citationWeight: "HIGH" as const, searchRelevance: "Key criterion for IT procurement citations", actionPlan: "Include user provisioning in enterprise tier table" },
+      { entityName: "Semantic Indexing", category: "AI Architecture", citationWeight: "MEDIUM" as const, searchRelevance: "Differentiator in AI infrastructure category prompts", actionPlan: "Explain data vectorization workflow" },
+      { entityName: "PostgreSQL & Snowflake Sync", category: "Data Infrastructure", citationWeight: "MEDIUM" as const, searchRelevance: "Frequently cited in data warehouse integration queries", actionPlan: "Highlight warehouse connector compatibility" }
     ];
 
     const brandEntities = brand.detectedEntities || [];
-    return candidateEntities.filter(e => !brandEntities.includes(e.name)).slice(0, 6);
+    return candidateEntities.filter(e => !brandEntities.includes(e.entityName)).slice(0, 6);
   }
 
   static createPayloadForUrl(url: string, isBrand: boolean = true): ScrapedPayload {

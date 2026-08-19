@@ -88,7 +88,7 @@ import Layout from "../layouts/Layout.astro";
           <div class="user-avatar">M</div>
           <div class="user-info">
             <span class="user-name">Mereke D.</span>
-            <span class="user-role">Head of Product</span>
+            <span class="user-role">Product Manager</span>
           </div>
         </div>
       </div>
@@ -627,13 +627,13 @@ import Layout from "../layouts/Layout.astro";
             <!-- Monitored Prompts Table Editor -->
             <div class="portfolio-table-header">
               <span class="label">🎯 Monitored Prompts (each row = one lost citation to diagnose):</span>
-              <button class="btn-small-outline" id="btnAddPromptRow">➕ Add Prompt Row</button>
+              <button class="btn-small-outline" id="btnAddPromptRow">➕ Add Monitored Prompt</button>
             </div>
 
             <div class="portfolio-rows-container" id="portfolioRowsList"></div>
 
-            <div style="margin-top: 18px; display: flex; justify-content: flex-end;">
-              <button class="btn-primary-black" id="btnRunPortfolio">
+            <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+              <button class="btn-primary-black" id="btnRunPortfolio" style="padding: 10px 24px;">
                 <span>🚀 Run Multi-Prompt Portfolio Analysis</span>
               </button>
             </div>
@@ -756,7 +756,7 @@ import Layout from "../layouts/Layout.astro";
   </div>
 </Layout>
 
-<style>
+<style is:global>
   /* ── Layout Shell ────────────────────────────────────────── */
   .peec-app {
     display: flex;
@@ -1474,6 +1474,7 @@ import Layout from "../layouts/Layout.astro";
     outline: none;
     transition: border-color 0.15s, box-shadow 0.15s;
     width: 100%;
+    box-sizing: border-box;
   }
   .input:focus {
     border-color: #6366F1;
@@ -1493,6 +1494,9 @@ import Layout from "../layouts/Layout.astro";
     transition: background 0.15s, transform 0.1s;
     height: 40px;
     flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
   .btn-primary-black:hover { background: #000000; }
   .btn-primary-black:active { transform: scale(0.98); }
@@ -1612,40 +1616,44 @@ import Layout from "../layouts/Layout.astro";
   .row-cell.cell-partial { background: #FFFBEB; color: #92400E; }
   .row-cell.cell-partial .icon { color: #F59E0B; }
 
-  /* ── Action Items Feed ──────────────────────────────────── */
+  /* ── Action Items Feed (Global CSS for dynamic injection) ── */
   .action-feed-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
+    margin-top: 10px;
   }
-  .feed-title { font-size: 0.95rem; font-weight: 700; color: #111827; }
-  .feed-subtitle { font-size: 0.78rem; color: #6B7280; }
+  .feed-title { font-size: 1.05rem; font-weight: 700; color: #111827; }
+  .feed-subtitle { font-size: 0.8rem; color: #6B7280; }
   .action-items-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
     margin-bottom: 24px;
   }
   .action-item-card {
     display: flex;
     align-items: flex-start;
-    gap: 14px;
-    padding: 14px 18px;
+    gap: 16px;
+    padding: 18px 20px;
     background: #FFFFFF;
     border: 1px solid #E5E7EB;
-    border-radius: 10px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-    transition: border-color 0.12s;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: all 0.15s ease;
   }
-  .action-item-card:hover { border-color: #6366F1; }
+  .action-item-card:hover {
+    border-color: #6366F1;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.08);
+  }
   .action-num {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     background: #EEF2FF;
     color: #4F46E5;
     border-radius: 50%;
-    font-size: 0.75rem;
+    font-size: 0.82rem;
     font-weight: 700;
     display: flex;
     align-items: center;
@@ -1653,30 +1661,31 @@ import Layout from "../layouts/Layout.astro";
     flex-shrink: 0;
     margin-top: 2px;
   }
-  .action-content { flex: 1; }
-  .action-title { font-size: 0.88rem; font-weight: 600; color: #111827; margin-bottom: 2px; }
-  .action-desc { font-size: 0.8rem; color: #4B5563; line-height: 1.45; }
-  .action-tags { display: flex; gap: 6px; margin-top: 6px; }
+  .action-content { flex: 1; min-width: 0; }
+  .action-title { font-size: 0.94rem; font-weight: 700; color: #111827; margin-bottom: 4px; }
+  .action-desc { font-size: 0.84rem; color: #4B5563; line-height: 1.5; margin-bottom: 6px; }
+  .action-tags { display: flex; gap: 8px; align-items: center; }
   .action-tag {
-    font-size: 0.68rem;
-    padding: 2px 6px;
+    font-size: 0.72rem;
+    padding: 3px 8px;
     background: #F3F4F6;
     border-radius: 4px;
-    color: #6B7280;
+    color: #4B5563;
     font-weight: 500;
   }
   .btn-copy-fix {
     border: 1px solid #E5E7EB;
     background: #FFFFFF;
-    border-radius: 6px;
-    padding: 6px 12px;
-    font-size: 0.76rem;
+    border-radius: 8px;
+    padding: 7px 14px;
+    font-size: 0.8rem;
     font-weight: 600;
-    color: #4B5563;
+    color: #374151;
     cursor: pointer;
     white-space: nowrap;
     transition: all 0.12s;
     flex-shrink: 0;
+    margin-top: 2px;
   }
   .btn-copy-fix:hover {
     border-color: #6366F1;
@@ -1722,16 +1731,17 @@ import Layout from "../layouts/Layout.astro";
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    padding: 5px 10px;
+    padding: 6px 12px;
     background: #FFFFFF;
-    border: 1px solid #E5E7EB;
+    border: 1px solid #C7D2FE;
     border-radius: 6px;
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     font-weight: 600;
-    color: #6366F1;
+    color: #4F46E5;
     cursor: pointer;
+    transition: all 0.12s;
   }
-  .btn-small-outline:hover { background: #EEF2FF; border-color: #C7D2FE; }
+  .btn-small-outline:hover { background: #EEF2FF; border-color: #6366F1; }
   .btn-black {
     display: flex;
     align-items: center;
@@ -1748,7 +1758,7 @@ import Layout from "../layouts/Layout.astro";
   }
   .btn-black:hover { background: #000000; }
 
-  /* ── Portfolio Mode Specific Styles ─────────────────────── */
+  /* ── Portfolio Mode Specific Clean Styles ─────────────────── */
   .portfolio-intro-card { margin-bottom: 24px; }
   .portfolio-intro-header {
     display: flex;
@@ -1760,61 +1770,103 @@ import Layout from "../layouts/Layout.astro";
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 18px;
-    margin-bottom: 8px;
+    margin-top: 20px;
+    margin-bottom: 10px;
   }
   .portfolio-rows-container {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
   }
   .prompt-row-card {
-    display: grid;
-    grid-template-columns: 1.2fr 1.2fr auto;
-    gap: 10px;
+    display: flex;
     align-items: center;
-    background: #F9FAFB;
+    gap: 14px;
+    background: #FFFFFF;
     border: 1px solid #E5E7EB;
-    border-radius: 8px;
-    padding: 8px 12px;
+    border-radius: 10px;
+    padding: 12px 16px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    transition: border-color 0.12s;
+  }
+  .prompt-row-card:hover {
+    border-color: #D1D5DB;
+  }
+  .row-num-badge {
+    width: 26px;
+    height: 26px;
+    background: #F3F4F6;
+    color: #4B5563;
+    border-radius: 50%;
+    font-size: 0.76rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .row-fields {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+  }
+  .row-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+  .field-sublabel {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #6B7280;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
   }
   .btn-remove-row {
-    background: transparent;
-    border: 1px solid #E5E7EB;
-    border-radius: 6px;
-    padding: 6px 10px;
+    background: #FFFFFF;
+    border: 1px solid #FCA5A5;
+    border-radius: 8px;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: #EF4444;
     cursor: pointer;
-    font-size: 0.8rem;
+    transition: all 0.12s;
+    flex-shrink: 0;
   }
-  .btn-remove-row:hover { background: #FEE2E2; }
+  .btn-remove-row:hover { background: #FEF2F2; border-color: #EF4444; }
 
   .recurrence-chart-card { margin-bottom: 24px; }
   .bars-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 8px;
+    gap: 12px;
+    margin-top: 10px;
   }
   .bar-row {
     display: grid;
-    grid-template-columns: 220px 1fr 60px;
+    grid-template-columns: 240px 1fr 70px;
     align-items: center;
-    gap: 14px;
-    font-size: 0.8rem;
+    gap: 16px;
+    font-size: 0.84rem;
   }
   .bar-label { font-weight: 600; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .bar-track {
     background: #F3F4F6;
-    border-radius: 6px;
-    height: 16px;
+    border-radius: 99px;
+    height: 18px;
     overflow: hidden;
     position: relative;
   }
   .bar-fill {
     background: #6366F1;
     height: 100%;
-    border-radius: 6px;
+    border-radius: 99px;
     transition: width 0.3s ease;
   }
   .bar-fill.critical { background: #EF4444; }
@@ -1824,14 +1876,15 @@ import Layout from "../layouts/Layout.astro";
   .portfolio-insights-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
     margin-bottom: 24px;
   }
   .insight-card {
     background: #FFFFFF;
     border: 1px solid #E5E7EB;
-    border-radius: 10px;
-    padding: 16px 20px;
+    border-radius: 12px;
+    padding: 18px 22px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
     transition: border-color 0.12s;
   }
   .insight-card:hover { border-color: #6366F1; }
@@ -1842,7 +1895,7 @@ import Layout from "../layouts/Layout.astro";
     margin-bottom: 8px;
   }
   .insight-title {
-    font-size: 0.92rem;
+    font-size: 0.98rem;
     font-weight: 700;
     color: #111827;
   }
@@ -1851,18 +1904,19 @@ import Layout from "../layouts/Layout.astro";
     color: #6B7280;
   }
   .insight-meta {
-    font-size: 0.8rem;
-    color: #4B5563;
+    font-size: 0.84rem;
+    color: #374151;
     line-height: 1.5;
     margin-bottom: 6px;
   }
   .insight-prompts {
-    font-size: 0.76rem;
+    font-size: 0.78rem;
     color: #6B7280;
     background: #F9FAFB;
-    padding: 6px 10px;
-    border-radius: 6px;
-    margin-top: 6px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-top: 8px;
+    border: 1px solid #F3F4F6;
   }
 
   /* ── Empty States ───────────────────────────────────────── */
@@ -1882,7 +1936,7 @@ import Layout from "../layouts/Layout.astro";
     .dashboard-grid-bottom { grid-template-columns: 1fr; }
     .scorecard-grid { grid-template-columns: 1fr 1fr; }
     .matrix-header, .matrix-row { grid-template-columns: 140px 1fr 1fr; }
-    .prompt-row-card { grid-template-columns: 1fr; }
+    .row-fields { grid-template-columns: 1fr; }
     .bar-row { grid-template-columns: 1fr; }
     .export-handoff-card { flex-direction: column; gap: 14px; align-items: flex-start; }
   }
@@ -1987,6 +2041,7 @@ import Layout from "../layouts/Layout.astro";
   }
 
   function escHtml(str: string) {
+    if (str === undefined || str === null) return "";
     return String(str)
       .replace(/&/g,"&amp;")
       .replace(/</g,"&lt;")
@@ -2075,31 +2130,36 @@ import Layout from "../layouts/Layout.astro";
 
     const actions: Array<{ title: string; desc: string; tag: string; copyText: string }> = [];
 
+    // 1. Schema Actions
     result.schemaGaps.forEach(g => {
       actions.push({
         title: `Inject Schema.org @type ${g.schemaType}`,
         desc: g.impactReason,
-        tag: "Technical SEO &bull; &lt;15 min",
+        tag: "Technical SEO &bull; <15 min",
         copyText: g.recommendedJsonLd
       });
     });
 
+    // 2. Benchmark Actions
     result.benchmarkGaps.forEach(g => {
       actions.push({
         title: `Add Quantitative Metric: ${g.metricName}`,
         desc: `Competitor explicitly states "${g.competitorValue}". Action: ${g.recommendation}`,
-        tag: "Landing Page Copy &bull; &lt;20 min",
+        tag: "Landing Page Copy &bull; <20 min",
         copyText: `Recommendation for ${g.metricName}: ${g.recommendation}`
       });
     });
 
-    result.entityGaps.slice(0, 2).forEach(g => {
-      actions.push({
-        title: `Cover Topic Entity: ${g.entityName}`,
-        desc: `${g.searchRelevance}. ${g.actionPlan}`,
-        tag: "Content Strategy &bull; &lt;30 min",
-        copyText: `Add keyword entity '${g.entityName}' to features or FAQ sections.`
-      });
+    // 3. Entity Actions (using guaranteed valid fields)
+    result.entityGaps.forEach(g => {
+      if (g && g.entityName) {
+        actions.push({
+          title: `Cover Topic Entity: ${g.entityName}`,
+          desc: `${g.searchRelevance || "Essential semantic search keyword"}. ${g.actionPlan || "Add this entity to landing page content."}`,
+          tag: `${g.category || "Content Strategy"} &bull; <30 min`,
+          copyText: `Add keyword entity '${g.entityName}' to features or FAQ sections.`
+        });
+      }
     });
 
     const countElem = document.getElementById("remediationCount");
@@ -2150,9 +2210,23 @@ import Layout from "../layouts/Layout.astro";
 
     container.innerHTML = portfolioRows.map((row, idx) => `
       <div class="prompt-row-card" data-idx="${idx}">
-        <input class="input prompt-query-input" type="text" value="${escHtml(row.query)}" placeholder="Prompt query..." data-idx="${idx}" />
-        <input class="input prompt-comp-input" type="url" value="${escHtml(row.competitorUrl)}" placeholder="Winning competitor URL..." data-idx="${idx}" />
-        <button class="btn-remove-row" data-idx="${idx}" title="Remove prompt row">🗑️</button>
+        <div class="row-num-badge">${idx + 1}</div>
+        <div class="row-fields">
+          <div class="row-field">
+            <span class="field-sublabel">Monitored Search Prompt</span>
+            <input class="input prompt-query-input" type="text" value="${escHtml(row.query)}" placeholder="e.g. Best CRM for Startups" data-idx="${idx}" />
+          </div>
+          <div class="row-field">
+            <span class="field-sublabel">Winning Competitor URL</span>
+            <input class="input prompt-comp-input" type="url" value="${escHtml(row.competitorUrl)}" placeholder="https://competitor.com/features" data-idx="${idx}" />
+          </div>
+        </div>
+        <button class="btn-remove-row" data-idx="${idx}" title="Remove prompt row">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+        </button>
       </div>
     `).join("");
 
@@ -2184,10 +2258,13 @@ import Layout from "../layouts/Layout.astro";
 
   document.getElementById("btnAddPromptRow")?.addEventListener("click", () => {
     portfolioRows.push({
-      query: "New monitored prompt query",
-      competitorUrl: "https://example-competitor.com"
+      query: "Top Software with SOC-2 Compliance and Instant Onboarding",
+      competitorUrl: "https://monday.com/crm"
     });
     renderPortfolioRows();
+    const inputs = document.querySelectorAll(".prompt-query-input");
+    const lastInput = inputs[inputs.length - 1] as HTMLInputElement;
+    lastInput?.focus();
   });
 
   document.getElementById("btnResetPortfolio")?.addEventListener("click", () => {
@@ -2219,7 +2296,7 @@ import Layout from "../layouts/Layout.astro";
       }
 
       const res = ZeroExtrapolationDiffEngine.executeDiff(row.query, brandPayload, compPayload);
-      results.append ? results.append(res) : results.push(res);
+      results.push(res);
     });
 
     const portfolio = PortfolioAggregator.aggregate(brandDomain, results);
@@ -2229,7 +2306,9 @@ import Layout from "../layouts/Layout.astro";
 
   function renderPortfolioUI(portfolio: PortfolioAnalysisResult) {
     const resultsArea = document.getElementById("portfolioResultsArea");
-    if (resultsArea) resultsArea.style.display = "block";
+    if (resultsArea) {
+      resultsArea.style.display = "block";
+    }
 
     // Summary KPIs
     const pPrompts = document.getElementById("portStatPrompts");
@@ -2258,7 +2337,7 @@ import Layout from "../layouts/Layout.astro";
             <div class="bar-track">
               <div class="bar-fill ${fillClass}" style="width: ${pct}%;"></div>
             </div>
-            <div class="bar-val">${g.recurrenceCount} / ${total}</div>
+            <div class="bar-val">${g.recurrenceCount} / ${total} (${pct}%)</div>
           </div>
         `;
       }).join("");
@@ -2274,7 +2353,7 @@ import Layout from "../layouts/Layout.astro";
           <div class="insight-card">
             <div class="insight-header">
               <div class="insight-title">#${idx + 1} &bull; ${escHtml(g.displayName)}</div>
-              <span class="stat-badge ${badgeClass}">${g.citationWeight} Priority &bull; Score ${g.priorityScore}</span>
+              <span class="stat-badge ${badgeClass}">${g.citationWeight} Priority &bull; Priority Score: ${g.priorityScore}</span>
             </div>
             <div class="insight-meta">
               <strong>Recurrence:</strong> Appears on <strong>${g.recurrenceCount} of ${portfolio.totalPromptsAnalyzed} monitored prompts (${pct}%)</strong>.
@@ -2351,4 +2430,6 @@ import Layout from "../layouts/Layout.astro";
 
   // Initial Run
   runAnalysis();
+  renderPortfolioRows();
+  runPortfolioAnalysis();
 </script>
