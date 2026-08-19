@@ -98,3 +98,26 @@ export interface PresetScenario {
   brandData: ScrapedPayload;
   competitorData: ScrapedPayload;
 }
+
+export interface RecurringGapInsight {
+  gapKey: string;
+  gapType: 'Schema Markup' | 'Benchmark / Metric' | 'Topic Entity';
+  displayName: string;
+  citationWeight: 'CRITICAL' | 'HIGH' | 'MEDIUM';
+  recurrenceCount: number;
+  totalPromptsAnalyzed: number;
+  affectedPrompts: string[];
+  exampleCompetitorUrls: string[];
+  representativeRecommendation: string;
+  priorityScore: number;
+}
+
+export interface PortfolioAnalysisResult {
+  brandDomain: string;
+  totalPromptsAnalyzed: number;
+  totalDistinctCompetitors: number;
+  prompts: string[];
+  recurringGaps: RecurringGapInsight[];
+  bulkMarkdownBrief: string;
+  timestamp: string;
+}

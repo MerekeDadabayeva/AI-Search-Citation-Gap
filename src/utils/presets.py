@@ -61,142 +61,103 @@ PRESETS: Dict[str, Dict[str, Any]] = {
         "@type": "FAQPage",
         "mainEntity": [{
             "@type": "Question",
-            "name": "Does Attio support bidirectional sync with email and calendar?",
+            "name": "How fast does Attio sync customer data?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes, Attio offers sub-second bidirectional sync with Google Workspace and Microsoft 365."
+                "text": "Attio features a sub-10ms real-time sync engine across 10,000+ teams."
             }
         }]
     }
     </script>
 </head>
 <body>
-    <h1>Attio: The Powerful CRM for Modern B2B Startups</h1>
-    <h2>Real-time Pipeline Sync & Automated Data Enrichment</h2>
-    <p>Sync contacts with Google Workspace and Microsoft 365 in real time with sub-50ms latency. Over 10,000+ fast-growing teams rely on Attio for automated enrichment and custom workflows.</p>
-    <h2>Transparent Pricing: From Free to Enterprise</h2>
-    <p>Start for free with up to 3 seats. Pro plan is $29/user/month billed annually. Enterprise plans include dedicated SAML SSO and audit logs.</p>
-    <h2>Enterprise Security & Compliance</h2>
-    <p>Built with enterprise-grade security: SOC-2 Type II certified, GDPR compliant, and 99.99% uptime SLA guarantee.</p>
-    <h2>Integrations & Extensibility</h2>
-    <p>Connect with REST API, GraphQL, Webhooks, Notion Sync, Slack Notifications, and Stripe Billing in one click.</p>
+    <h1>Attio: The Real-Time CRM Platform</h1>
+    <h2>Real-time 10ms Sync Engine</h2>
+    <p>Attio is the CRM built for high-growth tech companies. Real-time 10ms sync engine. Automatic relationship intelligence across 10,000+ teams. Trusted by top startups.</p>
+    <h2>Pricing and Compliance</h2>
+    <p>Pricing starts at $29/user/month for Starter and $59/user/month for Pro. Enterprise features include SOC-2 Type II, GDPR compliance, HIPAA readiness, SAML SSO, and SCIM provisioning.</p>
 </body>
 </html>"""
     },
     "geo_search_analytics": {
         "name": "2. AI Search & GEO Analytics (Peec AI vs Legacy Tracker)",
-        "query": "Best Generative Engine Optimization (GEO) & AI Search Monitoring Platform",
-        "brand_url": "https://legacy-serp-tracker.com/features",
-        "competitor_url": "https://peec.ai/platform",
+        "query": "Best Generative Engine Optimization & AI Search Tracking Tool",
+        "brand_url": "https://our-legacy-tracker.com",
+        "competitor_url": "https://peec.ai",
         "brand_html": """<!DOCTYPE html>
 <html>
 <head>
-    <title>Legacy SERP Tracker - Daily Google Search Rank Analytics</title>
-    <meta name="description" content="Track traditional Google organic search rankings across desktop and mobile devices.">
+    <title>RankTrack Legacy - Traditional Google SERP Tracking</title>
 </head>
 <body>
-    <h1>Legacy SERP Rank Tracker</h1>
-    <h2>Daily Rank Tracking across 100+ Search Engines</h2>
-    <p>Monitor your position in Google search results pages. Receive weekly email reports with keyword position changes.</p>
+    <h1>RankTrack: Traditional Rank Tracking</h1>
+    <p>Monitor blue-link rankings on Google and Bing.</p>
 </body>
 </html>""",
         "competitor_html": """<!DOCTYPE html>
 <html>
 <head>
-    <title>Peec AI - Autonomous Generative Engine Optimization & Citation Intelligence</title>
-    <meta name="description" content="Peec AI tracks citations across ChatGPT Search, Perplexity AI, and Google Gemini with sub-1.5s automated remediation briefs.">
+    <title>Peec AI - AI Search Analytics & GEO Synthesizer</title>
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "name": "Peec AI",
-        "applicationCategory": "AnalyticsPlatform",
+        "applicationCategory": "BusinessApplication",
         "offers": {
             "@type": "Offer",
             "price": "99.00",
             "priceCurrency": "USD"
-        },
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "reviewCount": "320"
         }
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [{
-            "@type": "Question",
-            "name": "How does Peec AI resolve the AI search Actionability Gap?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Peec AI ingests winning competitor citations and deterministically synthesizes 1-click Markdown briefs and sprint-ready Jira stories in < 1.5s."
-            }
-        }]
     }
     </script>
 </head>
 <body>
-    <h1>Peec AI: Diagnostic AI Search Visibility & Citation Remediation</h1>
-    <h2>Real-time Citation Monitoring across ChatGPT, Perplexity & Gemini</h2>
-    <p>Track over 500,000+ monitored prompts with automated citation gap detection. Close the actionability bottleneck with 1-click remediation briefs generated in < 1.5s latency.</p>
-    <h2>Sprint-Ready Engineering Backlog Integration</h2>
-    <p>Export sprint-ready Gherkin Jira specifications (PEEC-408) directly to engineering boards with clear V1 scope limits. Integrates via REST API, Webhooks, and GraphQL.</p>
-    <h2>Transparent Pricing: From $99/mo</h2>
-    <p>Starter plans begin at $99/mo for up to 100 monitored prompts. Scale seamlessly with dedicated SAML SSO and audit logs.</p>
-    <h2>Enterprise Trust & Security</h2>
-    <p>Certified SOC-2 Type II, GDPR compliant, with 99.95% API uptime SLA and deterministic zero-extrapolation verification.</p>
+    <h1>Peec AI: Track and Win AI Citations</h1>
+    <h2>Real-Time AI Search Monitoring across ChatGPT, Perplexity, and Gemini</h2>
+    <p>Peec AI helps marketing teams analyze brand performance across ChatGPT, Perplexity, and Gemini. Track visibility, benchmark competitors, and optimize AI search presence starting at $99/mo.</p>
+    <h2>Enterprise Security</h2>
+    <p>SOC-2 Type II certified and GDPR compliant.</p>
 </body>
 </html>"""
     },
     "billing_usage_based": {
         "name": "3. Usage-Based Billing for AI (Lago vs Generic Billing)",
-        "query": "Top Usage-Based Billing & Metering Software for AI Apps",
-        "brand_url": "https://generic-billing-demo.io/pricing",
-        "competitor_url": "https://getlago.com/features",
+        "query": "Open Source Metering & Usage-Based Billing for LLM API Platforms",
+        "brand_url": "https://generic-billing-demo.io",
+        "competitor_url": "https://getlago.com",
         "brand_html": """<!DOCTYPE html>
 <html>
 <head>
-    <title>SimpleBilling - Easy SaaS Invoicing</title>
-    <meta name="description" content="Create subscriptions and charge credit cards easily with our basic invoicing API.">
+    <title>SimpleBill - Basic Invoicing Tool</title>
 </head>
 <body>
-    <h1>SimpleBilling: Subscriptions Made Easy</h1>
-    <p>Accept credit cards for flat-rate monthly recurring billing. Simple setup with Stripe.</p>
+    <h1>SimpleBill Invoicing</h1>
+    <p>Send standard monthly invoices to your clients.</p>
 </body>
 </html>""",
         "competitor_html": """<!DOCTYPE html>
 <html>
 <head>
-    <title>Lago - Open-Source Metering & Usage-Based Billing for AI Companies</title>
-    <meta name="description" content="Lago delivers real-time event metering at 100,000+ events/sec with sub-5ms ingestion latency.">
+    <title>Lago - Open Source Metering and Usage-Based Billing for Modern SaaS</title>
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        "name": "Lago Metering & Billing",
-        "applicationCategory": "BillingEngine",
+        "name": "Lago Billing Engine",
+        "applicationCategory": "DeveloperApplication",
         "offers": {
             "@type": "Offer",
             "price": "0.00",
             "priceCurrency": "USD"
-        },
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.85",
-            "reviewCount": "850"
         }
     }
     </script>
 </head>
 <body>
-    <h1>Lago: High-Performance Metering for AI & API-First Companies</h1>
-    <h2>Sub-5ms Event Ingestion at 100,000+ events/sec</h2>
-    <p>Meter token usage, compute hours, and API calls with sub-5ms latency and 99.99% uptime SLA. Open source with over 6,500+ GitHub stars.</p>
-    <h2>Flexible Pricing Models: Free Open Source & Cloud</h2>
-    <p>100% free open-source tier. Cloud plans start at $250/mo with dedicated high-throughput Kafka clusters.</p>
+    <h1>Lago: The Metering and Usage-Based Billing Engine</h1>
+    <h2>High-Throughput Metering with sub-5ms Event Ingestion</h2>
+    <p>Real-time event processing scaling to 100k events/sec. Open source with self-hosting options and cloud tier.</p>
     <h2>Security & Compliances</h2>
     <p>SOC-2 Type II certified, GDPR compliant, and HIPAA ready for healthcare AI workloads.</p>
 </body>
@@ -252,6 +213,92 @@ PRESETS: Dict[str, Dict[str, Any]] = {
 </html>"""
     }
 }
+
+
+# ----------------- PORTFOLIO DEMO FIXTURES -----------------
+PORTFOLIO_DEMO_BRAND_URL = "https://our-saas-crm.io/features"
+PORTFOLIO_DEMO_BRAND_HTML = """<!DOCTYPE html>
+<html>
+<head>
+    <title>NextGen CRM - Simple Relationship Management for Modern Teams</title>
+    <meta name="description" content="A clean and flexible CRM designed to help your team manage deals and stay organized.">
+</head>
+<body>
+    <h1>NextGen CRM: The Modern Way to Manage Sales</h1>
+    <h2>Flexible Contact Lists and Deal Boards</h2>
+    <p>Keep track of your prospects, customize your pipeline stages, and send emails directly from your CRM. Our intuitive interface gets your team up and running in minutes.</p>
+    <h2>Affordable Pricing for Growing Teams</h2>
+    <p>We offer transparent and flexible plans for every stage of your company. Contact our sales team for enterprise tier options.</p>
+</body>
+</html>"""
+
+PORTFOLIO_DEMO_PROMPTS = [
+    {
+        "query": "Best CRM for Early-Stage B2B Startups",
+        "competitor_url": "https://attio.com/features",
+        "competitor_html": PRESETS["crm_early_stage"]["competitor_html"]
+    },
+    {
+        "query": "Best AI-Native Sales Platform for Tech Companies",
+        "competitor_url": "https://monday.com/crm",
+        "competitor_html": """<!DOCTYPE html>
+<html>
+<head>
+    <title>Monday CRM - Manage Any Sales Pipeline at Scale</title>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Monday CRM",
+        "applicationCategory": "BusinessApplication",
+        "offers": { "@type": "Offer", "price": "35.00", "priceCurrency": "USD" },
+        "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.7", "reviewCount": "2300" }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [{
+            "@type": "Question",
+            "name": "Does Monday CRM support automated pipeline sync?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes, Monday CRM supports automated real-time webhooks and GraphQL integrations." }
+        }]
+    }
+    </script>
+</head>
+<body>
+    <h1>Monday Sales CRM: Automate Your Entire Revenue Engine</h1>
+    <h2>SOC-2 Type II Certified and GDPR Compliant</h2>
+    <p>Trusted by over 180,000 customers worldwide. Sub-15ms sync speed with transparent $35/seat/month pricing.</p>
+</body>
+</html>"""
+    },
+    {
+        "query": "Top CRM Software with GraphQL API & Real-time Webhooks",
+        "competitor_url": "https://hubspot.com/crm",
+        "competitor_html": """<!DOCTYPE html>
+<html>
+<head>
+    <title>HubSpot CRM - Free and Scale-Ready Customer Platform</title>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "HubSpot CRM",
+        "applicationCategory": "BusinessApplication",
+        "offers": { "@type": "Offer", "price": "45.00", "priceCurrency": "USD" }
+    }
+    </script>
+</head>
+<body>
+    <h1>HubSpot CRM Platform</h1>
+    <h2>Enterprise Compliance and Global Scale</h2>
+    <p>SOC-2 Type II, GDPR, HIPAA ready. Features bi-directional real-time webhooks, REST & GraphQL APIs, and transparent tiered pricing.</p>
+</body>
+</html>"""
+    }
+]
 
 
 def get_preset(key: str) -> Dict[str, Any]:

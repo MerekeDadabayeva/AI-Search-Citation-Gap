@@ -3,10 +3,16 @@ import os
 from urllib.parse import urlparse
 import streamlit as st
 
-from src.models.schemas import ScrapedPayload, CitationGapResult
+from src.models.schemas import ScrapedPayload, CitationGapResult, PortfolioAnalysisResult
 from src.scraper.ingestion import DeterministicScraper, _GLOBAL_CACHE
 from src.engine.diff_engine import ZeroExtrapolationGapEngine
-from src.utils.presets import PRESETS
+from src.engine.portfolio_engine import PortfolioAggregator
+from src.utils.presets import (
+    PRESETS,
+    PORTFOLIO_DEMO_BRAND_URL,
+    PORTFOLIO_DEMO_BRAND_HTML,
+    PORTFOLIO_DEMO_PROMPTS,
+)
 
 # Page Configuration
 st.set_page_config(
@@ -126,6 +132,176 @@ st.markdown('''<div class="header-container">
         Turn diagnostic AI search visibility losses into <strong>prioritized quick-win fixes</strong>, <strong>client-ready agency briefs</strong>, and <strong>sprint-ready Jira tickets (PEEC-408)</strong>.
     </p>
 </div>''', unsafe_allow_html=True)
+
+# ----------------- PORTFOLIO MODE (Track C: Recurring Gaps Across Prompts) -----------------
+def render_portfolio_mode():
+    """
+    Answers the question Peec AI's existing rank tracker can't: across every
+    prompt where this brand is losing citations, which ONE fix would move the
+    needle on the most prompts at once? Runs the same zero-extrapolation diff
+    engine per prompt, then rolls the results up with PortfolioAggregator.
+    """
+    st.markdown("#### 📦 Portfolio Mode: Find the Fix That Wins Multiple Prompts")
+    st.caption(
+        "Peec AI already tells you *which* prompts you're losing. This runs the Citation Gap "
+        "Engine across all of them and surfaces the recurring pattern worth fixing first — "
+        "ranked by how many lost prompts it would help win back."
+    )
+
+    if "portfolio_rows" not in st.session_state:
+        st.session_state["portfolio_rows"] = [
+            {"query": p["query"], "competitor_url": p["competitor_url"], "competitor_html": p["competitor_html"]}
+            for p in PORTFOLIO_DEMO_PROMPTS
+        ]
+        st.session_state["portfolio_brand_url"] = PORTFOLIO_DEMO_BRAND_URL
+        st.session_state["portfolio_brand_html"] = PORTFOLIO_DEMO_BRAND_HTML
+
+    top_col1, top_col2 = st.columns([3, 1])
+    with top_col1:
+        portfolio_brand_url = st.text_input(
+            "🏢 Your Brand URL (analyzed once, against every monitored prompt below):",
+            value=st.session_state["portfolio_brand_url"],
+            key="portfolio_brand_url_input",
+        )
+    with top_col2:
+        st.write("")
+        st.write("")
+        if st.button("↻ Reset to Demo Portfolio", use_container_width=True):
+            st.session_state["portfolio_rows"] = [
+                {"query": p["query"], "competitor_url": p["competitor_url"], "competitor_html": p["competitor_html"]}
+                for p in PORTFOLIO_DEMO_PROMPTS
+            ]
+            st.session_state["portfolio_brand_url"] = PORTFOLIO_DEMO_BRAND_URL
+            st.rerun()
+
+    st.markdown("**Monitored Prompts** (each row = one lost citation to diagnose):")
+    rows_to_remove = []
+    for i, row in enumerate(st.session_state["portfolio_rows"]):
+        rc1, rc2, rc3 = st.columns([3, 3, 1])
+        with rc1:
+            row["query"] = st.text_input(f"Prompt #{i+1}", value=row["query"], key=f"pq_{i}")
+        with rc2:
+            row["competitor_url"] = st.text_input(f"Winning Competitor URL #{i+1}", value=row["competitor_url"], key=f"pc_{i}")
+        with rc3:
+            st.write("")
+            st.write("")
+            if st.button("🗑️", key=f"rm_{i}", help="Remove this prompt row"):
+                rows_to_remove.append(i)
+    if rows_to_remove:
+        st.session_state["portfolio_rows"] = [
+            r for idx, r in enumerate(st.session_state["portfolio_rows"]) if idx not in rows_to_remove
+        ]
+        st.rerun()
+
+    add_col1, add_col2 = st.columns([1, 4])
+    with add_col1:
+        if st.button("➕ Add Prompt Row"):
+            st.session_state["portfolio_rows"].append(
+                {"query": "New monitored prompt", "competitor_url": "https://example-competitor.com", "competitor_html": None}
+            )
+            st.rerun()
+    with add_col2:
+        run_portfolio = st.button("🚀 Run Portfolio Analysis", type="primary", use_container_width=True)
+
+    if run_portfolio:
+        rows = st.session_state["portfolio_rows"]
+        if len(rows) < 2:
+            st.warning("Add at least 2 monitored prompts to detect recurring patterns.")
+            return
+
+        with st.spinner(f"Running zero-extrapolation diff across {len(rows)} monitored prompts..."):
+            brand_domain = urlparse(portfolio_brand_url).netloc or "brand.io"
+            results = []
+            for row in rows:
+                if row.get("competitor_html"):
+                    # Deterministic demo fixture row: parse the pinned HTML instead of a live fetch
+                    brand_payload = DeterministicScraper.parse_html(
+                        html=st.session_state["portfolio_brand_html"], url=portfolio_brand_url, domain=brand_domain
+                    )
+                    comp_domain = urlparse(row["competitor_url"]).netloc or "competitor.com"
+                    comp_payload = DeterministicScraper.parse_html(
+                        html=row["competitor_html"], url=row["competitor_url"], domain=comp_domain
+                    )
+                else:
+                    brand_payload, _ = DeterministicScraper.scrape_url(portfolio_brand_url, use_cache=True)
+                    comp_payload, _ = DeterministicScraper.scrape_url(row["competitor_url"], use_cache=True)
+
+                result = ZeroExtrapolationGapEngine.execute_diff(
+                    query=row["query"],
+                    brand_payload=brand_payload,
+                    competitor_payload=comp_payload,
+                    execution_time_ms=5.0,
+                )
+                results.append(result)
+
+            portfolio: PortfolioAnalysisResult = PortfolioAggregator.aggregate(
+                brand_domain=brand_domain, results=results
+            )
+            st.session_state["portfolio_result"] = portfolio
+
+    portfolio: PortfolioAnalysisResult = st.session_state.get("portfolio_result")
+    if not portfolio:
+        return
+
+    st.divider()
+    pstat1, pstat2, pstat3 = st.columns(3)
+    with pstat1:
+        st.markdown(f'''<div class="stat-card">
+            <div class="stat-number" style="color: #818CF8;">{portfolio.total_prompts_analyzed}</div>
+            <div class="stat-label">Monitored Prompts Analyzed</div>
+        </div>''', unsafe_allow_html=True)
+    with pstat2:
+        st.markdown(f'''<div class="stat-card">
+            <div class="stat-number" style="color: #FBBF24;">{portfolio.total_distinct_competitors}</div>
+            <div class="stat-label">Distinct Winning Competitors</div>
+        </div>''', unsafe_allow_html=True)
+    with pstat3:
+        st.markdown(f'''<div class="stat-card">
+            <div class="stat-number" style="color: #34D399;">{len(portfolio.recurring_gaps)}</div>
+            <div class="stat-label">Recurring Fix Opportunities</div>
+        </div>''', unsafe_allow_html=True)
+
+    st.write("")
+    st.markdown("#### 🔥 Fix This Once, Win Multiple Prompts")
+    st.caption("Ranked by priority score = recurrence across prompts × severity. Fix #1 first.")
+
+    if portfolio.recurring_gaps:
+        chart_data = {g.display_name[:40]: g.recurrence_count for g in portfolio.recurring_gaps}
+        st.bar_chart(chart_data)
+
+    for rank, g in enumerate(portfolio.recurring_gaps, start=1):
+        pct = round(100 * g.recurrence_count / g.total_prompts_analyzed) if g.total_prompts_analyzed else 0
+        weight_badge = {"CRITICAL": "badge-green", "HIGH": "badge-amber", "MEDIUM": "badge-purple"}.get(g.citation_weight, "badge-purple")
+        with st.expander(f"#{rank} · {g.display_name} — recurs on {g.recurrence_count}/{g.total_prompts_analyzed} prompts ({pct}%)", expanded=(rank <= 3)):
+            st.markdown(
+                f'<span class="badge-pill {weight_badge}">{g.citation_weight}</span> '
+                f'<span style="margin-left:8px; color:#94A3B8; font-size:0.85rem;">Priority score: <strong style="color:#F8FAFC;">{g.priority_score}</strong></span>',
+                unsafe_allow_html=True,
+            )
+            st.markdown(f"**Gap type:** {g.gap_type}")
+            st.markdown(f"**Affected prompts:** {', '.join(g.affected_prompts)}")
+            st.markdown(f"**Seen on competitor pages:** {', '.join(g.example_competitor_urls)}")
+            st.markdown(f"**Recommendation:** {g.representative_recommendation}")
+
+    st.divider()
+    st.download_button(
+        label="⬇️ Download Portfolio Remediation Brief (.md)",
+        data=portfolio.bulk_markdown_brief,
+        file_name=f"peec_ai_portfolio_brief_{portfolio.brand_domain}.md",
+        mime="text/markdown",
+        use_container_width=False,
+    )
+
+
+analysis_mode = st.radio(
+    "Analysis Mode:",
+    options=["🎯 Single Prompt Analysis", "📦 Portfolio Mode (Recurring Gaps Across Prompts)"],
+    horizontal=True,
+)
+
+if analysis_mode.startswith("📦"):
+    render_portfolio_mode()
+    st.stop()
 
 # ----------------- INPUT CONTROLS -----------------
 preset_keys = list(PRESETS.keys())

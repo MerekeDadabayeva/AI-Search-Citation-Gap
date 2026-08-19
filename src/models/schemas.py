@@ -112,3 +112,28 @@ class CitationGapResult(BaseModel):
     entity_gaps: List[EntityGap] = Field(default_factory=list)
     marketer_brief: RemediationBrief
     engineering_jira: JiraTicket
+
+
+class RecurringGapInsight(BaseModel):
+    """A recurring gap pattern detected across multiple monitored prompts."""
+    gap_key: str = Field(description="Unique key (e.g. 'schema:FAQPage', 'entity:SOC-2')")
+    gap_type: str = Field(description="'schema' | 'benchmark' | 'entity'")
+    display_name: str = Field(description="Human readable gap title")
+    citation_weight: str = Field(default="HIGH", description="CRITICAL | HIGH | MEDIUM")
+    recurrence_count: int = Field(description="Number of prompts this gap appeared on")
+    total_prompts_analyzed: int = Field(description="Total prompts in portfolio")
+    affected_prompts: List[str] = Field(default_factory=list)
+    example_competitor_urls: List[str] = Field(default_factory=list)
+    representative_recommendation: str = Field(default="")
+    priority_score: float = Field(description="recurrence_count * weight_multiplier")
+
+
+class PortfolioAnalysisResult(BaseModel):
+    """Aggregated portfolio-level analysis across N prompts."""
+    brand_domain: str
+    total_prompts_analyzed: int
+    total_distinct_competitors: int
+    prompts: List[str] = Field(default_factory=list)
+    recurring_gaps: List[RecurringGapInsight] = Field(default_factory=list)
+    bulk_markdown_brief: str = Field(default="")
+    timestamp: str = Field(default_factory=lambda: datetime.utcnow().isoformat() + 'Z')

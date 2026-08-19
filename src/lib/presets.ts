@@ -245,3 +245,95 @@ export const PRESETS: Record<string, PresetScenario> = {
     }
   }
 };
+
+export const PORTFOLIO_DEMO_BRAND: ScrapedPayload = PRESETS.crm_early_stage.brandData;
+
+export const PORTFOLIO_DEMO_PROMPTS = [
+  {
+    query: "Best CRM for Early-Stage B2B Startups",
+    competitorUrl: "https://attio.com",
+    competitorData: PRESETS.crm_early_stage.competitorData,
+  },
+  {
+    query: "Best AI-Native Sales Platform for Tech Companies",
+    competitorUrl: "https://monday.com",
+    competitorData: {
+      url: 'https://monday.com',
+      domain: 'monday.com',
+      statusCode: 200,
+      isFallback: false,
+      contentLengthChars: 1400,
+      title: 'Monday Sales CRM — Manage Any Sales Pipeline at Scale',
+      metaDescription: 'Monday Sales CRM automates your sales processes with real-time tracking.',
+      h1Tags: ['Monday Sales CRM: Automate Your Entire Revenue Engine'],
+      h2Tags: ['SOC-2 Type II Certified and GDPR Compliant', 'Transparent Pricing starting at $35/seat'],
+      cleanedText: 'Monday Sales CRM is trusted by over 180,000 customers worldwide. Sub-15ms sync speed with transparent $35/seat/month pricing. Certified SOC-2 Type II, GDPR compliant, and ISO 27001 audited. Real-time webhooks and GraphQL APIs.',
+      rawHtmlSnippet: '<html>...</html>',
+      jsonLdSchemas: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'SoftwareApplication',
+          'name': 'Monday CRM',
+          'applicationCategory': 'BusinessApplication',
+          'offers': { '@type': 'Offer', 'price': '35.00', 'priceCurrency': 'USD' }
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          'mainEntity': [
+            {
+              '@type': 'Question',
+              'name': 'Does Monday CRM support automated pipeline sync?',
+              'acceptedAnswer': { '@type': 'Answer', 'text': 'Yes, Monday CRM supports automated real-time webhooks and GraphQL integrations.' }
+            }
+          ]
+        }
+      ],
+      schemaTypes: ['SoftwareApplication', 'FAQPage', 'Offer'],
+      extractedStatistics: ['$35/seat', '180,000+ customers', 'sub-15ms', '99.9% uptime'],
+      pricingClaims: ['$35/seat/month', 'free trial'],
+      complianceBadges: ['SOC-2 TYPE II', 'GDPR', 'ISO 27001'],
+      detectedEntities: ['GraphQL & REST API', 'Real-time Webhooks', 'SOC-2 Type II & GDPR', 'SAML SSO & SCIM'],
+      fetchTimestamp: '2026-08-19 12:00:00 UTC'
+    }
+  },
+  {
+    query: "Top CRM Software with GraphQL API & Real-time Webhooks",
+    competitorUrl: "https://hubspot.com",
+    competitorData: {
+      url: 'https://hubspot.com',
+      domain: 'hubspot.com',
+      statusCode: 200,
+      isFallback: false,
+      contentLengthChars: 1350,
+      title: 'HubSpot CRM — Free and Scale-Ready Customer Platform',
+      metaDescription: 'HubSpot CRM platform for growing teams with developer APIs.',
+      h1Tags: ['HubSpot CRM Platform'],
+      h2Tags: ['Enterprise Compliance and Global Scale', 'Bi-directional Real-time Webhooks'],
+      cleanedText: 'HubSpot CRM Platform provides enterprise compliance and global scale. Certified SOC-2 Type II, GDPR, and HIPAA ready. Features bi-directional real-time webhooks, REST & GraphQL APIs, and transparent tiered pricing from $45/user/month.',
+      rawHtmlSnippet: '<html>...</html>',
+      jsonLdSchemas: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'SoftwareApplication',
+          'name': 'HubSpot CRM',
+          'applicationCategory': 'BusinessApplication',
+          'offers': { '@type': 'Offer', 'price': '45.00', 'priceCurrency': 'USD' }
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'AggregateRating',
+          'ratingValue': '4.6',
+          'reviewCount': '3500'
+        }
+      ],
+      schemaTypes: ['SoftwareApplication', 'AggregateRating', 'Offer'],
+      extractedStatistics: ['$45/user/mo', '100,000+ users', '99.99% uptime'],
+      pricingClaims: ['$45/user/month', 'free tier'],
+      complianceBadges: ['SOC-2 TYPE II', 'GDPR', 'HIPAA'],
+      detectedEntities: ['GraphQL & REST API', 'Real-time Webhooks', 'SOC-2 Type II & GDPR', 'Semantic Indexing'],
+      fetchTimestamp: '2026-08-19 12:00:00 UTC'
+    }
+  }
+];
+

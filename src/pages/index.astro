@@ -202,13 +202,11 @@ import Layout from "../layouts/Layout.astro";
             <!-- Simulated Line Graph with Interactive Tooltip -->
             <div class="chart-canvas">
               <svg class="chart-svg" viewBox="0 0 500 180" preserveAspectRatio="none">
-                <!-- Grid Lines -->
                 <line x1="0" y1="30" x2="500" y2="30" stroke="#F3F4F6" stroke-width="1"/>
                 <line x1="0" y1="75" x2="500" y2="75" stroke="#F3F4F6" stroke-width="1"/>
                 <line x1="0" y1="120" x2="500" y2="120" stroke="#F3F4F6" stroke-width="1"/>
                 <line x1="0" y1="165" x2="500" y2="165" stroke="#F3F4F6" stroke-width="1"/>
 
-                <!-- Lines: Monday (Red/Orange), Salesforce (Blue), Attio (Indigo), Zero (Gold), Pipedrive (Green) -->
                 <path d="M0,110 Q120,80 250,50 T500,60" fill="none" stroke="#EF4444" stroke-width="2.5"/>
                 <path d="M0,90 Q120,95 250,70 T500,80" fill="none" stroke="#3B82F6" stroke-width="2.5"/>
                 <path d="M0,130 Q120,120 250,95 T500,105" fill="none" stroke="#6366F1" stroke-width="3"/>
@@ -216,7 +214,6 @@ import Layout from "../layouts/Layout.astro";
                 <path d="M0,140 Q120,130 250,145 T500,150" fill="none" stroke="#10B981" stroke-width="2"/>
               </svg>
 
-              <!-- Floating Tooltip Box (like in Peec AI screenshot) -->
               <div class="chart-tooltip">
                 <div class="tooltip-title">March 2026</div>
                 <div class="tooltip-row"><span class="dot red"></span> Monday <span class="val">72%</span></div>
@@ -226,7 +223,6 @@ import Layout from "../layouts/Layout.astro";
                 <div class="tooltip-row"><span class="dot green"></span> Pipedrive <span class="val">28%</span></div>
               </div>
 
-              <!-- Month X-Axis -->
               <div class="chart-x-axis">
                 <span>Jan</span>
                 <span>Feb</span>
@@ -416,7 +412,7 @@ import Layout from "../layouts/Layout.astro";
         </div>
       </main>
 
-      <!-- View 2: Autonomous Citation Gap Synthesizer (The Solution) -->
+      <!-- View 2: Autonomous Citation Gap Synthesizer (Single & Portfolio Mode) -->
       <main id="view-gap" class="view-pane">
         <!-- Diagnostic Workspace Header -->
         <div class="gap-workspace-header">
@@ -429,173 +425,302 @@ import Layout from "../layouts/Layout.astro";
           </div>
         </div>
 
-        <!-- Diagnostic Input Bar -->
-        <div class="card gap-input-card">
-          <div class="input-grid">
-            <div class="field">
-              <label class="label" for="brandUrlInput">🏢 Your Brand Landing Page:</label>
-              <input id="brandUrlInput" class="input" type="url" value="https://attio.com" />
+        <!-- Mode Switcher Pill Bar -->
+        <div class="mode-switcher-bar">
+          <button class="mode-btn active" id="btnSingleMode">
+            <span>🎯 Single Prompt Analysis</span>
+          </button>
+          <button class="mode-btn" id="btnPortfolioMode">
+            <span>📦 Portfolio Mode (Fix Once, Win Multiple Prompts)</span>
+            <span class="mode-badge">HIGH LEVERAGE</span>
+          </button>
+        </div>
+
+        <!-- ================= TRACK A: SINGLE PROMPT MODE ================= -->
+        <div id="singleModeContainer" class="mode-content-container active">
+          <!-- Diagnostic Input Bar -->
+          <div class="card gap-input-card">
+            <div class="input-grid">
+              <div class="field">
+                <label class="label" for="brandUrlInput">🏢 Your Brand Landing Page:</label>
+                <input id="brandUrlInput" class="input" type="url" value="https://attio.com" />
+              </div>
+              <div class="field">
+                <label class="label" for="compUrlInput">🏆 Cited Competitor URL (Winning Page):</label>
+                <input id="compUrlInput" class="input" type="url" value="https://monday.com/crm" />
+              </div>
             </div>
-            <div class="field">
-              <label class="label" for="compUrlInput">🏆 Cited Competitor URL (Winning Page):</label>
-              <input id="compUrlInput" class="input" type="url" value="https://monday.com/crm" />
+
+            <div class="query-row">
+              <div class="field" style="flex:1">
+                <label class="label" for="queryInput">🎯 Monitored Search Prompt / Query:</label>
+                <input id="queryInput" class="input" type="text" value="best b2b crm for fast-growing startups" />
+              </div>
+              <button id="analyzeBtn" class="btn-primary-black">
+                <span>🚀 Synthesize Citation Gap</span>
+              </button>
+            </div>
+
+            <!-- Presets for 1-click loading -->
+            <div class="presets-row">
+              <span class="presets-label">Quick Preset Scenarios:</span>
+              <button class="chip chip-active" data-preset="crm_early_stage">Attio vs Our Brand CRM</button>
+              <button class="chip" data-preset="geo_search_analytics">Peec AI vs Legacy Tracker</button>
+              <button class="chip" data-preset="billing_usage_based">Lago vs Generic Billing</button>
+              <button class="chip" data-preset="vector_database_rag">Qdrant vs Basic Vector DB</button>
             </div>
           </div>
 
-          <div class="query-row">
-            <div class="field" style="flex:1">
-              <label class="label" for="queryInput">🎯 Monitored Search Prompt / Query:</label>
-              <input id="queryInput" class="input" type="text" value="best b2b crm for fast-growing startups" />
+          <!-- Delta Scorecard (Summary Metrics) -->
+          <div class="scorecard-grid">
+            <div class="card stat-box">
+              <div class="stat-top">
+                <span class="stat-label">Missing Schema Types</span>
+                <span class="stat-badge red">Critical</span>
+              </div>
+              <div class="stat-number danger" id="statSchemaCount">2</div>
+              <div class="stat-hint">JSON-LD missing in page &lt;head&gt;</div>
             </div>
-            <button id="analyzeBtn" class="btn-primary-black">
-              <span>🚀 Synthesize Citation Gap</span>
-            </button>
+
+            <div class="card stat-box">
+              <div class="stat-top">
+                <span class="stat-label">Unstated Proof Points</span>
+                <span class="stat-badge amber">High Priority</span>
+              </div>
+              <div class="stat-number warning" id="statBenchmarkCount">4</div>
+              <div class="stat-hint">Quantitative metrics stated by competitor</div>
+            </div>
+
+            <div class="card stat-box">
+              <div class="stat-top">
+                <span class="stat-label">Omitted Topic Entities</span>
+                <span class="stat-badge purple">Semantic</span>
+              </div>
+              <div class="stat-number purple" id="statEntityCount">6</div>
+              <div class="stat-hint">Essential keywords searched by LLMs</div>
+            </div>
+
+            <div class="card stat-box">
+              <div class="stat-top">
+                <span class="stat-label">Projected Win Probability</span>
+                <span class="stat-badge green">Post-Fix</span>
+              </div>
+              <div class="stat-number success" id="statWinProb">85%</div>
+              <div class="stat-hint">+38% lift after injecting fixes</div>
+            </div>
           </div>
 
-          <!-- Presets for 1-click loading -->
-          <div class="presets-row">
-            <span class="presets-label">Quick Preset Scenarios:</span>
-            <button class="chip chip-active" data-preset="crm_early_stage">Attio vs Our Brand CRM</button>
-            <button class="chip" data-preset="geo_search_analytics">Peec AI vs Legacy Tracker</button>
-            <button class="chip" data-preset="billing_usage_based">Lago vs Generic Billing</button>
-            <button class="chip" data-preset="vector_database_rag">Qdrant vs Basic Vector DB</button>
+          <!-- Side-by-Side Comparison Matrix -->
+          <div class="card matrix-card">
+            <div class="matrix-header">
+              <div class="col-category">Diagnostic Category</div>
+              <div class="col-brand">
+                <span class="dot red"></span>
+                <span id="labelBrand">Your Brand (attio.com)</span>
+              </div>
+              <div class="col-comp">
+                <span class="dot green"></span>
+                <span id="labelComp">Winning Competitor (monday.com)</span>
+              </div>
+            </div>
+
+            <!-- Row 1: Schema -->
+            <div class="matrix-row">
+              <div class="row-info">
+                <div class="row-title">Structured Schema.org</div>
+                <div class="row-desc">Parsed by Perplexity &amp; ChatGPT Search for product cards</div>
+              </div>
+              <div class="row-cell cell-missing" id="cellSchemaBrand">
+                <span class="icon">✗</span>
+                <span id="textSchemaBrand">Missing SoftwareApplication &amp; FAQPage</span>
+              </div>
+              <div class="row-cell cell-has" id="cellSchemaComp">
+                <span class="icon">✓</span>
+                <span id="textSchemaComp">Has SoftwareApplication, FAQPage, AggregateRating</span>
+              </div>
+            </div>
+
+            <!-- Row 2: Numerical Proof Points -->
+            <div class="matrix-row">
+              <div class="row-info">
+                <div class="row-title">Numerical Proof Points</div>
+                <div class="row-desc">Hard data claims quoted in generative search summaries</div>
+              </div>
+              <div class="row-cell cell-missing" id="cellBenchmarkBrand">
+                <span class="icon">✗</span>
+                <span id="textBenchmarkBrand">No explicit SLA latency or customer counts stated</span>
+              </div>
+              <div class="row-cell cell-has" id="cellBenchmarkComp">
+                <span class="icon">✓</span>
+                <span id="textBenchmarkComp">Quotes: 10,000+ teams, sub-10ms sync, SOC-2 Type II</span>
+              </div>
+            </div>
+
+            <!-- Row 3: Entity Keywords -->
+            <div class="matrix-row">
+              <div class="row-info">
+                <div class="row-title">Semantic Topic Entities</div>
+                <div class="row-desc">Entity co-occurrences used to compute ranking relevance</div>
+              </div>
+              <div class="row-cell cell-partial" id="cellEntityBrand">
+                <span class="icon">~</span>
+                <span id="textEntityBrand">Partial (4/10 topic entities detected)</span>
+              </div>
+              <div class="row-cell cell-has" id="cellEntityComp">
+                <span class="icon">✓</span>
+                <span id="textEntityComp">Complete (10/10 topic entities detected)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Remediation Action Feed (Zero Extrapolation Action Items) -->
+          <div class="action-feed-header">
+            <h2 class="feed-title">⚡ High-Impact Remediation Actions (<span id="remediationCount">5 Actions</span>)</h2>
+            <span class="feed-subtitle">Zero-Extrapolation fixes ready to copy and deploy in under 30 minutes</span>
+          </div>
+
+          <div class="action-items-list" id="actionItemsList"></div>
+
+          <!-- Export & Handoff Bar -->
+          <div class="export-handoff-card">
+            <div class="handoff-left">
+              <div class="handoff-title">Ready to hand off to your team or client?</div>
+              <div class="handoff-desc">Export client-ready Markdown briefs or sprint-ready Jira stories with Gherkin acceptance criteria.</div>
+            </div>
+            <div class="handoff-actions">
+              <button class="btn-outline" id="btnCopyBrief">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <span>Copy Marketer Brief</span>
+              </button>
+              <button class="btn-outline" id="btnDownloadBrief">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>Download Brief (.md)</span>
+              </button>
+              <button class="btn-black" id="btnCopyJira">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                <span>Copy Jira Story (PEEC-408)</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- Delta Scorecard (Summary Metrics) -->
-        <div class="scorecard-grid">
-          <div class="card stat-box">
-            <div class="stat-top">
-              <span class="stat-label">Missing Schema Types</span>
-              <span class="stat-badge red">Critical</span>
+        <!-- ================= TRACK B: PORTFOLIO MODE (NEW) ================= -->
+        <div id="portfolioModeContainer" class="mode-content-container">
+          <div class="card portfolio-intro-card">
+            <div class="portfolio-intro-header">
+              <div>
+                <h3 class="card-title">📦 Portfolio Aggregator: Find the Fix That Wins Multiple Prompts</h3>
+                <p class="card-subtitle">
+                  Peec AI already tells you <em>which</em> prompts you're losing. This runs the Citation Gap Engine across all of them and surfaces the recurring pattern worth fixing first — ranked by how many lost prompts it would help win back.
+                </p>
+              </div>
+              <button class="btn-outline" id="btnResetPortfolio">
+                <span>↻ Reset to Demo Portfolio</span>
+              </button>
             </div>
-            <div class="stat-number danger" id="statSchemaCount">2</div>
-            <div class="stat-hint">JSON-LD missing in page &lt;head&gt;</div>
-          </div>
 
-          <div class="card stat-box">
-            <div class="stat-top">
-              <span class="stat-label">Unstated Proof Points</span>
-              <span class="stat-badge amber">High Priority</span>
+            <div class="field" style="margin-top: 14px;">
+              <label class="label" for="portfolioBrandUrlInput">🏢 Your Brand Landing Page (tested against all prompt losses):</label>
+              <input id="portfolioBrandUrlInput" class="input" type="url" value="https://our-saas-crm.io" />
             </div>
-            <div class="stat-number warning" id="statBenchmarkCount">4</div>
-            <div class="stat-hint">Quantitative metrics stated by competitor</div>
-          </div>
 
-          <div class="card stat-box">
-            <div class="stat-top">
-              <span class="stat-label">Omitted Topic Entities</span>
-              <span class="stat-badge purple">Semantic</span>
+            <!-- Monitored Prompts Table Editor -->
+            <div class="portfolio-table-header">
+              <span class="label">🎯 Monitored Prompts (each row = one lost citation to diagnose):</span>
+              <button class="btn-small-outline" id="btnAddPromptRow">➕ Add Prompt Row</button>
             </div>
-            <div class="stat-number purple" id="statEntityCount">6</div>
-            <div class="stat-hint">Essential keywords searched by LLMs</div>
-          </div>
 
-          <div class="card stat-box">
-            <div class="stat-top">
-              <span class="stat-label">Projected Win Probability</span>
-              <span class="stat-badge green">Post-Fix</span>
-            </div>
-            <div class="stat-number success" id="statWinProb">85%</div>
-            <div class="stat-hint">+38% lift after injecting fixes</div>
-          </div>
-        </div>
+            <div class="portfolio-rows-container" id="portfolioRowsList"></div>
 
-        <!-- Side-by-Side Comparison Matrix -->
-        <div class="card matrix-card">
-          <div class="matrix-header">
-            <div class="col-category">Diagnostic Category</div>
-            <div class="col-brand">
-              <span class="dot red"></span>
-              <span id="labelBrand">Your Brand (attio.com)</span>
-            </div>
-            <div class="col-comp">
-              <span class="dot green"></span>
-              <span id="labelComp">Winning Competitor (monday.com)</span>
+            <div style="margin-top: 18px; display: flex; justify-content: flex-end;">
+              <button class="btn-primary-black" id="btnRunPortfolio">
+                <span>🚀 Run Multi-Prompt Portfolio Analysis</span>
+              </button>
             </div>
           </div>
 
-          <!-- Row 1: Schema -->
-          <div class="matrix-row">
-            <div class="row-info">
-              <div class="row-title">Structured Schema.org</div>
-              <div class="row-desc">Parsed by Perplexity &amp; ChatGPT Search for product cards</div>
-            </div>
-            <div class="row-cell cell-missing" id="cellSchemaBrand">
-              <span class="icon">✗</span>
-              <span id="textSchemaBrand">Missing SoftwareApplication &amp; FAQPage</span>
-            </div>
-            <div class="row-cell cell-has" id="cellSchemaComp">
-              <span class="icon">✓</span>
-              <span id="textSchemaComp">Has SoftwareApplication, FAQPage, AggregateRating</span>
-            </div>
-          </div>
+          <!-- Portfolio Results Section -->
+          <div id="portfolioResultsArea" style="display: none;">
+            <!-- 3 Summary KPIs -->
+            <div class="scorecard-grid">
+              <div class="card stat-box">
+                <div class="stat-top">
+                  <span class="stat-label">Monitored Prompts</span>
+                  <span class="stat-badge purple">Analyzed</span>
+                </div>
+                <div class="stat-number purple" id="portStatPrompts">3</div>
+                <div class="stat-hint">Distinct losing prompt queries</div>
+              </div>
 
-          <!-- Row 2: Numerical Proof Points -->
-          <div class="matrix-row">
-            <div class="row-info">
-              <div class="row-title">Numerical Proof Points</div>
-              <div class="row-desc">Hard data claims quoted in generative search summaries</div>
-            </div>
-            <div class="row-cell cell-missing" id="cellBenchmarkBrand">
-              <span class="icon">✗</span>
-              <span id="textBenchmarkBrand">No explicit SLA latency or customer counts stated</span>
-            </div>
-            <div class="row-cell cell-has" id="cellBenchmarkComp">
-              <span class="icon">✓</span>
-              <span id="textBenchmarkComp">Quotes: 10,000+ teams, sub-10ms sync, SOC-2 Type II</span>
-            </div>
-          </div>
+              <div class="card stat-box">
+                <div class="stat-top">
+                  <span class="stat-label">Winning Competitors</span>
+                  <span class="stat-badge amber">Unique</span>
+                </div>
+                <div class="stat-number warning" id="portStatCompetitors">3</div>
+                <div class="stat-hint">Distinct outranking domains</div>
+              </div>
 
-          <!-- Row 3: Entity Keywords -->
-          <div class="matrix-row">
-            <div class="row-info">
-              <div class="row-title">Semantic Topic Entities</div>
-              <div class="row-desc">Entity co-occurrences used to compute ranking relevance</div>
-            </div>
-            <div class="row-cell cell-partial" id="cellEntityBrand">
-              <span class="icon">~</span>
-              <span id="textEntityBrand">Partial (4/10 topic entities detected)</span>
-            </div>
-            <div class="row-cell cell-has" id="cellEntityComp">
-              <span class="icon">✓</span>
-              <span id="textEntityComp">Complete (10/10 topic entities detected)</span>
-            </div>
-          </div>
-        </div>
+              <div class="card stat-box">
+                <div class="stat-top">
+                  <span class="stat-label">Recurring Opportunities</span>
+                  <span class="stat-badge green">High Leverage</span>
+                </div>
+                <div class="stat-number success" id="portStatGaps">5</div>
+                <div class="stat-hint">Fix once, win multiple prompts</div>
+              </div>
 
-        <!-- Remediation Action Feed (Zero Extrapolation Action Items) -->
-        <div class="action-feed-header">
-          <h2 class="feed-title">⚡ High-Impact Remediation Actions (<span id="remediationCount">5 Actions</span>)</h2>
-          <span class="feed-subtitle">Zero-Extrapolation fixes ready to copy and deploy in under 30 minutes</span>
-        </div>
+              <div class="card stat-box">
+                <div class="stat-top">
+                  <span class="stat-label">Top Recurring Impact</span>
+                  <span class="stat-badge red">100% Recurrence</span>
+                </div>
+                <div class="stat-number danger" id="portStatMaxRecur">3 / 3</div>
+                <div class="stat-hint">Appears on every prompt tested</div>
+              </div>
+            </div>
 
-        <div class="action-items-list" id="actionItemsList"></div>
+            <!-- Recurrence Bar Chart Card -->
+            <div class="card recurrence-chart-card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">📊 Recurrence Breakdown across Monitored Prompts</h3>
+                  <p class="card-subtitle">Number of lost prompt citations affected by each specific gap</p>
+                </div>
+              </div>
+              <div class="bars-container" id="recurrenceBarsList"></div>
+            </div>
 
-        <!-- Export & Handoff Bar -->
-        <div class="export-handoff-card">
-          <div class="handoff-left">
-            <div class="handoff-title">Ready to hand off to your team or client?</div>
-            <div class="handoff-desc">Export client-ready Markdown briefs or sprint-ready Jira stories with Gherkin acceptance criteria.</div>
-          </div>
-          <div class="handoff-actions">
-            <button class="btn-outline" id="btnCopyBrief">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-              <span>Copy Marketer Brief</span>
-            </button>
-            <button class="btn-outline" id="btnDownloadBrief">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              <span>Download Brief (.md)</span>
-            </button>
-            <button class="btn-black" id="btnCopyJira">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-              <span>Copy Jira Story (PEEC-408)</span>
-            </button>
+            <!-- Ranked Insights List -->
+            <div class="action-feed-header">
+              <h2 class="feed-title">🔥 Fix This Once, Win Multiple Prompts</h2>
+              <span class="feed-subtitle">Ranked by priority score = recurrence count × severity multiplier. Fix #1 first.</span>
+            </div>
+
+            <div class="portfolio-insights-list" id="portfolioInsightsList"></div>
+
+            <!-- Bulk Export Bar -->
+            <div class="export-handoff-card">
+              <div class="handoff-left">
+                <div class="handoff-title">Ready to export the Portfolio Remediation Plan?</div>
+                <div class="handoff-desc">Download a single consolidated Markdown brief synthesizing fixes across all analyzed prompts.</div>
+              </div>
+              <div class="handoff-actions">
+                <button class="btn-outline" id="btnCopyPortfolioBrief">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  <span>Copy Bulk Brief</span>
+                </button>
+                <button class="btn-black" id="btnDownloadPortfolioBrief">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  <span>⬇️ Download Portfolio Brief (.md)</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </main>
 
-      <!-- View 3: Prompts Tab Placeholder -->
+      <!-- View 3: Prompts Tab -->
       <main id="view-prompts" class="view-pane">
         <div class="empty-state-card">
           <h2>🎯 Monitored Search Prompts</h2>
@@ -604,7 +729,7 @@ import Layout from "../layouts/Layout.astro";
         </div>
       </main>
 
-      <!-- View 4: Sources Tab Placeholder -->
+      <!-- View 4: Sources Tab -->
       <main id="view-sources" class="view-pane">
         <div class="empty-state-card">
           <h2>🌐 Citation Sources &amp; Domains</h2>
@@ -612,7 +737,7 @@ import Layout from "../layouts/Layout.astro";
         </div>
       </main>
 
-      <!-- View 5: Models Tab Placeholder -->
+      <!-- View 5: Models Tab -->
       <main id="view-models" class="view-pane">
         <div class="empty-state-card">
           <h2>🤖 AI Engine Breakdown</h2>
@@ -620,7 +745,7 @@ import Layout from "../layouts/Layout.astro";
         </div>
       </main>
 
-      <!-- View 6: Settings Tab Placeholder -->
+      <!-- View 6: Settings Tab -->
       <main id="view-settings" class="view-pane">
         <div class="empty-state-card">
           <h2>⚙️ Brand &amp; Workspace Settings</h2>
@@ -916,6 +1041,52 @@ import Layout from "../layouts/Layout.astro";
     to { opacity: 1; transform: translateY(0); }
   }
 
+  /* ── Mode Switcher Bar ──────────────────────────────────── */
+  .mode-switcher-bar {
+    display: flex;
+    gap: 8px;
+    background: #F3F4F6;
+    padding: 4px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    width: fit-content;
+  }
+  .mode-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    background: transparent;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #6B7280;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .mode-btn.active {
+    background: #FFFFFF;
+    color: #111827;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+  .mode-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    background: #6366F1;
+    color: #FFFFFF;
+    padding: 2px 6px;
+    border-radius: 99px;
+  }
+
+  .mode-content-container {
+    display: none;
+  }
+  .mode-content-container.active {
+    display: block;
+    animation: fadeIn 0.15s ease-out;
+  }
+
   /* ── Cards General ──────────────────────────────────────── */
   .card {
     background: #FFFFFF;
@@ -982,7 +1153,7 @@ import Layout from "../layouts/Layout.astro";
   .kpi-arrow.up { color: #10B981; font-weight: 700; }
   .kpi-arrow.down { color: #EF4444; font-weight: 700; }
 
-  /* ── Pain Point Callout (The Bridge) ─────────────────────── */
+  /* ── Pain Point Callout ─────────────────────────────────── */
   .pain-point-callout {
     background: #EEF2FF;
     border: 1px solid #C7D2FE;
@@ -1032,9 +1203,7 @@ import Layout from "../layouts/Layout.astro";
     white-space: nowrap;
     transition: background 0.12s;
   }
-  .callout-btn:hover {
-    background: #000000;
-  }
+  .callout-btn:hover { background: #000000; }
 
   /* ── Dashboard Grids ────────────────────────────────────── */
   .dashboard-grid-top {
@@ -1136,7 +1305,7 @@ import Layout from "../layouts/Layout.astro";
     padding-top: 8px;
   }
 
-  /* ── Leaderboard & Peec Tables ───────────────────────────── */
+  /* ── Tables ─────────────────────────────────────────────── */
   .table-responsive {
     overflow-x: auto;
   }
@@ -1160,12 +1329,8 @@ import Layout from "../layouts/Layout.astro";
     border-bottom: 1px solid #F9FAFB;
     color: #374151;
   }
-  .competitor-row:hover {
-    background: #F9FAFB;
-  }
-  .you-row {
-    background: #EEF2FF;
-  }
+  .competitor-row:hover { background: #F9FAFB; }
+  .you-row { background: #EEF2FF; }
 
   .brand-cell {
     display: flex;
@@ -1189,16 +1354,9 @@ import Layout from "../layouts/Layout.astro";
   .table-logo.green { background: #10B981; }
   .table-logo.black { background: #111827; }
 
-  .pill-stat {
-    font-weight: 600;
-    color: #111827;
-  }
-  .pill-stat.highlight {
-    color: #6366F1;
-  }
-  .sentiment-bar {
-    font-weight: 600;
-  }
+  .pill-stat { font-weight: 600; color: #111827; }
+  .pill-stat.highlight { color: #6366F1; }
+  .sentiment-bar { font-weight: 600; }
   .trend.up { color: #10B981; font-size: 0.75rem; font-weight: 600; }
   .trend.down { color: #EF4444; font-size: 0.75rem; font-weight: 600; }
 
@@ -1256,16 +1414,8 @@ import Layout from "../layouts/Layout.astro";
     align-items: center;
     justify-content: center;
   }
-  .donut-percentage {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #111827;
-  }
-  .donut-caption {
-    font-size: 0.62rem;
-    color: #9CA3AF;
-    text-transform: uppercase;
-  }
+  .donut-percentage { font-size: 1.2rem; font-weight: 700; color: #111827; }
+  .donut-caption { font-size: 0.62rem; color: #9CA3AF; text-transform: uppercase; }
   .donut-legend {
     display: flex;
     flex-direction: column;
@@ -1273,16 +1423,10 @@ import Layout from "../layouts/Layout.astro";
     font-size: 0.78rem;
     color: #4B5563;
   }
-  .legend-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+  .legend-row { display: flex; align-items: center; gap: 6px; }
 
-  /* ── View 2: Citation Gap View Styles ───────────────────── */
-  .gap-workspace-header {
-    margin-bottom: 20px;
-  }
+  /* ── Citation Gap Workspace ─────────────────────────────── */
+  .gap-workspace-header { margin-bottom: 18px; }
   .workspace-tag {
     font-size: 0.72rem;
     font-weight: 700;
@@ -1305,9 +1449,7 @@ import Layout from "../layouts/Layout.astro";
     line-height: 1.5;
   }
 
-  .gap-input-card {
-    margin-bottom: 24px;
-  }
+  .gap-input-card { margin-bottom: 24px; }
   .input-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1320,16 +1462,8 @@ import Layout from "../layouts/Layout.astro";
     align-items: flex-end;
     margin-bottom: 16px;
   }
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #374151;
-  }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .label { font-size: 0.8rem; font-weight: 600; color: #374151; }
   .input {
     border: 1px solid #D1D5DB;
     border-radius: 8px;
@@ -1371,11 +1505,7 @@ import Layout from "../layouts/Layout.astro";
     padding-top: 12px;
     border-top: 1px solid #F3F4F6;
   }
-  .presets-label {
-    font-size: 0.76rem;
-    font-weight: 600;
-    color: #9CA3AF;
-  }
+  .presets-label { font-size: 0.76rem; font-weight: 600; color: #9CA3AF; }
   .chip {
     border: 1px solid #E5E7EB;
     background: #FFFFFF;
@@ -1406,20 +1536,14 @@ import Layout from "../layouts/Layout.astro";
     gap: 16px;
     margin-bottom: 24px;
   }
-  .stat-box {
-    padding: 16px;
-  }
+  .stat-box { padding: 16px; }
   .stat-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 8px;
   }
-  .stat-label {
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: #6B7280;
-  }
+  .stat-label { font-size: 0.78rem; font-weight: 600; color: #6B7280; }
   .stat-badge {
     font-size: 0.65rem;
     font-weight: 700;
@@ -1441,17 +1565,10 @@ import Layout from "../layouts/Layout.astro";
   .stat-number.warning { color: #F59E0B; }
   .stat-number.purple { color: #8B5CF6; }
   .stat-number.success { color: #10B981; }
-  .stat-hint {
-    font-size: 0.72rem;
-    color: #9CA3AF;
-  }
+  .stat-hint { font-size: 0.72rem; color: #9CA3AF; }
 
   /* ── Matrix Card ────────────────────────────────────────── */
-  .matrix-card {
-    padding: 0;
-    overflow: hidden;
-    margin-bottom: 24px;
-  }
+  .matrix-card { padding: 0; overflow: hidden; margin-bottom: 24px; }
   .matrix-header {
     display: grid;
     grid-template-columns: 240px 1fr 1fr;
@@ -1469,25 +1586,14 @@ import Layout from "../layouts/Layout.astro";
     grid-template-columns: 240px 1fr 1fr;
     border-bottom: 1px solid #E5E7EB;
   }
-  .matrix-row:last-child {
-    border-bottom: none;
-  }
+  .matrix-row:last-child { border-bottom: none; }
   .row-info {
     padding: 18px 20px;
     background: #F9FAFB;
     border-right: 1px solid #E5E7EB;
   }
-  .row-title {
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: #111827;
-    margin-bottom: 2px;
-  }
-  .row-desc {
-    font-size: 0.74rem;
-    color: #6B7280;
-    line-height: 1.4;
-  }
+  .row-title { font-size: 0.88rem; font-weight: 600; color: #111827; margin-bottom: 2px; }
+  .row-desc { font-size: 0.74rem; color: #6B7280; line-height: 1.4; }
   .row-cell {
     padding: 18px 20px;
     font-size: 0.85rem;
@@ -1513,15 +1619,8 @@ import Layout from "../layouts/Layout.astro";
     align-items: center;
     margin-bottom: 12px;
   }
-  .feed-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #111827;
-  }
-  .feed-subtitle {
-    font-size: 0.78rem;
-    color: #6B7280;
-  }
+  .feed-title { font-size: 0.95rem; font-weight: 700; color: #111827; }
+  .feed-subtitle { font-size: 0.78rem; color: #6B7280; }
   .action-items-list {
     display: flex;
     flex-direction: column;
@@ -1539,9 +1638,7 @@ import Layout from "../layouts/Layout.astro";
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
     transition: border-color 0.12s;
   }
-  .action-item-card:hover {
-    border-color: #6366F1;
-  }
+  .action-item-card:hover { border-color: #6366F1; }
   .action-num {
     width: 24px;
     height: 24px;
@@ -1556,25 +1653,10 @@ import Layout from "../layouts/Layout.astro";
     flex-shrink: 0;
     margin-top: 2px;
   }
-  .action-content {
-    flex: 1;
-  }
-  .action-title {
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: #111827;
-    margin-bottom: 2px;
-  }
-  .action-desc {
-    font-size: 0.8rem;
-    color: #4B5563;
-    line-height: 1.45;
-  }
-  .action-tags {
-    display: flex;
-    gap: 6px;
-    margin-top: 6px;
-  }
+  .action-content { flex: 1; }
+  .action-title { font-size: 0.88rem; font-weight: 600; color: #111827; margin-bottom: 2px; }
+  .action-desc { font-size: 0.8rem; color: #4B5563; line-height: 1.45; }
+  .action-tags { display: flex; gap: 6px; margin-top: 6px; }
   .action-tag {
     font-size: 0.68rem;
     padding: 2px 6px;
@@ -1618,21 +1700,9 @@ import Layout from "../layouts/Layout.astro";
     align-items: center;
     box-shadow: 0 1px 2px rgba(0,0,0,0.04);
   }
-  .handoff-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #111827;
-  }
-  .handoff-desc {
-    font-size: 0.8rem;
-    color: #6B7280;
-    margin-top: 2px;
-  }
-  .handoff-actions {
-    display: flex;
-    gap: 10px;
-    flex-shrink: 0;
-  }
+  .handoff-title { font-size: 0.95rem; font-weight: 700; color: #111827; }
+  .handoff-desc { font-size: 0.8rem; color: #6B7280; margin-top: 2px; }
+  .handoff-actions { display: flex; gap: 10px; flex-shrink: 0; }
   .btn-outline {
     display: flex;
     align-items: center;
@@ -1647,10 +1717,21 @@ import Layout from "../layouts/Layout.astro";
     cursor: pointer;
     transition: all 0.12s;
   }
-  .btn-outline:hover {
-    background: #F9FAFB;
-    border-color: #D1D5DB;
+  .btn-outline:hover { background: #F9FAFB; border-color: #D1D5DB; }
+  .btn-small-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 10px;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6366F1;
+    cursor: pointer;
   }
+  .btn-small-outline:hover { background: #EEF2FF; border-color: #C7D2FE; }
   .btn-black {
     display: flex;
     align-items: center;
@@ -1665,8 +1746,123 @@ import Layout from "../layouts/Layout.astro";
     cursor: pointer;
     transition: background 0.12s;
   }
-  .btn-black:hover {
-    background: #000000;
+  .btn-black:hover { background: #000000; }
+
+  /* ── Portfolio Mode Specific Styles ─────────────────────── */
+  .portfolio-intro-card { margin-bottom: 24px; }
+  .portfolio-intro-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .portfolio-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 18px;
+    margin-bottom: 8px;
+  }
+  .portfolio-rows-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .prompt-row-card {
+    display: grid;
+    grid-template-columns: 1.2fr 1.2fr auto;
+    gap: 10px;
+    align-items: center;
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    padding: 8px 12px;
+  }
+  .btn-remove-row {
+    background: transparent;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #EF4444;
+    cursor: pointer;
+    font-size: 0.8rem;
+  }
+  .btn-remove-row:hover { background: #FEE2E2; }
+
+  .recurrence-chart-card { margin-bottom: 24px; }
+  .bars-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .bar-row {
+    display: grid;
+    grid-template-columns: 220px 1fr 60px;
+    align-items: center;
+    gap: 14px;
+    font-size: 0.8rem;
+  }
+  .bar-label { font-weight: 600; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar-track {
+    background: #F3F4F6;
+    border-radius: 6px;
+    height: 16px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar-fill {
+    background: #6366F1;
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.3s ease;
+  }
+  .bar-fill.critical { background: #EF4444; }
+  .bar-fill.high { background: #F59E0B; }
+  .bar-val { font-weight: 700; color: #4B5563; text-align: right; }
+
+  .portfolio-insights-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .insight-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+    padding: 16px 20px;
+    transition: border-color 0.12s;
+  }
+  .insight-card:hover { border-color: #6366F1; }
+  .insight-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .insight-title {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #111827;
+  }
+  .insight-score {
+    font-size: 0.78rem;
+    color: #6B7280;
+  }
+  .insight-meta {
+    font-size: 0.8rem;
+    color: #4B5563;
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+  .insight-prompts {
+    font-size: 0.76rem;
+    color: #6B7280;
+    background: #F9FAFB;
+    padding: 6px 10px;
+    border-radius: 6px;
+    margin-top: 6px;
   }
 
   /* ── Empty States ───────────────────────────────────────── */
@@ -1686,14 +1882,17 @@ import Layout from "../layouts/Layout.astro";
     .dashboard-grid-bottom { grid-template-columns: 1fr; }
     .scorecard-grid { grid-template-columns: 1fr 1fr; }
     .matrix-header, .matrix-row { grid-template-columns: 140px 1fr 1fr; }
+    .prompt-row-card { grid-template-columns: 1fr; }
+    .bar-row { grid-template-columns: 1fr; }
     .export-handoff-card { flex-direction: column; gap: 14px; align-items: flex-start; }
   }
 </style>
 
 <script>
-  import type { CitationGapResult } from "../lib/types";
-  import { PRESETS } from "../lib/presets";
+  import type { CitationGapResult, PortfolioAnalysisResult } from "../lib/types";
+  import { PRESETS, PORTFOLIO_DEMO_PROMPTS } from "../lib/presets";
   import { ZeroExtrapolationDiffEngine } from "../lib/diffEngine";
+  import { PortfolioAggregator } from "../lib/portfolioEngine";
 
   // ── Tab & View Navigation ─────────────────────────────────────────────
   const navButtons = document.querySelectorAll(".nav-item[data-view]");
@@ -1717,7 +1916,6 @@ import Layout from "../layouts/Layout.astro";
     });
   });
 
-  // Callout & Leaderboard Quick Actions to jump into Citation Gap view
   document.getElementById("openGapFromBanner")?.addEventListener("click", () => {
     switchView("view-gap");
   });
@@ -1737,14 +1935,35 @@ import Layout from "../layouts/Layout.astro";
     });
   });
 
-  // ── Gap Analyzer Engine ────────────────────────────────────────────────
+  // ── Mode Switcher (Single Prompt vs Portfolio Mode) ────────────────────
+  const btnSingleMode = document.getElementById("btnSingleMode");
+  const btnPortfolioMode = document.getElementById("btnPortfolioMode");
+  const singleContainer = document.getElementById("singleModeContainer");
+  const portfolioContainer = document.getElementById("portfolioModeContainer");
+
+  btnSingleMode?.addEventListener("click", () => {
+    btnSingleMode.classList.add("active");
+    btnPortfolioMode?.classList.remove("active");
+    singleContainer?.classList.add("active");
+    portfolioContainer?.classList.remove("active");
+  });
+
+  btnPortfolioMode?.addEventListener("click", () => {
+    btnPortfolioMode.classList.add("active");
+    btnSingleMode?.classList.remove("active");
+    portfolioContainer?.classList.add("active");
+    singleContainer?.classList.remove("active");
+    renderPortfolioRows();
+    runPortfolioAnalysis();
+  });
+
+  // ── Single Prompt Gap Analyzer Engine ──────────────────────────────────
   const brandInput = document.getElementById("brandUrlInput") as HTMLInputElement;
   const compInput = document.getElementById("compUrlInput") as HTMLInputElement;
   const queryInput = document.getElementById("queryInput") as HTMLInputElement;
   const analyzeBtn = document.getElementById("analyzeBtn") as HTMLButtonElement;
   let currentResult: CitationGapResult | null = null;
 
-  // Preset Chips
   document.querySelectorAll(".chip[data-preset]").forEach(chip => {
     chip.addEventListener("click", () => {
       document.querySelectorAll(".chip").forEach(c => c.classList.remove("chip-active"));
@@ -1802,7 +2021,7 @@ import Layout from "../layouts/Layout.astro";
       renderGapUI(result);
       analyzeBtn.innerHTML = "<span>🚀 Synthesize Citation Gap</span>";
       analyzeBtn.disabled = false;
-    }, 150);
+    }, 120);
   }
 
   function renderGapUI(result: CitationGapResult) {
@@ -1810,7 +2029,6 @@ import Layout from "../layouts/Layout.astro";
     const brandDom = getDomain(result.brandPayload.url);
     const compDom = getDomain(result.competitorPayload.url);
 
-    // Scorecard stats
     const statSchema = document.getElementById("statSchemaCount");
     const statBench = document.getElementById("statBenchmarkCount");
     const statEntity = document.getElementById("statEntityCount");
@@ -1818,13 +2036,11 @@ import Layout from "../layouts/Layout.astro";
     if (statBench) statBench.textContent = String(result.benchmarkGaps.length);
     if (statEntity) statEntity.textContent = String(result.entityGaps.length);
 
-    // Matrix headers
     const labelBrand = document.getElementById("labelBrand");
     const labelComp = document.getElementById("labelComp");
     if (labelBrand) labelBrand.textContent = `Your Brand (${brandDom})`;
     if (labelComp) labelComp.textContent = `Winning Competitor (${compDom})`;
 
-    // Matrix cells - Schema
     const cellSchemaBrand = document.getElementById("cellSchemaBrand");
     const textSchemaBrand = document.getElementById("textSchemaBrand");
     const textSchemaComp = document.getElementById("textSchemaComp");
@@ -1837,7 +2053,6 @@ import Layout from "../layouts/Layout.astro";
       if (textSchemaBrand) textSchemaBrand.textContent = "All schemas matched";
     }
 
-    // Matrix cells - Benchmarks
     const textBenchmarkBrand = document.getElementById("textBenchmarkBrand");
     const textBenchmarkComp = document.getElementById("textBenchmarkComp");
     if (result.benchmarkGaps.length > 0) {
@@ -1846,13 +2061,11 @@ import Layout from "../layouts/Layout.astro";
       if (textBenchmarkComp) textBenchmarkComp.textContent = `Quotes: ${compProof}`;
     }
 
-    // Matrix cells - Entities
     const textEntityBrand = document.getElementById("textEntityBrand");
     const textEntityComp = document.getElementById("textEntityComp");
     if (textEntityBrand) textEntityBrand.textContent = `Partial (${result.entityGaps.length} critical topic entities omitted)`;
     if (textEntityComp) textEntityComp.textContent = `Complete coverage across categorical prompt keywords`;
 
-    // Action Feed
     renderActionFeed(result);
   }
 
@@ -1862,7 +2075,6 @@ import Layout from "../layouts/Layout.astro";
 
     const actions: Array<{ title: string; desc: string; tag: string; copyText: string }> = [];
 
-    // Schema Actions
     result.schemaGaps.forEach(g => {
       actions.push({
         title: `Inject Schema.org @type ${g.schemaType}`,
@@ -1872,7 +2084,6 @@ import Layout from "../layouts/Layout.astro";
       });
     });
 
-    // Benchmark Actions
     result.benchmarkGaps.forEach(g => {
       actions.push({
         title: `Add Quantitative Metric: ${g.metricName}`,
@@ -1882,7 +2093,6 @@ import Layout from "../layouts/Layout.astro";
       });
     });
 
-    // Entity Actions
     result.entityGaps.slice(0, 2).forEach(g => {
       actions.push({
         title: `Cover Topic Entity: ${g.entityName}`,
@@ -1911,7 +2121,6 @@ import Layout from "../layouts/Layout.astro";
       </div>
     `).join("");
 
-    // Wire up Copy Fix buttons
     list.querySelectorAll(".btn-copy-fix").forEach(btn => {
       btn.addEventListener("click", () => {
         const text = decodeURIComponent((btn as HTMLElement).dataset.copy || "");
@@ -1925,6 +2134,161 @@ import Layout from "../layouts/Layout.astro";
         });
       });
     });
+  }
+
+  // ── Portfolio Mode State & Execution ──────────────────────────────────
+  let portfolioRows = [
+    { query: PORTFOLIO_DEMO_PROMPTS[0].query, competitorUrl: PORTFOLIO_DEMO_PROMPTS[0].competitorUrl },
+    { query: PORTFOLIO_DEMO_PROMPTS[1].query, competitorUrl: PORTFOLIO_DEMO_PROMPTS[1].competitorUrl },
+    { query: PORTFOLIO_DEMO_PROMPTS[2].query, competitorUrl: PORTFOLIO_DEMO_PROMPTS[2].competitorUrl },
+  ];
+  let currentPortfolioResult: PortfolioAnalysisResult | null = null;
+
+  function renderPortfolioRows() {
+    const container = document.getElementById("portfolioRowsList");
+    if (!container) return;
+
+    container.innerHTML = portfolioRows.map((row, idx) => `
+      <div class="prompt-row-card" data-idx="${idx}">
+        <input class="input prompt-query-input" type="text" value="${escHtml(row.query)}" placeholder="Prompt query..." data-idx="${idx}" />
+        <input class="input prompt-comp-input" type="url" value="${escHtml(row.competitorUrl)}" placeholder="Winning competitor URL..." data-idx="${idx}" />
+        <button class="btn-remove-row" data-idx="${idx}" title="Remove prompt row">🗑️</button>
+      </div>
+    `).join("");
+
+    container.querySelectorAll(".prompt-query-input").forEach(input => {
+      input.addEventListener("input", (e) => {
+        const idx = parseInt((input as HTMLElement).dataset.idx || "0");
+        portfolioRows[idx].query = (e.target as HTMLInputElement).value;
+      });
+    });
+
+    container.querySelectorAll(".prompt-comp-input").forEach(input => {
+      input.addEventListener("input", (e) => {
+        const idx = parseInt((input as HTMLElement).dataset.idx || "0");
+        portfolioRows[idx].competitorUrl = (e.target as HTMLInputElement).value;
+      });
+    });
+
+    container.querySelectorAll(".btn-remove-row").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const idx = parseInt((btn as HTMLElement).dataset.idx || "0");
+        if (portfolioRows.length > 1) {
+          portfolioRows.splice(idx, 1);
+          renderPortfolioRows();
+          runPortfolioAnalysis();
+        }
+      });
+    });
+  }
+
+  document.getElementById("btnAddPromptRow")?.addEventListener("click", () => {
+    portfolioRows.push({
+      query: "New monitored prompt query",
+      competitorUrl: "https://example-competitor.com"
+    });
+    renderPortfolioRows();
+  });
+
+  document.getElementById("btnResetPortfolio")?.addEventListener("click", () => {
+    portfolioRows = [
+      { query: PORTFOLIO_DEMO_PROMPTS[0].query, competitorUrl: PORTFOLIO_DEMO_PROMPTS[0].competitorUrl },
+      { query: PORTFOLIO_DEMO_PROMPTS[1].query, competitorUrl: PORTFOLIO_DEMO_PROMPTS[1].competitorUrl },
+      { query: PORTFOLIO_DEMO_PROMPTS[2].query, competitorUrl: PORTFOLIO_DEMO_PROMPTS[2].competitorUrl },
+    ];
+    renderPortfolioRows();
+    runPortfolioAnalysis();
+  });
+
+  document.getElementById("btnRunPortfolio")?.addEventListener("click", runPortfolioAnalysis);
+
+  function runPortfolioAnalysis() {
+    const brandUrl = (document.getElementById("portfolioBrandUrlInput") as HTMLInputElement)?.value || "https://our-saas-crm.io";
+    const brandDomain = getDomain(brandUrl);
+    const results: CitationGapResult[] = [];
+
+    const brandPayload = ZeroExtrapolationDiffEngine.createPayloadForUrl(brandUrl, true);
+
+    portfolioRows.forEach(row => {
+      let compPayload;
+      const demoMatch = PORTFOLIO_DEMO_PROMPTS.find(p => p.competitorUrl === row.competitorUrl);
+      if (demoMatch) {
+        compPayload = demoMatch.competitorData;
+      } else {
+        compPayload = ZeroExtrapolationDiffEngine.createPayloadForUrl(row.competitorUrl, false);
+      }
+
+      const res = ZeroExtrapolationDiffEngine.executeDiff(row.query, brandPayload, compPayload);
+      results.append ? results.append(res) : results.push(res);
+    });
+
+    const portfolio = PortfolioAggregator.aggregate(brandDomain, results);
+    currentPortfolioResult = portfolio;
+    renderPortfolioUI(portfolio);
+  }
+
+  function renderPortfolioUI(portfolio: PortfolioAnalysisResult) {
+    const resultsArea = document.getElementById("portfolioResultsArea");
+    if (resultsArea) resultsArea.style.display = "block";
+
+    // Summary KPIs
+    const pPrompts = document.getElementById("portStatPrompts");
+    const pComps = document.getElementById("portStatCompetitors");
+    const pGaps = document.getElementById("portStatGaps");
+    const pMax = document.getElementById("portStatMaxRecur");
+
+    if (pPrompts) pPrompts.textContent = String(portfolio.totalPromptsAnalyzed);
+    if (pComps) pComps.textContent = String(portfolio.totalDistinctCompetitors);
+    if (pGaps) pGaps.textContent = String(portfolio.recurringGaps.length);
+    if (pMax && portfolio.recurringGaps.length > 0) {
+      const top = portfolio.recurringGaps[0];
+      pMax.textContent = `${top.recurrenceCount} / ${portfolio.totalPromptsAnalyzed}`;
+    }
+
+    // Recurrence Bars
+    const barsList = document.getElementById("recurrenceBarsList");
+    if (barsList) {
+      const total = portfolio.totalPromptsAnalyzed || 1;
+      barsList.innerHTML = portfolio.recurringGaps.map(g => {
+        const pct = Math.round((g.recurrenceCount / total) * 100);
+        const fillClass = g.citationWeight === "CRITICAL" ? "critical" : (g.citationWeight === "HIGH" ? "high" : "");
+        return `
+          <div class="bar-row">
+            <div class="bar-label" title="${escHtml(g.displayName)}">${escHtml(g.displayName)}</div>
+            <div class="bar-track">
+              <div class="bar-fill ${fillClass}" style="width: ${pct}%;"></div>
+            </div>
+            <div class="bar-val">${g.recurrenceCount} / ${total}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // Insights List
+    const insightsList = document.getElementById("portfolioInsightsList");
+    if (insightsList) {
+      insightsList.innerHTML = portfolio.recurringGaps.map((g, idx) => {
+        const pct = Math.round((g.recurrenceCount / (portfolio.totalPromptsAnalyzed || 1)) * 100);
+        const badgeClass = g.citationWeight === "CRITICAL" ? "red" : (g.citationWeight === "HIGH" ? "amber" : "purple");
+        return `
+          <div class="insight-card">
+            <div class="insight-header">
+              <div class="insight-title">#${idx + 1} &bull; ${escHtml(g.displayName)}</div>
+              <span class="stat-badge ${badgeClass}">${g.citationWeight} Priority &bull; Score ${g.priorityScore}</span>
+            </div>
+            <div class="insight-meta">
+              <strong>Recurrence:</strong> Appears on <strong>${g.recurrenceCount} of ${portfolio.totalPromptsAnalyzed} monitored prompts (${pct}%)</strong>.
+            </div>
+            <div class="insight-meta">
+              <strong>Action Required:</strong> ${escHtml(g.representativeRecommendation)}
+            </div>
+            <div class="insight-prompts">
+              <strong>Affected Prompts:</strong> ${g.affectedPrompts.map(p => `<em>"${escHtml(p)}"</em>`).join(", ")}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
   }
 
   // ── Handoff Actions ────────────────────────────────────────────────────
@@ -1957,6 +2321,26 @@ import Layout from "../layouts/Layout.astro";
         if (btn) btn.innerHTML = `<span>Copy Jira Story (PEEC-408)</span>`;
       }, 2000);
     });
+  });
+
+  document.getElementById("btnCopyPortfolioBrief")?.addEventListener("click", () => {
+    if (!currentPortfolioResult) return;
+    navigator.clipboard.writeText(currentPortfolioResult.bulkMarkdownBrief).then(() => {
+      const btn = document.getElementById("btnCopyPortfolioBrief");
+      if (btn) btn.innerHTML = "<span>Copied Bulk Brief ✓</span>";
+      setTimeout(() => {
+        if (btn) btn.innerHTML = `<span>Copy Bulk Brief</span>`;
+      }, 2000);
+    });
+  });
+
+  document.getElementById("btnDownloadPortfolioBrief")?.addEventListener("click", () => {
+    if (!currentPortfolioResult) return;
+    const blob = new Blob([currentPortfolioResult.bulkMarkdownBrief], { type: "text/markdown" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `peec_ai_portfolio_brief_${currentPortfolioResult.brandDomain}.md`;
+    a.click();
   });
 
   document.getElementById("headerExportBtn")?.addEventListener("click", () => {
