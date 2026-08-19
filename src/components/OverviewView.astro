@@ -1,0 +1,271 @@
+---
+---
+
+<main id="view-overview" class="view-pane active">
+  <!-- Overview Banner & KPIs -->
+  <div class="overview-header">
+    <div class="overview-title-group">
+      <span class="sparkle-icon">✨</span>
+      <h1 class="overview-title">Overview &bull; Attio's Visibility trending up by 5.2% this month</h1>
+    </div>
+    <div class="kpi-pills">
+      <div class="kpi-tag">
+        <span class="kpi-label">Visibility:</span>
+        <span class="kpi-val">3/14</span>
+        <span class="kpi-arrow down">▾</span>
+      </div>
+      <div class="kpi-tag">
+        <span class="kpi-label">Sentiment:</span>
+        <span class="kpi-val">2/14</span>
+        <span class="kpi-arrow up">▴</span>
+      </div>
+      <div class="kpi-tag">
+        <span class="kpi-label">Position:</span>
+        <span class="kpi-val">5/14</span>
+        <span class="kpi-arrow up">▴</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Problem Banner: The Citation Gap Pain Point -->
+  <div class="pain-point-callout">
+    <div class="callout-left">
+      <div class="callout-icon">⚡</div>
+      <div>
+        <div class="callout-heading">Attention: 2 Competitors Outrank Attio on Prompt <em>"Best CRM for Startups"</em></div>
+        <div class="callout-sub">Salesforce (62%) and Monday.com (65%) win citations due to missing structured schemas and unstated latency SLAs.</div>
+      </div>
+    </div>
+    <button class="callout-btn" id="openGapFromBanner">
+      <span>Diagnose Citation Gap &amp; Fixes →</span>
+    </button>
+  </div>
+
+  <!-- Grid 2-col: Chart & Competitor Leaderboard -->
+  <div class="dashboard-grid-top">
+    <!-- Visibility Trend Card -->
+    <div class="card chart-card">
+      <div class="card-header">
+        <div class="tab-toggle-group">
+          <button class="tab-toggle active">👁 Visibility</button>
+          <button class="tab-toggle">😊 Sentiment</button>
+          <button class="tab-toggle">🧭 Position</button>
+        </div>
+        <div class="card-actions">
+          <button class="mini-icon-btn">📈</button>
+          <button class="mini-icon-btn">📊</button>
+        </div>
+      </div>
+
+      <!-- Line Graph with Interactive Tooltip -->
+      <div class="chart-canvas">
+        <svg class="chart-svg" viewBox="0 0 500 180" preserveAspectRatio="none">
+          <line x1="0" y1="30" x2="500" y2="30" stroke="#F3F4F6" stroke-width="1"/>
+          <line x1="0" y1="75" x2="500" y2="75" stroke="#F3F4F6" stroke-width="1"/>
+          <line x1="0" y1="120" x2="500" y2="120" stroke="#F3F4F6" stroke-width="1"/>
+          <line x1="0" y1="165" x2="500" y2="165" stroke="#F3F4F6" stroke-width="1"/>
+
+          <path d="M0,110 Q120,80 250,50 T500,60" fill="none" stroke="#EF4444" stroke-width="2.5"/>
+          <path d="M0,90 Q120,95 250,70 T500,80" fill="none" stroke="#3B82F6" stroke-width="2.5"/>
+          <path d="M0,130 Q120,120 250,95 T500,105" fill="none" stroke="#6366F1" stroke-width="3"/>
+          <path d="M0,150 Q120,140 250,135 T500,140" fill="none" stroke="#F59E0B" stroke-width="2"/>
+          <path d="M0,140 Q120,130 250,145 T500,150" fill="none" stroke="#10B981" stroke-width="2"/>
+        </svg>
+
+        <div class="chart-tooltip">
+          <div class="tooltip-title">March 2026</div>
+          <div class="tooltip-row"><span class="dot red"></span> Monday <span class="val">72%</span></div>
+          <div class="tooltip-row"><span class="dot blue"></span> Salesforce <span class="val">65%</span></div>
+          <div class="tooltip-row active"><span class="dot indigo"></span> Attio (You) <span class="val">54%</span></div>
+          <div class="tooltip-row"><span class="dot gold"></span> Zero <span class="val">33%</span></div>
+          <div class="tooltip-row"><span class="dot green"></span> Pipedrive <span class="val">28%</span></div>
+        </div>
+
+        <div class="chart-x-axis">
+          <span>Jan</span>
+          <span>Feb</span>
+          <span>Mar</span>
+          <span>Apr</span>
+          <span>May</span>
+          <span>Jun</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Competitor Leaderboard Table Card -->
+    <div class="card leaderboard-card">
+      <div class="card-header">
+        <div>
+          <h3 class="card-title">Attio's competitors</h3>
+          <p class="card-subtitle">Compare Attio with its competitors in AI Search citations</p>
+        </div>
+        <button class="pop-out-btn" title="Open full table">↗</button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="peec-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Brand</th>
+              <th>Visibility</th>
+              <th>Sentiment</th>
+              <th>Position</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="competitor-row">
+              <td>1</td>
+              <td class="brand-cell">
+                <span class="table-logo red">M</span>
+                <strong>Monday.com</strong>
+              </td>
+              <td><span class="pill-stat">65%</span></td>
+              <td><span class="sentiment-bar">86</span></td>
+              <td>#2.7</td>
+              <td>
+                <button class="table-diagnose-btn" data-comp="monday.com">
+                  <span>Diagnose Gap ⚡</span>
+                </button>
+              </td>
+            </tr>
+            <tr class="competitor-row">
+              <td>2</td>
+              <td class="brand-cell">
+                <span class="table-logo blue">S</span>
+                <strong>Salesforce</strong>
+              </td>
+              <td><span class="pill-stat">62%</span></td>
+              <td><span class="sentiment-bar">62</span> <span class="trend down">↘ 0.2</span></td>
+              <td>#2.9 <span class="trend down">↘ 0.1</span></td>
+              <td>
+                <button class="table-diagnose-btn" data-comp="salesforce.com">
+                  <span>Diagnose Gap ⚡</span>
+                </button>
+              </td>
+            </tr>
+            <tr class="competitor-row you-row">
+              <td>3</td>
+              <td class="brand-cell">
+                <span class="table-logo indigo">A</span>
+                <strong>Attio (Your Brand)</strong>
+              </td>
+              <td><span class="pill-stat highlight">47%</span> <span class="trend up">↗ 0.3</span></td>
+              <td><span class="sentiment-bar">89</span></td>
+              <td>#3.6</td>
+              <td><span class="you-badge">Your Brand</span></td>
+            </tr>
+            <tr class="competitor-row">
+              <td>4</td>
+              <td class="brand-cell">
+                <span class="table-logo green">P</span>
+                <strong>Pipedrive</strong>
+              </td>
+              <td><span class="pill-stat">41%</span> <span class="trend down">↘ 0.3</span></td>
+              <td><span class="sentiment-bar">76</span></td>
+              <td>#3.9</td>
+              <td>
+                <button class="table-diagnose-btn" data-comp="pipedrive.com">
+                  <span>Diagnose Gap ⚡</span>
+                </button>
+              </td>
+            </tr>
+            <tr class="competitor-row">
+              <td>5</td>
+              <td class="brand-cell">
+                <span class="table-logo black">Z</span>
+                <strong>Zero</strong>
+              </td>
+              <td><span class="pill-stat">28%</span></td>
+              <td><span class="sentiment-bar">88</span> <span class="trend up">↗ 0.4</span></td>
+              <td>#2.3 <span class="trend up">↗ 0.2</span></td>
+              <td>
+                <button class="table-diagnose-btn" data-comp="zero.io">
+                  <span>Diagnose Gap ⚡</span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid 2-col: Domains Table & Donut Breakdown -->
+  <div class="dashboard-grid-bottom">
+    <div class="card domains-card">
+      <div class="card-header">
+        <div class="tab-toggle-group">
+          <button class="tab-toggle active">Domains</button>
+          <button class="tab-toggle">URLs</button>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="peec-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Domain</th>
+              <th>Type</th>
+              <th>Used</th>
+              <th>Avg. Citations</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td class="domain-cell">🔴 reddit.com</td>
+              <td><span class="type-pill ugc">UGC</span></td>
+              <td>32%</td>
+              <td>41%</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td class="domain-cell">📰 techradar.com</td>
+              <td><span class="type-pill editorial">Editorial</span></td>
+              <td>43%</td>
+              <td>46%</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td class="domain-cell">📚 wikipedia.org</td>
+              <td><span class="type-pill reference">Reference</span></td>
+              <td>28%</td>
+              <td>34%</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td class="domain-cell">▶️ youtube.com</td>
+              <td><span class="type-pill ugc">UGC</span></td>
+              <td>19%</td>
+              <td>22%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card donut-card">
+      <div class="card-header">
+        <div>
+          <h3 class="card-title">Domains by Type</h3>
+          <p class="card-subtitle">Most used domains categorized by citation source type</p>
+        </div>
+        <button class="pop-out-btn">↗</button>
+      </div>
+      <div class="donut-content">
+        <div class="donut-circle">
+          <span class="donut-percentage">12%</span>
+          <span class="donut-caption">Brand share</span>
+        </div>
+        <div class="donut-legend">
+          <div class="legend-row"><span class="dot blue"></span> UGC (42%)</div>
+          <div class="legend-row"><span class="dot purple"></span> Editorial (31%)</div>
+          <div class="legend-row"><span class="dot indigo"></span> Corporate (15%)</div>
+          <div class="legend-row"><span class="dot red"></span> Competitor (12%)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

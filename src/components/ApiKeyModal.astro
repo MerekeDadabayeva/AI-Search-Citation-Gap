@@ -1,0 +1,22 @@
+---
+---
+
+<div id="apiKeyModal" class="modal-backdrop" style="display: none;">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 class="modal-title">🔑 Live AI API Key Settings (Optional)</h3>
+      <button class="btn-close-modal" id="btnCloseApiKeyModal">✕</button>
+    </div>
+    <p class="modal-desc">
+      Peec AI works out-of-the-box using live client-side page scraping &amp; heuristic extraction. If you want direct real-time prompting with Gemini 1.5 or OpenAI, you can optionally provide your key here (saved only in your browser localStorage).
+    </p>
+    <div class="field" style="margin-bottom: 12px;">
+      <label class="label" for="apiKeyInput">Google Gemini API Key:</label>
+      <input class="input" id="apiKeyInput" type="password" placeholder="AIzaSy..." />
+    </div>
+    <div class="modal-actions">
+      <button class="btn-outline" id="btnClearApiKey">Clear Key</button>
+      <button class="btn-primary-black" id="btnSaveApiKey">Save Key</button>
+    </div>
+  </div>
+</div>

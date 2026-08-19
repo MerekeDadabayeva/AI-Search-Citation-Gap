@@ -1,0 +1,170 @@
+---
+---
+
+<div id="portfolioModeContainer" class="mode-content-container">
+  <!-- Portfolio Setup Card -->
+  <div class="card portfolio-intro-card">
+    <div class="portfolio-intro-header">
+      <div>
+        <h3 class="card-title">📦 Portfolio Aggregator: Find the Fix That Wins Multiple Prompts</h3>
+        <p class="card-subtitle">
+          Diagnose multiple search queries at once and find the single highest-impact updates that move the needle across all of them.
+        </p>
+      </div>
+      <button class="btn-outline" id="btnResetPortfolio">
+        <span>↻ Reset to Default</span>
+      </button>
+    </div>
+
+    <!-- Portfolio Cluster Preset Selector -->
+    <div class="cluster-preset-row">
+      <span class="cluster-preset-label">⚡ Load Example Portfolio:</span>
+      <button class="chip chip-active" data-cluster="crm_suite">🚀 CRM &amp; Sales Tech (3 Prompts)</button>
+      <button class="chip" data-cluster="ai_analytics">🌐 AI Search &amp; GEO (3 Prompts)</button>
+      <button class="chip" data-cluster="vector_db">⚡ Vector DB &amp; Infrastructure (3 Prompts)</button>
+    </div>
+
+    <div class="field" style="margin-top: 16px;">
+      <label class="label" for="portfolioBrandUrlInput">🏢 Your Brand Landing Page (analyzed against all prompt losses):</label>
+      <input id="portfolioBrandUrlInput" class="input" type="url" value="https://our-saas-crm.io" />
+    </div>
+
+    <!-- Monitored Prompts Table Editor -->
+    <div class="portfolio-table-header">
+      <span class="label">🎯 Monitored Search Prompts:</span>
+      <button class="btn-small-outline" id="btnAddPromptRow">➕ Add Search Prompt</button>
+    </div>
+
+    <div class="portfolio-rows-container" id="portfolioRowsList"></div>
+
+    <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+      <button class="btn-primary-black" id="btnRunPortfolio" style="padding: 10px 24px;">
+        <span>🚀 Run Multi-Prompt Portfolio Analysis</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Portfolio Results Section -->
+  <div id="portfolioResultsArea">
+    <!-- 4 Summary KPIs -->
+    <div class="scorecard-grid">
+      <div class="card stat-box">
+        <div class="stat-top">
+          <span class="stat-label">Search Prompts</span>
+          <span class="stat-badge purple">Analyzed</span>
+        </div>
+        <div class="stat-number purple" id="portStatPrompts">3</div>
+        <div class="stat-hint">Losing search queries</div>
+      </div>
+
+      <div class="card stat-box">
+        <div class="stat-top">
+          <span class="stat-label">Winning Competitors</span>
+          <span class="stat-badge amber">Unique</span>
+        </div>
+        <div class="stat-number warning" id="portStatCompetitors">3</div>
+        <div class="stat-hint">Outranking domains</div>
+      </div>
+
+      <div class="card stat-box">
+        <div class="stat-top">
+          <span class="stat-label">High-Leverage Fixes</span>
+          <span class="stat-badge green">Cross-Prompt</span>
+        </div>
+        <div class="stat-number success" id="portStatGaps">5</div>
+        <div class="stat-hint">Fix once, win multiple queries</div>
+      </div>
+
+      <div class="card stat-box">
+        <div class="stat-top">
+          <span class="stat-label">Top Recurring Impact</span>
+          <span class="stat-badge red">100% Recurrence</span>
+        </div>
+        <div class="stat-number danger" id="portStatMaxRecur">3 / 3</div>
+        <div class="stat-hint">Appears on every prompt tested</div>
+      </div>
+    </div>
+
+    <!-- Projected Portfolio Win Lift Banner -->
+    <div class="portfolio-lift-card">
+      <div class="lift-left">
+        <div class="lift-icon">📈</div>
+        <div>
+          <div class="lift-title">Portfolio Citation Win Lift: <strong>38% ➔ 89% (+51% Lift)</strong></div>
+          <div class="lift-desc">Deploying the top 2 recurring fixes below simultaneously resolves citation deficits across 100% of analyzed prompt clusters.</div>
+        </div>
+      </div>
+      <div class="lift-bar-wrapper">
+        <div class="lift-bar-bg">
+          <div class="lift-bar-fill" style="width: 89%;"></div>
+        </div>
+        <span class="lift-bar-label">89% Win Rate</span>
+      </div>
+    </div>
+
+    <!-- Per-Prompt Loss Audit Table -->
+    <div class="card per-prompt-card">
+      <div class="card-header">
+        <div>
+          <h3 class="card-title">📋 Search Prompts Breakdown</h3>
+          <p class="card-subtitle">Why competitors outrank your brand on each individual query</p>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="peec-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Search Query</th>
+              <th>Winning Competitor</th>
+              <th>Top Missing Tag</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="perPromptTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Recurrence Bar Chart Card -->
+    <div class="card recurrence-chart-card">
+      <div class="card-header">
+        <div>
+          <h3 class="card-title">📊 Fix Recurrence across Monitored Prompts</h3>
+          <p class="card-subtitle">Which fixes will help you win back the most search queries</p>
+        </div>
+      </div>
+      <div class="bars-container" id="recurrenceBarsList"></div>
+    </div>
+
+    <!-- Ranked Insights List -->
+    <div class="action-feed-header">
+      <h2 class="feed-title">🔥 Ranked Fixes (Fix Once, Win Multiple Searches)</h2>
+      <span class="feed-subtitle">Fix #1 first for the highest ROI</span>
+    </div>
+
+    <div class="portfolio-insights-list" id="portfolioInsightsList"></div>
+
+    <!-- Bulk Export Bar -->
+    <div class="export-handoff-card">
+      <div class="handoff-left">
+        <div class="handoff-title">Export Consolidated Portfolio Plan</div>
+        <div class="handoff-desc">Download a complete marketing plan or export sprint-ready Jira stories for your developers.</div>
+      </div>
+      <div class="handoff-actions">
+        <button class="btn-outline" id="btnCopyPortfolioBrief">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          <span>Copy Bulk Summary</span>
+        </button>
+        <button class="btn-outline" id="btnCopyJiraBacklog">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+          <span>Copy Jira Backlog</span>
+        </button>
+        <button class="btn-black" id="btnDownloadPortfolioBrief">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <span>⬇️ Download Portfolio Report (.md)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
