@@ -5,34 +5,45 @@ interface Props {
 }
 
 const {
-  title = "Peec AI — Generative Citation Gap Synthesizer",
-  description = "Turn diagnostic AI search visibility losses into actionable content remediation briefs and sprint-ready Jira stories."
+  title = "Citation Gap Analyzer — Peec AI",
+  description = "See exactly what your competitor has that you don't — schema, proof points, and keywords that get cited by AI."
 } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔍</text></svg>" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style is:global>
       :root {
-        --bg-dark: #0B0F19;
-        --card-bg: rgba(22, 30, 49, 0.6);
-        --card-border: rgba(255, 255, 255, 0.08);
-        --accent-indigo: #6366F1;
-        --accent-purple: #818CF8;
-        --text-main: #F8FAFC;
-        --text-muted: #94A3B8;
+        --bg: #FFFFFF;
+        --bg-subtle: #F9FAFB;
+        --bg-hover: #F3F4F6;
+        --border: #E5E7EB;
+        --border-strong: #D1D5DB;
+        --text: #111827;
+        --text-secondary: #6B7280;
+        --text-tertiary: #9CA3AF;
+        --accent: #6366F1;
+        --accent-hover: #4F46E5;
+        --accent-light: #EEF2FF;
+        --accent-text: #4F46E5;
         --success: #10B981;
+        --success-light: #ECFDF5;
         --warning: #F59E0B;
-        --danger: #F43F5E;
+        --warning-light: #FFFBEB;
+        --danger: #EF4444;
+        --danger-light: #FEF2F2;
       }
-      
+
       * {
         box-sizing: border-box;
         margin: 0;
@@ -40,16 +51,17 @@ const {
       }
 
       body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        background-color: var(--bg-dark);
-        color: var(--text-main);
+        font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
         line-height: 1.5;
         min-height: 100vh;
         -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
 
       a {
-        color: var(--accent-purple);
+        color: var(--accent);
         text-decoration: none;
       }
       a:hover {
@@ -57,20 +69,11 @@ const {
       }
 
       code, pre {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-family: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       }
 
-      /* Scrollbar */
-      ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #0F172A;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #334155;
-        border-radius: 3px;
+      input, button, select {
+        font-family: inherit;
       }
     </style>
   </head>
