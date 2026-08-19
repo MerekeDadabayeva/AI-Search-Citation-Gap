@@ -1,0 +1,19 @@
+{
+  "name": "ai-search-citation-gap",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Autonomous Generative Citation Gap & Content Remediation Synthesizer for Peec AI",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^4.16.18"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

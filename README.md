@@ -2,12 +2,21 @@
 
 [![Organization: Peec AI](https://img.shields.io/badge/Organization-Peec%20AI%20(Berlin)-6366F1)](https://peec.ai)
 [![Author: Mereke Dadabayeva](https://img.shields.io/badge/Author-Mereke%20Dadabayeva%20(PM)-10B981)](#)
+[![Framework: Astro Static](https://img.shields.io/badge/Framework-Astro%20v4-FF5D01)](https://astro.build)
+[![Deployment: GitHub Pages](https://img.shields.io/badge/Deployment-GitHub%20Pages-22C55E)](https://merekedadabayeva.github.io/AI-Search-Citation-Gap/)
 [![Status: Sprint Ready](https://img.shields.io/badge/Status-Sprint%20Ready%20(PEEC--408)-06B6D4)](#)
 [![Estimate: 5 Story Points](https://img.shields.io/badge/Estimate-5%20Story%20Points-F59E0B)](#)
-[![Tests: 8 Passed](https://img.shields.io/badge/Tests-8%20Passing%20(100%25)-10B981)](#)
 
 > **Closing Peec AI's Core Market Challenge — The "Actionability Gap":**  
 > Users see when they lose generative search citations (in ChatGPT Search, Perplexity AI, Google Gemini) to competitors, but lack the exact structured content adjustments needed to win them back. This engine bridges diagnostic AI search visibility data directly to engineering and marketing execution.
+
+---
+
+## 🌐 Live Interactive Application (GitHub Pages)
+
+👉 **[https://merekedadabayeva.github.io/AI-Search-Citation-Gap/](https://merekedadabayeva.github.io/AI-Search-Citation-Gap/)**
+
+Built with **Astro** for sub-10ms instant client-side execution, zero backend hosting overhead, and automated CI/CD deployment via GitHub Actions.
 
 ---
 
@@ -21,8 +30,9 @@ While AI search monitors detect **when** a brand loses citation visibility and *
 * Engineering squads receive vague requests without strict Gherkin acceptance criteria or scope limits.
 
 The **Autonomous Generative Citation Gap & Content Remediation Synthesizer** automates deterministic extraction, enforces a **Zero-Extrapolation Constraint**, and immediately outputs dual handoffs:
-1. **Track A (Marketer Brief):** 1-Click exportable Markdown Content Brief with copy-pasteable JSON-LD schemas, benchmark comparisons, and topic entities.
+1. **Track A (Marketer Brief):** 1-Click exportable Markdown Content Brief with copy-pasteable JSON-LD schemas, benchmark comparisons, and topic entities (agency client deliverable).
 2. **Track B (Engineering Jira Spec):** Sprint-ready Agile story (`PEEC-408`, 5 Story Points, `AI-Gateway`) with strict Gherkin acceptance criteria and hard V1 scope boundaries.
+3. **Continuous Retention Loop:** "Verify Live Remediation" interactive DOM audit validator.
 
 ---
 
@@ -33,87 +43,51 @@ The **Autonomous Generative Citation Gap & Content Remediation Synthesizer** aut
 │                        GEO CITATION GAP & REMEDIATION PIPELINE                         │
 ├────────────────────────────────────────────────────────────────────────────────────────┤
 │ [Tracked Prompt + User Domain + Cited Competitor URL]                                  │
-│           ➔ [Deterministic Scraper: Ingest HTML, Schemas, & Authority Claims]          │
+│           ➔ [Deterministic Ingestion: Ingest HTML, Schemas, & Authority Claims]        │
 │           ➔ [LLM Gateway: Zero-Extrapolation Semantic & Entity Delta Diff]             │
 │           ➔ [Dual Output Handoff]                                                      │
-│               ├─ Marketer: 1-Click Markdown Remediation Brief                          │
+│               ├─ Marketer: 1-Click Markdown Remediation Brief (Agency-Ready)           │
 │               └─ Dev Squad: Sprint-Ready Jira Ticket (Gherkin AC + V1 Scope Limits)    │
 └────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🚀 Key Deliverables & Documentation
+## 🚀 Key Features
 
-| Deliverable | Description | Location / File |
-| :--- | :--- | :--- |
-| 💻 **Interactive Live App** | Streamlit Web Application with presets, side-by-side inspection, and export | [`app.py`](app.py) |
-| 📄 **PRD Document** | Full Product Requirements Document (Pipeline, Architecture, KPIs) | [`PRD.md`](PRD.md) |
-| 🎫 **Jira Ticket Spec** | Developer Jira Specification (`PEEC-408`, Gherkin Scenarios, V1 Limits) | [`JIRA_PEEC_102.md`](JIRA_PEEC_102.md) |
-| 📊 **Executive Pitch Deck** | 5-Slide Pitch Deck with speaker notes & teardown | [`PRESENTATION.md`](PRESENTATION.md) |
-| 🧪 **Automated Test Suite** | 8 unit and end-to-end pipeline verification tests | [`tests/test_pipeline.py`](tests/test_pipeline.py) |
+* **⚡ Quick Wins vs. Strategic Refactors Filter:** Filter gaps by `< 15 min` markup fixes vs. 1–2 day content refactors.
+* **🔄 Closed-Loop DOM Verification:** Re-audits live pages to verify if missing Schema.org JSON-LD definitions were deployed, computing projected citation win probabilities.
+* **📋 Agency Deliverables:** 1-Click copy-to-clipboard and Markdown download for client reports.
+* **🛡️ Zero-Extrapolation Guardrail:** Every claim is verified verbatim against primary source text with `Verify Source ↗` anchors.
 
 ---
 
-## 🎯 Scope Matrix (Agile Boundaries)
+## ⚡ Local Development & Build
 
-| ✅ In-Scope (Version 1 MVP) | 🛑 Explicitly Out-of-Scope (V1 Limits) |
-| :--- | :--- |
-| • Side-by-side entity and factual delta parser | 🛑 Direct CMS auto-publishing (WordPress/Webflow) |
-| • JSON-LD schema and microdata extractor | 🛑 Automated cold backlink/PR email outreach |
-| • Instant 1-click **Markdown Content Brief** export | 🛑 Real-time scraping behind paid paywalls |
-| • Asynchronous processing with 24-hour cache TTL (< 1.5s) | 🛑 Multi-tenant workspace role management |
-| • Graceful 403 / Anti-bot fallback handler | 🛑 Custom LLM model fine-tuning |
-| • Inspectable raw scraped payload drawer with primary source links | |
-
----
-
-## 🧪 Data Provenance & Zero-Extrapolation Guardrail
-
-To eliminate AI hallucinations and establish trust with enterprise marketing teams:
-1. **Deterministic Primary Ingestion:** Raw HTML, JSON-LD schemas (`application/ld+json`), and OpenGraph metadata are parsed directly from target URLs.
-2. **Zero-Extrapolation Constraint:** The diff engine is strictly constrained to cite facts *only* if they exist verbatim in the scraped text corpus; otherwise omitted.
-3. **Inspectable Scraped Payload Drawer:** Collapsible UI drawer provides full transparency into HTTP status (`200 OK` / `403 Fallback`), fetch timestamp, content length, and raw extracted text.
-4. **Primary Source Anchors:** Every benchmark comparison includes an active `Verify Source ↗` hyperlink pointing directly to the live competitor page.
-
----
-
-## ⚡ Quick Start & Installation
-
-### 1. Prerequisites
-- Python 3.10+ (Tested on Python 3.11)
-
-### 2. Setup Virtual Environment & Install Dependencies
+### 1. Install Dependencies
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+npm install
 ```
 
-### 3. Run the Interactive Streamlit App
+### 2. Start Astro Development Server
 ```bash
-streamlit run app.py
+npm run dev
 ```
 
-### 4. Run Automated Test Suite
+### 3. Build Production Static Site
 ```bash
-pytest -v
+npm run build
 ```
 
----
-
-## 📊 Presentation Assets for Peec AI
-
-| Asset | Where to Host / Present | What It Proves to Peec AI Founders & Leads |
-| :--- | :--- | :--- |
-| **Interactive Live App** | Streamlit Cloud / Local | Shows ability to prototype working AI products before engineering commits sprint capacity. |
-| **Public GitHub Repo** | `github.com/MerekeDadabayeva` | Clean Python code, Pydantic data schemas, robust ingestion, and async caching architecture. |
-| **1-Page Teardown & PRD** | Attached to LinkedIn / Email | Proves deep domain fluency in Generative Engine Optimization (GEO) and sprint-ready Gherkin spec writing. |
+### 4. Preview Production Build
+```bash
+npm run preview
+```
 
 ---
 
 ## 👤 Author & Organization
 
-* **Lead Author & Product Manager:** Mereke Dadabayeva
+* **Lead Product Manager & Engineer:** Mereke Dadabayeva
 * **Target Organization:** Peec AI (Berlin)
-* **Status:** Sprint Ready (Ticket: `PEEC-408` / `PEEC-102` Series)\n
+* **Status:** Sprint Ready (Ticket: `PEEC-408` Series)

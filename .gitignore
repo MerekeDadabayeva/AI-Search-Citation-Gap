@@ -1,23 +1,18 @@
-# Python
+# Node & Astro
+node_modules/
+dist/
+.astro/
+
+# Python (if any)
 .venv/
 venv/
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
-
-# Testing & Cache
 .pytest_cache/
-.coverage
-htmlcov/
 
-# Environment variables
-.env
-.env.local
-
-# OS
+# OS & Environment
 .DS_Store
 Thumbs.db
-
-# Streamlit
-.streamlit/secrets.toml
+.env
+.env.local
+.env.*.local
