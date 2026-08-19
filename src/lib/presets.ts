@@ -17,12 +17,12 @@ export const PRESETS: Record<string, PresetScenario> = {
       metaDescription: 'Manage your contacts and deals easily with modern pipelines.',
       h1Tags: ['Next-Gen CRM for Modern Teams'],
       h2Tags: ['Simple Pipeline Management', 'Affordable Pricing'],
-      cleanedText: 'Next-Gen CRM for Modern Teams. Simple Pipeline Management. Contact management and pipeline tracking starting at \/user/month. Fast onboarding and friendly customer support. Integrates with your email and calendars.',
+      cleanedText: 'Next-Gen CRM for Modern Teams. Simple Pipeline Management. Contact management and pipeline tracking starting at $19/user/month. Fast onboarding and friendly customer support. Integrates with your email and calendars.',
       rawHtmlSnippet: '<html>...</html>',
       jsonLdSchemas: [],
       schemaTypes: [],
-      extractedStatistics: ['\/user/month'],
-      pricingClaims: ['\/user/month', 'free trial'],
+      extractedStatistics: ['$19/user/month'],
+      pricingClaims: ['$19/user/month', 'free trial'],
       complianceBadges: [],
       detectedEntities: ['REST API', 'CSV Export'],
       fetchTimestamp: '2026-08-19 12:00:00 UTC'
@@ -37,7 +37,7 @@ export const PRESETS: Record<string, PresetScenario> = {
       metaDescription: 'Attio is the CRM built for high-growth tech companies with real-time data sync and automatic relationship intelligence.',
       h1Tags: ['The Next-Generation Data-Driven CRM'],
       h2Tags: ['Real-time 10ms sync engine', 'Automatic Relationship Intelligence', 'SOC-2 Type II Certified Security', 'Transparent Usage & Tier Pricing'],
-      cleanedText: 'Attio is the CRM built for high-growth tech companies. Real-time 10ms sync engine. Automatic relationship intelligence across 10,000+ teams. Trusted by top startups. Pricing starts at \/user/month for Starter and \/user/month for Pro. Enterprise features include SOC-2 Type II, GDPR compliance, HIPAA readiness, SAML SSO, and SCIM provisioning. Rated 4.9/5 stars by over 1,200 tech teams. Powered by GraphQL API and bi-directional webhooks.',
+      cleanedText: 'Attio is the CRM built for high-growth tech companies. Real-time 10ms sync engine. Automatic relationship intelligence across 10,000+ teams. Trusted by top startups. Pricing starts at $29/user/month for Starter and $59/user/month for Pro. Enterprise features include SOC-2 Type II, GDPR compliance, HIPAA readiness, SAML SSO, and SCIM provisioning. Rated 4.9/5 stars by over 1,200 tech teams. Powered by GraphQL API and bi-directional webhooks.',
       rawHtmlSnippet: '<html>...</html>',
       jsonLdSchemas: [
         {
@@ -60,38 +60,38 @@ export const PRESETS: Record<string, PresetScenario> = {
           ]
         }
       ],
-      schemaTypes: ['SoftwareApplication', 'FAQPage', 'Offer', 'AggregateRating'],
-      extractedStatistics: ['\/user/month', '\/user/month', '10ms', '10,000+ teams', '4.9/5 stars', '1,200 tech teams'],
-      pricingClaims: ['\/user/month', '\/user/month', 'custom enterprise'],
+      schemaTypes: ['SoftwareApplication', 'FAQPage', 'AggregateRating', 'Offer'],
+      extractedStatistics: ['$29/user/month', 'sub-10ms', '10,000+ teams', '4.9/5 stars'],
+      pricingClaims: ['$29/user/month', '$59/user/month', 'free trial'],
       complianceBadges: ['SOC-2 TYPE II', 'GDPR', 'HIPAA'],
-      detectedEntities: ['REST API', 'GraphQL', 'Webhooks', 'SOC-2', 'SAML SSO', 'SCIM', 'Audit Logs', 'Real-time Collaboration'],
+      detectedEntities: ['GraphQL & REST API', 'Real-time Webhooks', 'SOC-2 Type II & GDPR', 'SAML SSO & SCIM'],
       fetchTimestamp: '2026-08-19 12:00:00 UTC'
     }
   },
   geo_search_analytics: {
     id: 'geo_search_analytics',
-    name: 'AI Search & GEO Analytics (Peec AI vs Legacy Tracker)',
+    name: 'AI Search Analytics (Peec AI vs Legacy Tracker)',
     query: 'best generative engine optimization and ai search tracking tool',
-    brandUrl: 'https://legacy-rank-tracker.com',
+    brandUrl: 'https://our-legacy-tracker.com',
     competitorUrl: 'https://peec.ai',
     brandData: {
-      url: 'https://legacy-rank-tracker.com',
-      domain: 'legacy-rank-tracker.com',
+      url: 'https://our-legacy-tracker.com',
+      domain: 'our-legacy-tracker.com',
       statusCode: 200,
       isFallback: false,
       contentLengthChars: 410,
-      title: 'Traditional Search Rank Tracker & SERP Checker',
-      metaDescription: 'Check your Google keyword rank position and weekly organic search visibility.',
-      h1Tags: ['Traditional Search Rank Tracker'],
-      h2Tags: ['Track Google Keyword Rankings', 'Weekly Email Reports'],
-      cleanedText: 'Traditional Search Rank Tracker. Check your Google keyword rank position and weekly organic search visibility. Weekly SERP tracking starting at \/month for 500 keywords.',
+      title: 'RankTracker Legacy — Google SERP Rank Tracker',
+      metaDescription: 'Monitor your website rank across standard Google search queries.',
+      h1Tags: ['Google SERP Rank Tracker'],
+      h2Tags: ['Track Google Keywords'],
+      cleanedText: 'RankTracker Legacy tracks keywords across Google desktop and mobile. Historical rank graphs and daily reporting.',
       rawHtmlSnippet: '<html>...</html>',
       jsonLdSchemas: [],
       schemaTypes: [],
-      extractedStatistics: ['\/month', '500 keywords'],
-      pricingClaims: ['\/month'],
+      extractedStatistics: [],
+      pricingClaims: ['$49/month'],
       complianceBadges: [],
-      detectedEntities: ['CSV Export'],
+      detectedEntities: ['Google SERP API'],
       fetchTimestamp: '2026-08-19 12:00:00 UTC'
     },
     competitorData: {
@@ -99,12 +99,12 @@ export const PRESETS: Record<string, PresetScenario> = {
       domain: 'peec.ai',
       statusCode: 200,
       isFallback: false,
-      contentLengthChars: 1100,
-      title: 'Peec AI &mdash; Generative Engine Optimization (GEO) & AI Search Intelligence',
-      metaDescription: 'Peec AI tracks and optimizes your brand visibility across ChatGPT Search, Perplexity AI, Google Gemini, and Claude.',
-      h1Tags: ['Generative Engine Optimization (GEO) & AI Search Intelligence'],
-      h2Tags: ['Multi-LLM Citation Tracking', 'Actionable Entity Delta Diff', 'Sub-second Diagnostic API', 'SOC-2 Type II Enterprise Security'],
-      cleanedText: 'Peec AI tracks brand visibility across ChatGPT Search, Perplexity AI, Google Gemini, and Claude. Ingests 50,000+ generative prompts daily with sub-1.5s cached latency. Features zero-extrapolation semantic entity diffs. Pricing starts at \/month for Growth and \/month for Agencies. Built with SOC-2 Type II and GDPR compliance. Trusted by over 500+ fast-growing enterprise marketing squads.',
+      contentLengthChars: 1180,
+      title: 'Peec AI &mdash; Autonomous AI Search Analytics & GEO Synthesizer',
+      metaDescription: 'Peec AI empowers brands to measure, benchmark, and optimize their visibility across ChatGPT, Perplexity, and Gemini Search.',
+      h1Tags: ['Win Citations Across ChatGPT, Perplexity, and Gemini'],
+      h2Tags: ['Autonomous Citation Gap Remediation', 'Real-time Model Share of Voice', 'Automated JSON-LD Schema Synthesizer', 'Enterprise Security & SOC-2'],
+      cleanedText: 'Peec AI empowers brands to monitor and win citations across ChatGPT, Perplexity, and Gemini. Features real-time AI visibility tracking, automated zero-extrapolation citation gap remediation, and instant engineer-ready Jira export. Starting at $99/mo with SOC-2 Type II and GDPR compliance.',
       rawHtmlSnippet: '<html>...</html>',
       jsonLdSchemas: [
         {
@@ -112,52 +112,41 @@ export const PRESETS: Record<string, PresetScenario> = {
           '@type': 'SoftwareApplication',
           'name': 'Peec AI',
           'applicationCategory': 'MarketingApplication',
-          'offers': { '@type': 'Offer', 'price': '199.00', 'priceCurrency': 'USD' }
-        },
-        {
-          '@context': 'https://schema.org',
-          '@type': 'FAQPage',
-          'mainEntity': [
-            {
-              '@type': 'Question',
-              'name': 'Which AI search engines does Peec AI track?',
-              'acceptedAnswer': { '@type': 'Answer', 'text': 'Peec AI monitors ChatGPT Search, Perplexity AI, Google Gemini, and Claude in real time.' }
-            }
-          ]
+          'offers': { '@type': 'Offer', 'price': '99.00', 'priceCurrency': 'USD' }
         }
       ],
-      schemaTypes: ['SoftwareApplication', 'FAQPage', 'Offer'],
-      extractedStatistics: ['\/month', '\/month', '50,000+ prompts', 'sub-1.5s', '500+ teams'],
-      pricingClaims: ['\/month', '\/month', 'custom enterprise'],
+      schemaTypes: ['SoftwareApplication', 'Offer'],
+      extractedStatistics: ['$99/mo', '3 major AI models', 'sub-2s audit'],
+      pricingClaims: ['$99/mo', 'custom enterprise'],
       complianceBadges: ['SOC-2 TYPE II', 'GDPR'],
-      detectedEntities: ['REST API', 'Webhooks', 'OpenAI', 'Gemini', 'Anthropic', 'Semantic Indexing', 'Audit Logs'],
+      detectedEntities: ['ChatGPT Search', 'Perplexity Sonar', 'Gemini Pro', 'Zero-Extrapolation Engine', 'Schema Generator'],
       fetchTimestamp: '2026-08-19 12:00:00 UTC'
     }
   },
   billing_usage_based: {
     id: 'billing_usage_based',
-    name: 'Usage-Based Billing for AI (Lago vs Generic Billing)',
-    query: 'open source meter-based billing software for ai agents',
-    brandUrl: 'https://generic-billing-software.io',
+    name: 'Usage-Based Billing (Lago vs Generic Billing)',
+    query: 'open source metering and usage-based billing for ai platforms',
+    brandUrl: 'https://generic-billing-demo.io',
     competitorUrl: 'https://getlago.com',
     brandData: {
-      url: 'https://generic-billing-software.io',
-      domain: 'generic-billing-software.io',
+      url: 'https://generic-billing-demo.io',
+      domain: 'generic-billing-demo.io',
       statusCode: 200,
       isFallback: false,
       contentLengthChars: 380,
-      title: 'Simple Invoice Generator and Subscription Manager',
-      metaDescription: 'Create monthly recurring subscription invoices for your customers.',
-      h1Tags: ['Simple Subscription Invoicing'],
-      h2Tags: ['Monthly Recurring Billing'],
-      cleanedText: 'Simple Subscription Invoicing. Create monthly recurring subscription invoices for your customers. Pricing starts at \/month for up to 100 invoices. Stripe integration included.',
+      title: 'SimpleInvoice — Easy Recurring Billing',
+      metaDescription: 'Send PDF invoices and collect payments online.',
+      h1Tags: ['Easy Recurring Billing for Teams'],
+      h2Tags: ['Credit Card Payments'],
+      cleanedText: 'SimpleInvoice lets you create invoices and collect payments with Stripe integration. Simple fixed monthly plans.',
       rawHtmlSnippet: '<html>...</html>',
       jsonLdSchemas: [],
       schemaTypes: [],
-      extractedStatistics: ['\/month', '100 invoices'],
-      pricingClaims: ['\/month'],
+      extractedStatistics: [],
+      pricingClaims: ['2.9% + 30c'],
       complianceBadges: [],
-      detectedEntities: ['Stripe Billing'],
+      detectedEntities: ['Stripe Payments'],
       fetchTimestamp: '2026-08-19 12:00:00 UTC'
     },
     competitorData: {
@@ -165,34 +154,34 @@ export const PRESETS: Record<string, PresetScenario> = {
       domain: 'getlago.com',
       statusCode: 200,
       isFallback: false,
-      contentLengthChars: 1180,
-      title: 'Lago &mdash; Open-Source Metering & Usage-Based Billing for AI',
-      metaDescription: 'Lago is the leading open-source usage-based billing platform designed for high-scale AI API metering and hybrid models.',
-      h1Tags: ['Open-Source Metering & Usage-Based Billing for AI'],
-      h2Tags: ['High-throughput event ingestion (100k+ events/sec)', 'Real-time prepaid credits and wallets', 'SOC-2 Type II Certified', 'Developer-first REST and GraphQL APIs'],
-      cleanedText: 'Lago is the open-source usage-based billing platform designed for high-scale AI API metering. Handles 100,000+ events/sec with sub-5ms ingestion latency. Open-source AGPL-3.0 with over 6,500+ GitHub stars. Cloud tier starts at \/month. SOC-2 Type II certified and PCI-DSS Level 1 compliant. Native integrations with Stripe Billing, Segment, and Snowflake.',
+      contentLengthChars: 1300,
+      title: 'Lago &mdash; Open-Source Metering and Usage-Based Billing Platform',
+      metaDescription: 'Lago is the open-source metering and billing infrastructure engineered for modern AI, SaaS, and API businesses.',
+      h1Tags: ['Open-Source Metering & Usage-Based Billing'],
+      h2Tags: ['High-Throughput Ingestion Engine (100k events/sec)', 'Real-Time Dynamic Pricing Models', 'SOC-2 Type II Certified & GDPR Compliant', 'Self-Hosted or Cloud Managed'],
+      cleanedText: 'Lago provides high-throughput metering scaling to 100,000+ events per second with sub-5ms latency. Designed for AI workloads with token-based pricing, pay-as-you-go, and hybrid recurring models. Open-source core with cloud tier. Certified SOC-2 Type II, GDPR, and HIPAA compliant.',
       rawHtmlSnippet: '<html>...</html>',
       jsonLdSchemas: [
         {
           '@context': 'https://schema.org',
           '@type': 'SoftwareApplication',
           'name': 'Lago',
-          'applicationCategory': 'FinanceApplication',
-          'offers': { '@type': 'Offer', 'price': '290.00', 'priceCurrency': 'USD' }
+          'applicationCategory': 'DeveloperApplication',
+          'offers': { '@type': 'Offer', 'price': '0.00', 'priceCurrency': 'USD' }
         }
       ],
       schemaTypes: ['SoftwareApplication', 'Offer'],
-      extractedStatistics: ['\/month', '100,000+ events/sec', 'sub-5ms', '6,500+ stars'],
-      pricingClaims: ['\/month', 'open-source free tier', 'enterprise custom'],
-      complianceBadges: ['SOC-2 TYPE II', 'PCI-DSS'],
-      detectedEntities: ['REST API', 'GraphQL', 'Webhooks', 'Stripe Billing', 'Snowflake', 'PostgreSQL', 'Role-Based Access'],
+      extractedStatistics: ['100,000+ events/sec', 'sub-5ms', '100% open source'],
+      pricingClaims: ['free open source', '$250/mo cloud'],
+      complianceBadges: ['SOC-2 TYPE II', 'GDPR', 'HIPAA'],
+      detectedEntities: ['Real-Time Metering', 'GraphQL & REST API', 'Segment Integration', 'Kafka Stream Ingestion'],
       fetchTimestamp: '2026-08-19 12:00:00 UTC'
     }
   },
   vector_database_rag: {
     id: 'vector_database_rag',
-    name: 'Vector DB for Production RAG (Qdrant vs Basic Store)',
-    query: 'fastest vector database for billion-scale production rag',
+    name: 'Vector DB for RAG (Qdrant vs Basic Store)',
+    query: 'high performance vector database for enterprise rag systems',
     brandUrl: 'https://basic-vector-store.dev',
     competitorUrl: 'https://qdrant.tech',
     brandData: {
@@ -225,7 +214,7 @@ export const PRESETS: Record<string, PresetScenario> = {
       metaDescription: 'Qdrant is the ultra-fast Rust-native vector database engineered for billion-scale semantic search and RAG.',
       h1Tags: ['Vector Search Engine for Production AI & RAG'],
       h2Tags: ['Rust-Native Performance (<4ms search latency)', 'Payload-based dynamic filtering', 'Billion-Scale Distributed Clustering', 'SOC-2 Type II and ISO 27001 Certified'],
-      cleanedText: 'Qdrant is the ultra-fast Rust-native vector database. Engineered for billion-scale vector search with <4ms p99 latency. Handles over 10,000,000+ vectors per node. Cloud managed tier starting at \/month. Certified SOC-2 Type II, ISO 27001, and GDPR compliant. Seamlessly connects with OpenAI, Anthropic, Gemini, and LangChain.',
+      cleanedText: 'Qdrant is the ultra-fast Rust-native vector database. Engineered for billion-scale vector search with <4ms p99 latency. Handles over 10,000,000+ vectors per node. Cloud managed tier starting at $25/month. Certified SOC-2 Type II, ISO 27001, and GDPR compliant. Seamlessly connects with OpenAI, Anthropic, Gemini, and LangChain.',
       rawHtmlSnippet: '<html>...</html>',
       jsonLdSchemas: [
         {
@@ -237,8 +226,8 @@ export const PRESETS: Record<string, PresetScenario> = {
         }
       ],
       schemaTypes: ['SoftwareApplication', 'Offer'],
-      extractedStatistics: ['\/month', '<4ms', '10,000,000+ vectors', '99.99% uptime'],
-      pricingClaims: ['\/month', 'free cloud tier', 'custom enterprise'],
+      extractedStatistics: ['$25/month', '<4ms', '10,000,000+ vectors', '99.99% uptime'],
+      pricingClaims: ['$25/month', 'free cloud tier', 'custom enterprise'],
       complianceBadges: ['SOC-2 TYPE II', 'ISO 27001', 'GDPR'],
       detectedEntities: ['REST API', 'GraphQL', 'OpenAI', 'Anthropic', 'Gemini', 'Vector Search', 'Semantic Indexing', 'Role-Based Access'],
       fetchTimestamp: '2026-08-19 12:00:00 UTC'
@@ -337,3 +326,32 @@ export const PORTFOLIO_DEMO_PROMPTS = [
   }
 ];
 
+export const PORTFOLIO_CLUSTERS: Record<string, { name: string; brandUrl: string; prompts: Array<{ query: string; competitorUrl: string }> }> = {
+  crm_suite: {
+    name: "CRM & Sales Tech Cluster",
+    brandUrl: "https://our-saas-crm.io",
+    prompts: [
+      { query: "Best CRM for Early-Stage B2B Startups", competitorUrl: "https://attio.com" },
+      { query: "Best AI-Native Sales Platform for Tech Companies", competitorUrl: "https://monday.com" },
+      { query: "Top CRM Software with GraphQL API & Real-time Webhooks", competitorUrl: "https://hubspot.com" }
+    ]
+  },
+  ai_analytics: {
+    name: "GEO & AI Search Analytics Cluster",
+    brandUrl: "https://our-legacy-tracker.com",
+    prompts: [
+      { query: "best generative engine optimization and ai search tracking tool", competitorUrl: "https://peec.ai" },
+      { query: "how to track chatgpt citations and perplexity visibility", competitorUrl: "https://peec.ai" },
+      { query: "top enterprise ai brand visibility monitoring software", competitorUrl: "https://peec.ai" }
+    ]
+  },
+  vector_db: {
+    name: "Vector Database & RAG Cluster",
+    brandUrl: "https://basic-vector-store.dev",
+    prompts: [
+      { query: "high performance vector database for enterprise rag systems", competitorUrl: "https://qdrant.tech" },
+      { query: "fastest rust vector database with payload filtering", competitorUrl: "https://qdrant.tech" },
+      { query: "production scale vector index with sub-4ms query latency", competitorUrl: "https://qdrant.tech" }
+    ]
+  }
+};

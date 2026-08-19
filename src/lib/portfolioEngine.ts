@@ -2,6 +2,7 @@ import type {
   CitationGapResult,
   RecurringGapInsight,
   PortfolioAnalysisResult,
+  PerPromptBreakdown,
 } from "./types";
 
 export class PortfolioAggregator {
@@ -22,8 +23,10 @@ export class PortfolioAggregator {
         totalPromptsAnalyzed: 0,
         totalDistinctCompetitors: 0,
         prompts: [],
+        perPromptBreakdowns: [],
         recurringGaps: [],
         bulkMarkdownBrief: `# Peec AI Portfolio Remediation Brief\n\nNo prompts analyzed.`,
+        sprintJiraBacklog: `# Jira Sprint Backlog\n\nNo issues generated.`,
         timestamp: new Date().toISOString(),
       };
     }
@@ -31,6 +34,7 @@ export class PortfolioAggregator {
     const totalPrompts = results.length;
     const distinctCompetitors = new Set<string>();
     const promptsList: string[] = [];
+    const perPromptBreakdowns: PerPromptBreakdown[] = [];
 
     // Accumulator map: gapKey -> aggregated object
     const accumulator: Map<
@@ -43,13 +47,27 @@ export class PortfolioAggregator {
         prompts: Set<string>;
         competitorUrls: Set<string>;
         recs: string[];
+        codeSnippet: string;
+        lossReason: string;
       }
     > = new Map();
 
     for (const res of results) {
       promptsList.push(res.query);
-      distinctCompetitors.add(res.competitorPayload.domain);
+      const compDomain = res.competitorPayload.domain || "competitor.com";
+      distinctCompetitors.add(compDomain);
       const compUrl = res.competitorPayload.url;
+
+      perPromptBreakdowns.push({
+        query: res.query,
+        competitorUrl: compUrl,
+        competitorDomain: compDomain,
+        schemaGapsCount: res.schemaGaps.length,
+        benchmarkGapsCount: res.benchmarkGaps.length,
+        entityGapsCount: res.entityGaps.length,
+        topMissingSchema: res.schemaGaps.length > 0 ? res.schemaGaps[0].schemaType : "None",
+        status: (res.schemaGaps.length > 0 || res.benchmarkGaps.length > 0) ? "CRITICAL_GAPS" : "AUDITED"
+      });
 
       // 1. Process Schema Gaps
       for (const sg of res.schemaGaps) {
@@ -58,11 +76,13 @@ export class PortfolioAggregator {
           accumulator.set(key, {
             gapKey: key,
             gapType: "Schema Markup",
-            displayName: `Schema @type ${sg.schemaType}`,
+            displayName: `Schema.org @type ${sg.schemaType}`,
             citationWeight: "CRITICAL",
             prompts: new Set(),
             competitorUrls: new Set(),
             recs: [],
+            codeSnippet: sg.recommendedJsonLd || `<script type="application/ld+json">\n{\n  "@context": "https://schema.org",\n  "@type": "${sg.schemaType}"\n}\n</script>`,
+            lossReason: sg.impactReason || "Parsed directly by AI search engines (Perplexity, ChatGPT Search) to ground structured answer cards."
           });
         }
         const acc = accumulator.get(key)!;
@@ -70,6 +90,9 @@ export class PortfolioAggregator {
         acc.competitorUrls.add(compUrl);
         if (sg.impactReason && !acc.recs.includes(sg.impactReason)) {
           acc.recs.push(sg.impactReason);
+        }
+        if (sg.recommendedJsonLd && acc.codeSnippet.length < sg.recommendedJsonLd.length) {
+          acc.codeSnippet = sg.recommendedJsonLd;
         }
       }
 
@@ -80,11 +103,13 @@ export class PortfolioAggregator {
           accumulator.set(key, {
             gapKey: key,
             gapType: "Benchmark / Metric",
-            displayName: `Metric: ${bg.metricName}`,
+            displayName: `Quantitative Metric: ${bg.metricName}`,
             citationWeight: "HIGH",
             prompts: new Set(),
             competitorUrls: new Set(),
             recs: [],
+            codeSnippet: `// Suggested landing page stat insertion:\n"${bg.metricName}: ${bg.competitorValue}"\nRecommendation: ${bg.recommendation}`,
+            lossReason: `Competitors explicitly quote "${bg.competitorValue}", giving LLMs hard numerical evidence for comparison queries.`
           });
         }
         const acc = accumulator.get(key)!;
@@ -103,11 +128,13 @@ export class PortfolioAggregator {
           accumulator.set(key, {
             gapKey: key,
             gapType: "Topic Entity",
-            displayName: `Entity: ${eg.entityName}`,
+            displayName: `Topic Entity: ${eg.entityName}`,
             citationWeight: weight,
             prompts: new Set(),
             competitorUrls: new Set(),
             recs: [],
+            codeSnippet: `<!-- Section Insertion Recommendation: -->\n<h3>${eg.entityName}</h3>\n<p>${eg.actionPlan}</p>`,
+            lossReason: eg.searchRelevance || "High search frequency in AI query context graphs."
           });
         }
         const acc = accumulator.get(key)!;
@@ -137,6 +164,8 @@ export class PortfolioAggregator {
         affectedPrompts: Array.from(data.prompts).sort(),
         exampleCompetitorUrls: Array.from(data.competitorUrls).sort(),
         representativeRecommendation: repRec,
+        readyCodeSnippet: data.codeSnippet,
+        lossReasonSummary: data.lossReason,
         priorityScore: score,
       });
     }
@@ -154,6 +183,12 @@ export class PortfolioAggregator {
       brandDomain,
       totalPrompts,
       distinctCompetitors.size,
+      topInsights,
+      perPromptBreakdowns
+    );
+
+    const jiraBacklog = this.generateJiraBacklog(
+      brandDomain,
       topInsights
     );
 
@@ -162,25 +197,36 @@ export class PortfolioAggregator {
       totalPromptsAnalyzed: totalPrompts,
       totalDistinctCompetitors: distinctCompetitors.size,
       prompts: promptsList,
+      perPromptBreakdowns,
       recurringGaps: topInsights,
       bulkMarkdownBrief: bulkBrief,
+      sprintJiraBacklog: jiraBacklog,
       timestamp: new Date().toISOString(),
     };
   }
 
   private static generateBulkBrief(
     brandDomain: string,
-    totalPrompts: int = 0,
+    totalPrompts: number,
     totalComps: number,
-    insights: RecurringGapInsight[]
+    insights: RecurringGapInsight[],
+    breakdowns: PerPromptBreakdown[]
   ): string {
     let md = `# 📦 Peec AI Portfolio Remediation Brief: ${brandDomain}\n\n`;
     md += `* **Target Brand:** \`${brandDomain}\`\n`;
     md += `* **Monitored Prompts Analyzed:** \`${totalPrompts}\`\n`;
     md += `* **Distinct Winning Competitors:** \`${totalComps}\`\n`;
-    md += `* **Top Recurring Gaps Identified:** \`${insights.length}\`\n\n`;
+    md += `* **Top Recurring Fixes Identified:** \`${insights.length}\`\n\n`;
     md += `---\n\n## 📌 Executive Summary (High-Leverage Fixes)\n\n`;
-    md += `Across ${totalPrompts} monitored AI search prompts where \`${brandDomain}\` is losing citations, the following recurring gaps represent the highest-leverage remediation actions. Fixing these elements once on the core landing page will simultaneously improve visibility across multiple prompt clusters.\n\n`;
+    md += `Across ${totalPrompts} monitored AI search prompts where \`${brandDomain}\` is losing citations, the following recurring gaps represent the highest-leverage remediation actions. Fixing these core items once on your main landing page resolves citation deficits across multiple prompt clusters.\n\n`;
+
+    md += `## 📋 Per-Prompt Audit Summary\n\n`;
+    md += `| # | Monitored Prompt Query | Winning Competitor | Missing Schemas | Status |\n`;
+    md += `|---|---|---|---|---|\n`;
+    breakdowns.forEach((b, i) => {
+      md += `| ${i + 1} | *"${b.query}"* | \`${b.competitorDomain}\` | \`${b.topMissingSchema}\` | ${b.status} |\n`;
+    });
+    md += `\n---\n\n`;
 
     md += `## 🎯 Ranked Recurring Fixes (Fix This Once, Win Multiple Prompts)\n\n`;
     insights.forEach((g, idx) => {
@@ -188,12 +234,45 @@ export class PortfolioAggregator {
       md += `### #${idx + 1} · ${g.displayName} (\`${g.citationWeight}\` Priority)\n\n`;
       md += `* **Recurrence:** Appears on **${g.recurrenceCount}/${g.totalPromptsAnalyzed} prompts (${pct}%)**\n`;
       md += `* **Priority Score:** \`${g.priorityScore}\`\n`;
+      md += `* **Why LLMs Favor Competitors:** ${g.lossReasonSummary}\n`;
       md += `* **Affected Prompts:**\n`;
       g.affectedPrompts.forEach((p) => {
         md += `  - *"${p}"*\n`;
       });
       md += `* **Seen on Competitor Pages:** ${g.exampleCompetitorUrls.map((u) => `[${u}](${u})`).join(", ")}\n`;
       md += `* **Action Required:** ${g.representativeRecommendation}\n\n`;
+      md += `**Code / Content Remediation Snippet:**\n\`\`\`html\n${g.readyCodeSnippet}\n\`\`\`\n\n`;
+    });
+
+    return md;
+  }
+
+  private static generateJiraBacklog(
+    brandDomain: string,
+    insights: RecurringGapInsight[]
+  ): string {
+    let md = `h1. Peec AI Remediation Sprint Backlog: ${brandDomain}\n\n`;
+    md += `*Epic:* PEEC-EPIC-12 (AI Search Citation Actionability)\n`;
+    md += `*Target Brand:* ${brandDomain}\n\n`;
+
+    insights.slice(0, 4).forEach((g, idx) => {
+      const key = `PEEC-50${idx + 1}`;
+      const points = g.citationWeight === "CRITICAL" ? 5 : (g.citationWeight === "HIGH" ? 3 : 2);
+      md += `h2. [${key}] Fix Recurring Gap: ${g.displayName} (${points} Story Points)\n\n`;
+      md += `*Issue Type:* Story\n`;
+      md += `*Priority:* ${g.citationWeight === "CRITICAL" ? "Highest" : "High"}\n`;
+      md += `*Recurrence:* ${g.recurrenceCount}/${g.totalPromptsAnalyzed} prompts\n\n`;
+      md += `*User Story:*\n`;
+      md += `AS A Growth Marketer / SEO Engineer,\n`;
+      md += `I WANT TO implement ${g.displayName} on ${brandDomain},\n`;
+      md += `SO THAT our brand wins citations across ${g.recurrenceCount} target AI search queries.\n\n`;
+      md += `*Acceptance Criteria (Gherkin):*\n`;
+      md += `{code}\n`;
+      md += `Given the ${brandDomain} landing page is deployed\n`;
+      md += `When Perplexity or ChatGPT crawls the HTML\n`;
+      md += `Then ${g.displayName} is explicitly verified in the DOM\n`;
+      md += `And citation eligibility increases across monitored prompt clusters.\n`;
+      md += `{code}\n\n`;
     });
 
     return md;

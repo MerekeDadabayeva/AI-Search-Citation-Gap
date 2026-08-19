@@ -99,6 +99,17 @@ export interface PresetScenario {
   competitorData: ScrapedPayload;
 }
 
+export interface PerPromptBreakdown {
+  query: string;
+  competitorUrl: string;
+  competitorDomain: string;
+  schemaGapsCount: number;
+  benchmarkGapsCount: number;
+  entityGapsCount: number;
+  topMissingSchema: string;
+  status: 'AUDITED' | 'CRITICAL_GAPS';
+}
+
 export interface RecurringGapInsight {
   gapKey: string;
   gapType: 'Schema Markup' | 'Benchmark / Metric' | 'Topic Entity';
@@ -109,6 +120,8 @@ export interface RecurringGapInsight {
   affectedPrompts: string[];
   exampleCompetitorUrls: string[];
   representativeRecommendation: string;
+  readyCodeSnippet: string;
+  lossReasonSummary: string;
   priorityScore: number;
 }
 
@@ -117,7 +130,10 @@ export interface PortfolioAnalysisResult {
   totalPromptsAnalyzed: number;
   totalDistinctCompetitors: number;
   prompts: string[];
+  perPromptBreakdowns: PerPromptBreakdown[];
   recurringGaps: RecurringGapInsight[];
   bulkMarkdownBrief: string;
+  sprintJiraBacklog: string;
   timestamp: string;
 }
+
