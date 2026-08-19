@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Peec AI | Citation Gap & Remediation Engine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: "#eef2ff", 100: "#e0e7ff", 400: "#818cf8", 500: "#6366f1", 600: "#4f46e5", 700: "#4338ca", 900: "#312e81" }
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap");
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+  <header class="sticky top-0 z-50 border-b border-slate-800 bg-slate-900/90 backdrop-blur px-6 py-3.5 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="h-9 w-9 rounded-xl bg-gradient-to-tr from-brand-600 to-cyan-400 flex items-center justify-center font-black text-white shadow-lg shadow-brand-500/20">P</div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="font-bold tracking-tight text-white text-base">Peec AI</span>
+          <span class="text-xs px-2 py-0.5 rounded-full font-medium bg-brand-500/20 text-brand-400 border border-brand-500/30">PEEC-102</span>
+        </div>
+        <p class="text-xs text-slate-400">Autonomous Citation Gap & Remediation Engine</p>
+      </div>
+    </div>
+    <nav class="flex items-center gap-1 bg-slate-800/70 p-1 rounded-xl border border-slate-700/60 text-xs sm:text-sm font-medium">
+      <button onclick="switchTab('slides')" id="tab-slides" class="px-3.5 py-1.5 rounded-lg flex items-center gap-2 bg-brand-600 text-white shadow transition">
+        <i class="fa-solid fa-chalkboard-user"></i> Executive Deck
+      </button>
+      <button onclick="switchTab('demo')" id="tab-demo" class="px-3.5 py-1.5 rounded-lg flex items-center gap-2 text-slate-400 hover:text-slate-200 transition">
+        <i class="fa-solid fa-bolt text-amber-400"></i> Live Prototype
+      </button>
+      <button onclick="switchTab('prd')" id="tab-prd" class="px-3.5 py-1.5 rounded-lg flex items-center gap-2 text-slate-400 hover:text-slate-200 transition">
+        <i class="fa-solid fa-file-lines"></i> PRD Spec
+      </button>
+      <button onclick="switchTab('jira')" id="tab-jira" class="px-3.5 py-1.5 rounded-lg flex items-center gap-2 text-slate-400 hover:text-slate-200 transition">
+        <i class="fa-brands fa-jira text-blue-400"></i> Jira PEEC-102
+      </button>
+    </nav>
+    <div class="hidden lg:flex items-center gap-4 text-xs text-slate-400">
+      <div class="text-right">
+        <p class="font-medium text-slate-300">Mereke Dadabayeva</p>
+        <p class="text-slate-500">Product Manager (Berlin)</p>
+      </div>
+      <div class="h-8 w-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 font-semibold">MD</div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+    <!-- SLIDES -->
+    <section id="view-slides" class="space-y-6">
+      <div class="flex items-center justify-between bg-slate-900/60 border border-slate-800 px-4 py-2.5 rounded-xl text-xs text-slate-400">
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Slide <span id="current-slide-num" class="font-bold text-white">1</span> of 5</span>
+          <span class="text-slate-600">|</span>
+          <span id="slide-name-badge" class="text-brand-400 font-medium">Title & Positioning</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="toggleNotes()" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition flex items-center gap-1.5">
+            <i class="fa-regular fa-comment-dots"></i> <span id="notes-btn-text">Show Speaker Notes</span>
+          </button>
+          <button onclick="prevSlide()" class="p-1.5 px-3 rounded bg-slate-800 hover:bg-slate-700 text-slate-200"><i class="fa-solid fa-chevron-left"></i></button>
+          <button onclick="nextSlide()" class="p-1.5 px-3 rounded bg-brand-600 hover:bg-brand-500 text-white font-medium">Next <i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+      </div>
+
+      <div class="relative min-h-[500px] bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 rounded-2xl shadow-2xl p-8 sm:p-12 flex flex-col justify-between overflow-hidden">
+        <div id="slide-container"></div>
+        <div id="speaker-notes-box" class="hidden mt-6 p-4 rounded-xl bg-slate-950/90 border border-brand-500/30 text-xs sm:text-sm text-slate-300">
+          <div class="font-bold text-brand-400 mb-1 flex items-center gap-2"><i class="fa-solid fa-comment-dots"></i> Speaker Notes for Presenter</div>
+          <div id="speaker-notes-text" class="italic text-slate-400 leading-relaxed"></div>
+        </div>
+        <div class="flex items-center justify-center gap-2 pt-4">
+          <button onclick="goToSlide(1)" class="slide-dot h-2 w-8 rounded-full bg-brand-500 transition-all"></button>
+          <button onclick="goToSlide(2)" class="slide-dot h-2 w-2 rounded-full bg-slate-700 hover:bg-slate-600 transition-all"></button>
+          <button onclick="goToSlide(3)" class="slide-dot h-2 w-2 rounded-full bg-slate-700 hover:bg-slate-600 transition-all"></button>
+          <button onclick="goToSlide(4)" class="slide-dot h-2 w-2 rounded-full bg-slate-700 hover:bg-slate-600 transition-all"></button>
+          <button onclick="goToSlide(5)" class="slide-dot h-2 w-2 rounded-full bg-slate-700 hover:bg-slate-600 transition-all"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE DEMO PROTOTYPE -->
+    <section id="view-demo" class="hidden space-y-6">
+      <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-6">
+        <div>
+          <h2 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-bolt text-amber-400"></i> Interactive Citation Gap Engine Prototype</h2>
+          <p class="text-sm text-slate-400 mt-1">Simulate a tracked prompt where brand visibility dropped, inspect the deterministic entity & schema delta, and generate handoffs.</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-4">
+          <div class="space-y-1.5">
+            <label class="text-xs font-semibold text-slate-400 uppercase">Monitored Prompt</label>
+            <select id="sim-prompt" onchange="runSimulation()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-brand-500">
+              <option value="crm">"Best CRM for Startups"</option>
+              <option value="analytics">"Top Product Analytics Tools for SaaS"</option>
+              <option value="bot">"Best Anti-Bot Protection 2026 (403 Test)"</option>
+            </select>
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-xs font-semibold text-slate-400 uppercase">Your Target Domain</label>
+            <input type="text" id="sim-target-url" value="https://peec-client.io/features/crm" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-300" readonly />
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-xs font-semibold text-slate-400 uppercase">Winning Competitor Citation</label>
+            <input type="text" id="sim-comp-url" value="https://competitor-leader.com/startup-crm-guide" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-300" readonly />
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+          <div class="flex items-center gap-3">
+            <span class="text-xs px-2.5 py-1 rounded bg-rose-500/20 text-rose-400 border border-rose-500/30 font-medium">Rank Status: Lost Citation (Position #4)</span>
+            <span class="text-xs text-slate-500 hidden sm:inline">Engine: Celery + Redis Cached</span>
+          </div>
+          <button onclick="runSimulation()" class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-sm font-semibold shadow-lg shadow-brand-500/20 flex items-center gap-2 transition">
+            <i class="fa-solid fa-magnifying-glass-chart"></i> Inspect Citation Gap
+          </button>
+        </div>
+      </div>
+
+      <div id="sim-results" class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div>
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+              <span>Deterministic Delta Diff</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-mono">Zero-Extrapolation Verified</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Execution latency: <span class="text-emerald-400 font-mono font-bold">1.12s (Redis Cache Hit)</span></p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="copyMarkdownBrief()" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-copy"></i> <span id="copy-brief-btn">Copy 1-Page Markdown Brief</span>
+            </button>
+            <button onclick="toggleRawPayload()" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-code"></i> <span>View Scraped Payload</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="fallback-alert" class="hidden p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs sm:text-sm flex items-start gap-3">
+          <i class="fa-solid fa-shield-halved text-amber-400 mt-0.5 text-base"></i>
+          <div>
+            <strong class="font-semibold text-amber-200">Target Competitor Protected by Anti-Bot / 403 Block:</strong>
+            <p class="text-slate-300 mt-0.5">Scraping worker fell back gracefully to SERP-level metadata and domain authority signals without throwing a 500 error.</p>
+          </div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6">
+          <div class="p-5 rounded-xl bg-slate-950 border border-slate-800 space-y-4">
+            <div class="flex items-center justify-between">
+              <h4 class="text-sm font-bold text-white flex items-center gap-2"><i class="fa-solid fa-tags text-brand-400"></i> Missing JSON-LD Schemas & Metadata</h4>
+              <span class="text-xs text-rose-400 font-mono font-medium">3 Missing Elements</span>
+            </div>
+            <div class="space-y-3 text-xs">
+              <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800/90 space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-rose-400 font-mono">@type: FAQPage Schema</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-medium">Missing</span>
+                </div>
+                <p class="text-slate-400">Competitor includes 6 structured Q&A schema entities directly crawled by LLMs.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800/90 space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-rose-400 font-mono">@type: SoftwareApplication</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-medium">Missing</span>
+                </div>
+                <p class="text-slate-400">Missing aggregateRating (4.8/5.0) and priceRange attributes.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-5 rounded-xl bg-slate-950 border border-slate-800 space-y-4">
+            <div class="flex items-center justify-between">
+              <h4 class="text-sm font-bold text-white flex items-center gap-2"><i class="fa-solid fa-chart-column text-emerald-400"></i> Missing Facts & Numerical Benchmarks</h4>
+              <span class="text-xs text-emerald-400 font-mono font-medium">Verbatim Extracted</span>
+            </div>
+            <div class="space-y-3 text-xs">
+              <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800/90 space-y-2">
+                <div class="flex items-start justify-between gap-2">
+                  <span class="font-bold text-white">"/user/month transparent flat-rate pricing"</span>
+                  <span class="text-[10px] text-brand-400">Verify Source ↗</span>
+                </div>
+                <p class="text-slate-400">ChatGPT explicitly cites this pricing benchmark in paragraph 2 of synthesis.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800/90 space-y-2">
+                <div class="flex items-start justify-between gap-2">
+                  <span class="font-bold text-white">"99.99% SLA Uptime & SOC-2 Type II Certified"</span>
+                  <span class="text-[10px] text-brand-400">Verify Source ↗</span>
+                </div>
+                <p class="text-slate-400">Perplexity highlights compliance and SLA as key differentiator for startup procurement.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="raw-payload-drawer" class="hidden p-4 rounded-xl bg-slate-950 border border-brand-500/30 space-y-3 font-mono text-xs">
+          <div class="flex items-center justify-between text-slate-400 pb-2 border-b border-slate-800">
+            <span class="font-bold text-white">Primary Ingestion Raw Payload</span>
+            <span class="text-[11px] text-emerald-400">HTTP 200 OK | Timestamp: 2026-08-19T15:32:00Z</span>
+          </div>
+          <pre class="p-3 rounded bg-slate-900 text-slate-300 text-[11px] overflow-x-auto max-h-48 leading-relaxed">
+{
+  "status": 200,
+  "url": "https://competitor-leader.com/startup-crm-guide",
+  "scraped_at": "2026-08-19T15:32:00Z",
+  "content_length_bytes": 48210,
+  "json_ld": [
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How much does the CRM cost for early-stage startups?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Plans start at /user/month with unlimited contact storage."
+          }
+        }
+      ]
+    }
+  ]
+}
+          </pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRD VIEW -->
+    <section id="view-prd" class="hidden p-8 rounded-2xl bg-slate-900 border border-slate-800 space-y-6 text-sm text-slate-300 leading-relaxed">
+      <div class="border-b border-slate-800 pb-4 flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl font-bold text-white">Product Requirements Document (PRD)</h2>
+          <p class="text-xs text-slate-400 mt-1">Autonomous AI Search Citation Gap & Remediation Engine</p>
+        </div>
+        <span class="text-xs px-3 py-1 rounded-full bg-brand-500/20 text-brand-300 border border-brand-500/30">V1 MVP Spec</span>
+      </div>
+      <div class="space-y-3">
+        <h3 class="text-base font-bold text-white">1. Executive Summary & Problem Framing</h3>
+        <p>AI search monitors show when a brand loses visibility in ChatGPT or Perplexity, identifying which competitor pages were cited instead. However, marketing and growth teams face an <strong>actionability gap</strong>: they spend 45+ minutes manually reading competitor websites to guess what text, statistics, or schema tags to add.</p>
+        <p>The Autonomous AI Search Citation Gap & Remediation Engine provides deterministic side-by-side parsing and generates an immediate 1-page Markdown Content Brief and a developer Jira story.</p>
+      </div>
+      <div class="space-y-3 pt-4 border-t border-slate-800">
+        <h3 class="text-base font-bold text-white">2. Data Provenance & Verification Architecture</h3>
+        <ul class="list-disc list-inside space-y-1.5 text-xs text-slate-300">
+          <li><strong>Deterministic Primary Ingestion:</strong> Scrapes raw HTML and JSON-LD schemas directly from target URLs.</li>
+          <li><strong>Zero-Extrapolation Constraint:</strong> Diffing models return factual claims only if they exist verbatim in the scraped text.</li>
+          <li><strong>Inspectable Raw Payload Drawer:</strong> UI provides timestamps, HTTP 200 status, and raw text chunk inspection.</li>
+          <li><strong>Direct Primary Links:</strong> Every finding includes an outbound link to the competitor live page.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- JIRA VIEW -->
+    <section id="view-jira" class="hidden p-8 rounded-2xl bg-slate-900 border border-slate-800 space-y-6 text-sm">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+        <div>
+          <h2 class="text-xl font-bold text-white">PEEC-102: Diagnostic Side-by-Side Citation Gap Engine</h2>
+          <p class="text-xs text-slate-400">Component: Analytics-Engine / AI-Gateway | Estimate: 5 Story Points</p>
+        </div>
+        <span class="text-xs px-3 py-1 rounded bg-emerald-500/20 text-emerald-400 font-semibold">Sprint Ready</span>
+      </div>
+      <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1 text-slate-300 text-xs sm:text-sm">
+        <p><strong class="text-brand-400">AS A</strong> Growth Marketing Manager tracking AI search visibility,</p>
+        <p><strong class="text-brand-400">I WANT TO</strong> inspect the semantic and entity gap between my domain and winning competitor URLs,</p>
+        <p><strong class="text-brand-400">SO THAT</strong> I can update my pages with the exact missing data required for LLM citations.</p>
+      </div>
+      <pre class="p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-emerald-400 leading-relaxed overflow-x-auto">
+GIVEN a tracked prompt where brand visibility rank is > 2 or unmentioned,
+WHEN the user clicks "Inspect Citation Gap" for a target competitor source,
+THEN render a side-by-side comparison modal displaying:
+  1. Missing JSON-LD schema tags and technical attributes,
+  2. Numerical benchmarks and claims present on the competitor page,
+  3. A 1-click Markdown remediation brief loaded in < 1.5s (cached state).
+AND IF the target competitor URL returns a 403 or anti-scraping block,
+THEN fallback gracefully to high-level domain authority signals without throwing a 500 error.
+      </pre>
+    </section>
+  </main>
+
+  <footer class="border-t border-slate-900 bg-slate-950 py-4 px-6 text-center text-xs text-slate-500">
+    Peec AI • Product & Technical Documentation • Lead Author: Mereke Dadabayeva, Product Manager (Berlin)
+  </footer>
+
+  <script>
+    let currentSlide = 1;
+    let notesVisible = false;
+
+    const notes = {
+      1: "Welcome everyone. AI search monitors detect when you lose citations. But knowing that you lost is only half the battle. Marketing teams are stuck in an actionability gap. I am excited to present Peec AI's Autonomous Citation Gap & Remediation Engine — turning passive alerts into fast, developer-ready content execution.",
+      2: "When a customer sees they are omitted from an AI answer, their immediate question is: Why did ChatGPT pick them instead of me? What do I need to write? Answering that today requires 45 minutes of manual website dissecting per query. Most teams simply guess or give up.",
+      3: "Our engine removes the guesswork. With one click on Inspect Citation Gap, the system deterministically parses both pages, isolates the exact delta, and produces two handoffs: a copywriter-ready Markdown brief and a developer-ready Jira story. We turn 45 minutes of manual digging into 90 seconds.",
+      4: "In enterprise B2B SaaS, data accuracy is non-negotiable. If an AI tool suggests adding a fake statistic, trust is destroyed. That is why our engine operates under a strict Zero-Extrapolation constraint: every fact, benchmark, and schema gap is verified verbatim against the scraped DOM.",
+      5: "To ensure a fast, robust V1 launch, we established strict scope boundaries. V1 delivers high-precision diagnostics and dual handoffs. We intentionally keep humans in the loop by deferring direct CMS auto-publishing and cold outreach to V2. This protects sprint velocity."
+    };
+
+    const slideTitles = {
+      1: "Title & Positioning",
+      2: "The User Problem",
+      3: "The Product Solution",
+      4: "Data Trust & Infrastructure",
+      5: "Roadmap & V1 Guardrails"
+    };
+
+    const slideHtmls = {
+      1: '<div class="space-y-4"><div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/30 text-brand-400 text-xs font-semibold uppercase">Executive Vision</div><h1 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">Closing the Generative Search <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-cyan-400">Actionability Gap</span></h1><p class="text-slate-400 max-w-xl">Transforming passive AI search visibility alerts into fast, developer-ready content execution.</p><div class="grid sm:grid-cols-3 gap-3 pt-4 border-t border-slate-800"><div class="p-3 bg-slate-900 border border-slate-800 rounded-xl"><div class="text-xs text-slate-400">Organization</div><div class="text-sm font-bold text-white">Peec AI (Berlin)</div></div><div class="p-3 bg-slate-900 border border-slate-800 rounded-xl"><div class="text-xs text-slate-400">Product Manager</div><div class="text-sm font-bold text-white">Mereke Dadabayeva</div></div><div class="p-3 bg-slate-900 border border-slate-800 rounded-xl"><div class="text-xs text-slate-400">Impact</div><div class="text-sm font-bold text-emerald-400">45m ➔ 90s Action</div></div></div></div>',
+      2: '<div class="space-y-4"><div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-semibold uppercase">The Friction</div><h2 class="text-3xl font-extrabold text-white">The 45-Minute Actionability Bottleneck</h2><div class="grid md:grid-cols-3 gap-4 pt-2"><div class="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2"><div class="font-bold text-white">1. What Happens Today</div><p class="text-xs text-slate-400">Marketer sees ChatGPT cited competitor on "Best CRM for Startups".</p></div><div class="p-4 bg-rose-950/20 border border-rose-900/40 rounded-xl space-y-2"><div class="font-bold text-rose-300">2. The Roadblock</div><p class="text-xs text-slate-400">Spends 45+ minutes manually reading competitor pages to guess the cause.</p></div><div class="p-4 bg-amber-950/20 border border-amber-900/40 rounded-xl space-y-2"><div class="font-bold text-amber-300">3. Business Cost</div><p class="text-xs text-slate-400">Delayed updates, low prompt-to-action conversion (~12%), and churn.</p></div></div></div>',
+      3: '<div class="space-y-4"><div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold uppercase">The Solution</div><h2 class="text-3xl font-extrabold text-white">Deterministic Side-by-Side Diffing</h2><div class="grid md:grid-cols-2 gap-4 pt-2"><div class="p-5 bg-slate-900 border border-slate-800 rounded-xl space-y-2"><div class="font-bold text-white">Automated Comparison</div><p class="text-xs text-slate-400">Isolates missing JSON-LD schemas (@type FAQPage), numerical benchmarks, and entity depth in &lt; 1.5s.</p></div><div class="p-5 bg-slate-900 border border-slate-800 rounded-xl space-y-2"><div class="font-bold text-white">Dual Actionable Handoff</div><p class="text-xs text-slate-400">1-Click Markdown brief for copywriters + Sprint-ready Jira ticket (PEEC-102) for developers.</p></div></div></div>',
+      4: '<div class="space-y-4"><div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold uppercase">Trust & Infrastructure</div><h2 class="text-3xl font-extrabold text-white">Zero Hallucinations, 100% Provenance</h2><div class="grid md:grid-cols-3 gap-4 pt-2"><div class="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-1"><div class="font-bold text-white text-xs">Deterministic Ingestion</div><p class="text-xs text-slate-400">Raw HTML and JSON-LD scraped directly from live URLs.</p></div><div class="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-1"><div class="font-bold text-white text-xs">Inspectable Payload Drawer</div><p class="text-xs text-slate-400">Transparent raw DOM view with direct primary links.</p></div><div class="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-1"><div class="font-bold text-white text-xs">Async Worker Queue</div><p class="text-xs text-slate-400">Celery + Redis 24h cache TTL keeps load times &lt; 1.5s.</p></div></div></div>',
+      5: '<div class="space-y-4"><div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/30 text-brand-400 text-xs font-semibold uppercase">Delivery Strategy</div><h2 class="text-3xl font-extrabold text-white">Roadmap & V1 Guardrails</h2><div class="grid md:grid-cols-2 gap-4 pt-2 text-xs"><div class="p-4 bg-emerald-950/20 border border-emerald-900/40 rounded-xl space-y-1.5"><div class="font-bold text-emerald-400">Shipped in V1 MVP (PEEC-102)</div><p>✓ Side-by-side entity & schema delta parser<br/>✓ 1-Click Markdown content brief export<br/>✓ Inspectable raw scraped payload drawer<br/>✓ Graceful 403 / anti-bot scraping fallback</p></div><div class="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-1.5"><div class="font-bold text-rose-400">Explicitly Deferred to V2</div><p>🛑 Direct CMS auto-publishing (Webhooks)<br/>🛑 Automated cold backlink / PR email outreach<br/>🛑 Real-time scraping behind paid paywalls<br/>🛑 Multi-tenant workspace role management</p></div></div></div>'
+    };
+
+    function updateSlide() {
+      document.getElementById("slide-container").innerHTML = slideHtmls[currentSlide];
+      document.getElementById("current-slide-num").innerText = currentSlide;
+      document.getElementById("slide-name-badge").innerText = slideTitles[currentSlide];
+      document.getElementById("speaker-notes-text").innerText = notes[currentSlide];
+      document.querySelectorAll(".slide-dot").forEach((d, i) => {
+        d.className = (i + 1 === currentSlide) ? "slide-dot h-2 w-8 rounded-full bg-brand-500 transition-all" : "slide-dot h-2 w-2 rounded-full bg-slate-700 hover:bg-slate-600 transition-all";
+      });
+    }
+
+    function nextSlide() { if (currentSlide < 5) { currentSlide++; updateSlide(); } }
+    function prevSlide() { if (currentSlide > 1) { currentSlide--; updateSlide(); } }
+    function goToSlide(n) { currentSlide = n; updateSlide(); }
+
+    function toggleNotes() {
+      notesVisible = !notesVisible;
+      document.getElementById("speaker-notes-box").classList.toggle("hidden", !notesVisible);
+      document.getElementById("notes-btn-text").innerText = notesVisible ? "Hide Speaker Notes" : "Show Speaker Notes";
+    }
+
+    function switchTab(t) {
+      ["slides", "demo", "prd", "jira"].forEach(tab => {
+        document.getElementById('view-' + tab).classList.toggle("hidden", tab !== t);
+        const btn = document.getElementById('tab-' + tab);
+        if (tab === t) {
+          btn.className = "px-3.5 py-1.5 rounded-lg flex items-center gap-2 bg-brand-600 text-white shadow transition";
+        } else {
+          btn.className = "px-3.5 py-1.5 rounded-lg flex items-center gap-2 text-slate-400 hover:text-slate-200 transition";
+        }
+      });
+    }
+
+    function toggleRawPayload() {
+      document.getElementById("raw-payload-drawer").classList.toggle("hidden");
+    }
+
+    function copyMarkdownBrief() {
+      const b = '# Content Remediation Brief (PEEC-102)
+## Prompt: "Best CRM for Startups"
+- Missing Schema: @type FAQPage
+- Missing Benchmarks: /user/month flat pricing, 99.99% SLA Uptime';
+      navigator.clipboard.writeText(b).then(() => {
+        const btn = document.getElementById("copy-brief-btn");
+        btn.innerText = "✓ Copied!";
+        setTimeout(() => { btn.innerText = "Copy 1-Page Markdown Brief"; }, 2000);
+      });
+    }
+
+    function runSimulation() {
+      const p = document.getElementById("sim-prompt").value;
+      const fb = document.getElementById("fallback-alert");
+      if (p === "bot") {
+        fb.classList.remove("hidden");
+      } else {
+        fb.classList.add("hidden");
+      }
+    }
+
+    window.addEventListener("keydown", (e) => {
+      if (!document.getElementById("view-slides").classList.contains("hidden")) {
+        if (e.key === "ArrowRight" || e.key === " ") nextSlide();
+        else if (e.key === "ArrowLeft") prevSlide();
+      }
+    });
+
+    updateSlide();
+  </script>
+</body>
+</html>
