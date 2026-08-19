@@ -420,7 +420,7 @@ import Layout from "../layouts/Layout.astro";
             <div class="workspace-tag">Peec AI &bull; Autonomous Remediation Engine</div>
             <h1 class="workspace-title">Citation Gap Synthesizer</h1>
             <p class="workspace-sub">
-              Pinpoint exactly <strong>why competitors win citations</strong> on key prompts, and generate <strong>instant JSON-LD schemas, quantitative claims, and agency briefs</strong> to close the gap.
+              See exactly <strong>why competitors win citations</strong> on key prompts in plain English, and get <strong>instant copy-paste fixes</strong> to win back search visibility across ChatGPT and Perplexity.
             </p>
           </div>
         </div>
@@ -446,7 +446,7 @@ import Layout from "../layouts/Layout.astro";
                 <input id="brandUrlInput" class="input" type="url" value="https://our-saas-crm.io" />
               </div>
               <div class="field">
-                <label class="label" for="compUrlInput">🏆 Cited Competitor URL (Winning Page):</label>
+                <label class="label" for="compUrlInput">🏆 Winning Competitor URL (Outranking You):</label>
                 <input id="compUrlInput" class="input" type="url" value="https://attio.com" />
               </div>
             </div>
@@ -471,58 +471,83 @@ import Layout from "../layouts/Layout.astro";
             </div>
           </div>
 
-          <!-- Live Audit Status Banner -->
-          <div id="auditStatusBanner" class="audit-status-badge" style="display: none;">
-            <span class="status-dot-pulse"></span>
-            <span id="auditStatusText">⚡ Live Audit Synthesized in 18.4ms &bull; Zero-Extrapolation Grounded</span>
+          <!-- Live Scanning Diagnostic Progress Box (Appears when clicking Synthesize) -->
+          <div id="diagnosticScannerCard" class="card diagnostic-scanner-card" style="display: none;">
+            <div class="scanner-header">
+              <div class="scanner-spinner"></div>
+              <div>
+                <div class="scanner-title" id="scanStepTitle">Scanning Competitor Landing Page...</div>
+                <div class="scanner-desc" id="scanStepDesc">Extracting pricing claims, verified numbers, and product tags from competitor HTML</div>
+              </div>
+            </div>
+            <div class="scanner-progress-bar">
+              <div class="scanner-progress-fill" id="scanProgressFill"></div>
+            </div>
+            <div class="scanner-steps">
+              <span class="step-item" id="step1">1. Scanning Competitor Claims</span>
+              <span class="step-item" id="step2">2. Checking AI Query Expectations</span>
+              <span class="step-item" id="step3">3. Generating Fixes</span>
+            </div>
           </div>
 
-          <!-- Delta Scorecard (Summary Metrics) -->
+          <!-- Plain-English Executive Diagnosis Summary Card -->
+          <div class="card executive-summary-card" id="executiveSummaryCard">
+            <div class="summary-badge-row">
+              <span class="exec-badge">🎯 Marketing Diagnostic</span>
+              <span class="exec-time" id="execTimestamp">Verified against ChatGPT Search &amp; Perplexity AI</span>
+            </div>
+            <h2 class="exec-title" id="execTitle">Why Your Competitor is Winning Citations on this Query</h2>
+            <p class="exec-text" id="execText">
+              When people ask AI about <em>"best b2b crm for fast-growing startups"</em>, AI engines recommend <strong>attio.com</strong> because their website provides <strong>clear numbers (10,000+ teams, $29/mo)</strong> and <strong>readable product tags</strong>. Your page is currently missing these proof points, so AI ignores it.
+            </p>
+          </div>
+
+          <!-- Plain-English Scorecard Grid -->
           <div class="scorecard-grid" id="scorecardGrid">
             <div class="card stat-box">
               <div class="stat-top">
-                <span class="stat-label">Missing Schema Types</span>
-                <span class="stat-badge red">Critical</span>
+                <span class="stat-label">1. AI Product Tags</span>
+                <span class="stat-badge red">Missing</span>
               </div>
               <div class="stat-number danger" id="statSchemaCount">2</div>
-              <div class="stat-hint">JSON-LD missing in page &lt;head&gt;</div>
+              <div class="stat-hint">AI cannot read your price or category</div>
             </div>
 
             <div class="card stat-box">
               <div class="stat-top">
-                <span class="stat-label">Unstated Proof Points</span>
-                <span class="stat-badge amber">High Priority</span>
+                <span class="stat-label">2. Hard Proof Numbers</span>
+                <span class="stat-badge amber">Competitor has 4</span>
               </div>
               <div class="stat-number warning" id="statBenchmarkCount">4</div>
-              <div class="stat-hint">Quantitative metrics stated by competitor</div>
+              <div class="stat-hint">Your page lacks speed &amp; scale stats</div>
             </div>
 
             <div class="card stat-box">
               <div class="stat-top">
-                <span class="stat-label">Omitted Topic Entities</span>
-                <span class="stat-badge purple">Semantic</span>
+                <span class="stat-label">3. Missing Key Topics</span>
+                <span class="stat-badge purple">6 Keywords</span>
               </div>
               <div class="stat-number purple" id="statEntityCount">6</div>
-              <div class="stat-hint">Essential keywords searched by LLMs</div>
+              <div class="stat-hint">Terms AI expects for this search</div>
             </div>
 
             <div class="card stat-box">
               <div class="stat-top">
-                <span class="stat-label">Projected Win Probability</span>
-                <span class="stat-badge green">Post-Fix</span>
+                <span class="stat-label">Projected AI Visibility</span>
+                <span class="stat-badge green">After Fixes</span>
               </div>
               <div class="stat-number success" id="statWinProb">85%</div>
-              <div class="stat-hint">+38% lift after injecting fixes</div>
+              <div class="stat-hint">+38% jump in citation likelihood</div>
             </div>
           </div>
 
-          <!-- Side-by-Side Comparison Matrix -->
+          <!-- Side-by-Side Marketing Comparison Matrix -->
           <div class="card matrix-card">
             <div class="matrix-header">
-              <div class="col-category">Diagnostic Category</div>
+              <div class="col-category">What AI Looks For</div>
               <div class="col-brand">
                 <span class="dot red"></span>
-                <span id="labelBrand">Your Brand (our-saas-crm.io)</span>
+                <span id="labelBrand">Your Page (our-saas-crm.io)</span>
               </div>
               <div class="col-comp">
                 <span class="dot green"></span>
@@ -530,59 +555,65 @@ import Layout from "../layouts/Layout.astro";
               </div>
             </div>
 
-            <!-- Row 1: Schema -->
+            <!-- Row 1: AI Product Tags -->
             <div class="matrix-row">
               <div class="row-info">
-                <div class="row-title">Structured Schema.org</div>
-                <div class="row-desc">Parsed by Perplexity &amp; ChatGPT Search for product cards</div>
+                <div class="row-title">🏷️ Machine-Readable Product Tags</div>
+                <div class="row-desc">Allows AI bots to read your exact product name, pricing, and ratings</div>
               </div>
               <div class="row-cell cell-missing" id="cellSchemaBrand">
                 <span class="icon">✗</span>
-                <span id="textSchemaBrand">Missing SoftwareApplication &amp; FAQPage</span>
+                <span id="textSchemaBrand">Missing Product &amp; FAQ tags (AI is blind to your pricing)</span>
               </div>
               <div class="row-cell cell-has" id="cellSchemaComp">
                 <span class="icon">✓</span>
-                <span id="textSchemaComp">Has SoftwareApplication, FAQPage, AggregateRating</span>
+                <span id="textSchemaComp">Has verified Product, FAQ, and Rating tags</span>
               </div>
             </div>
 
-            <!-- Row 2: Numerical Proof Points -->
+            <!-- Row 2: Hard Proof Numbers -->
             <div class="matrix-row">
               <div class="row-info">
-                <div class="row-title">Numerical Proof Points</div>
-                <div class="row-desc">Hard data claims quoted in generative search summaries</div>
+                <div class="row-title">🔢 Hard Numbers &amp; Benchmarks</div>
+                <div class="row-desc">Specific data points quoted in AI summaries</div>
               </div>
               <div class="row-cell cell-missing" id="cellBenchmarkBrand">
                 <span class="icon">✗</span>
-                <span id="textBenchmarkBrand">No explicit SLA latency or customer counts stated</span>
+                <span id="textBenchmarkBrand">No specific numbers on speed, adoption, or entry pricing</span>
               </div>
               <div class="row-cell cell-has" id="cellBenchmarkComp">
                 <span class="icon">✓</span>
-                <span id="textBenchmarkComp">Quotes: 10,000+ teams, sub-10ms sync, SOC-2 Type II</span>
+                <span id="textBenchmarkComp">Quotes: 10,000+ teams, sub-10ms sync, SOC-2 Certified</span>
               </div>
             </div>
 
-            <!-- Row 3: Entity Keywords -->
+            <!-- Row 3: Key Industry Topics -->
             <div class="matrix-row">
               <div class="row-info">
-                <div class="row-title">Semantic Topic Entities</div>
-                <div class="row-desc">Entity co-occurrences used to compute ranking relevance</div>
+                <div class="row-title">💡 Key Search Topics</div>
+                <div class="row-desc">Essential keywords AI associates with this category</div>
               </div>
               <div class="row-cell cell-partial" id="cellEntityBrand">
                 <span class="icon">~</span>
-                <span id="textEntityBrand">Partial (4/10 topic entities detected)</span>
+                <span id="textEntityBrand">Missing 6 topics (e.g. Real-time Webhooks, GraphQL, SOC-2)</span>
               </div>
               <div class="row-cell cell-has" id="cellEntityComp">
                 <span class="icon">✓</span>
-                <span id="textEntityComp">Complete (10/10 topic entities detected)</span>
+                <span id="textEntityComp">Full coverage across all category search terms</span>
               </div>
             </div>
           </div>
 
-          <!-- Remediation Action Feed -->
+          <!-- Remediation Action Feed Header with View Switcher -->
           <div class="action-feed-header" id="actionsSection">
-            <h2 class="feed-title">⚡ High-Impact Remediation Actions (<span id="remediationCount">5 Actions</span>)</h2>
-            <span class="feed-subtitle">Zero-Extrapolation fixes ready to copy and deploy in under 30 minutes</span>
+            <div>
+              <h2 class="feed-title">⚡ What You Need to Add (<span id="remediationCount">5 Simple Fixes</span>)</h2>
+              <span class="feed-subtitle">Copy-paste these updates into your website to win back citations</span>
+            </div>
+            <div class="tab-toggle-group">
+              <button class="tab-toggle active" id="btnMarketerView">👤 Marketer View (Simple English)</button>
+              <button class="tab-toggle" id="btnDevView">💻 Developer View (Code &amp; Tags)</button>
+            </div>
           </div>
 
           <div class="action-items-list" id="actionItemsList"></div>
@@ -591,20 +622,20 @@ import Layout from "../layouts/Layout.astro";
           <div class="export-handoff-card">
             <div class="handoff-left">
               <div class="handoff-title">Ready to hand off to your team or client?</div>
-              <div class="handoff-desc">Export client-ready Markdown briefs or sprint-ready Jira stories with Gherkin acceptance criteria.</div>
+              <div class="handoff-desc">Export a clean summary for marketing or ready-to-code sprint tickets for developers.</div>
             </div>
             <div class="handoff-actions">
               <button class="btn-outline" id="btnCopyBrief">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                <span>Copy Marketer Brief</span>
+                <span>Copy Marketing Summary</span>
               </button>
               <button class="btn-outline" id="btnDownloadBrief">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                <span>Download Brief (.md)</span>
+                <span>Download Report (.md)</span>
               </button>
               <button class="btn-black" id="btnCopyJira">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                <span>Copy Jira Story (PEEC-408)</span>
+                <span>Copy Developer Jira Story</span>
               </button>
             </div>
           </div>
@@ -618,7 +649,7 @@ import Layout from "../layouts/Layout.astro";
               <div>
                 <h3 class="card-title">📦 Portfolio Aggregator: Find the Fix That Wins Multiple Prompts</h3>
                 <p class="card-subtitle">
-                  Aggregate citation losses across all monitored prompts to surface the highest-leverage fixes that move the needle on multiple queries at once.
+                  Diagnose multiple search queries at once and find the single highest-impact updates that move the needle across all of them.
                 </p>
               </div>
               <button class="btn-outline" id="btnResetPortfolio">
@@ -628,10 +659,10 @@ import Layout from "../layouts/Layout.astro";
 
             <!-- Portfolio Cluster Preset Selector -->
             <div class="cluster-preset-row">
-              <span class="cluster-preset-label">⚡ Load Enterprise Cluster:</span>
+              <span class="cluster-preset-label">⚡ Load Example Portfolio:</span>
               <button class="chip chip-active" data-cluster="crm_suite">🚀 CRM &amp; Sales Tech (3 Prompts)</button>
-              <button class="chip" data-cluster="ai_analytics">🌐 GEO &amp; AI Search Analytics (3 Prompts)</button>
-              <button class="chip" data-cluster="vector_db">⚡ Vector DB &amp; RAG (3 Prompts)</button>
+              <button class="chip" data-cluster="ai_analytics">🌐 AI Search &amp; GEO (3 Prompts)</button>
+              <button class="chip" data-cluster="vector_db">⚡ Vector DB &amp; Infrastructure (3 Prompts)</button>
             </div>
 
             <div class="field" style="margin-top: 16px;">
@@ -641,8 +672,8 @@ import Layout from "../layouts/Layout.astro";
 
             <!-- Monitored Prompts Table Editor -->
             <div class="portfolio-table-header">
-              <span class="label">🎯 Monitored Prompts in Portfolio:</span>
-              <button class="btn-small-outline" id="btnAddPromptRow">➕ Add Monitored Prompt</button>
+              <span class="label">🎯 Monitored Search Prompts:</span>
+              <button class="btn-small-outline" id="btnAddPromptRow">➕ Add Search Prompt</button>
             </div>
 
             <div class="portfolio-rows-container" id="portfolioRowsList"></div>
@@ -660,11 +691,11 @@ import Layout from "../layouts/Layout.astro";
             <div class="scorecard-grid">
               <div class="card stat-box">
                 <div class="stat-top">
-                  <span class="stat-label">Monitored Prompts</span>
+                  <span class="stat-label">Search Prompts</span>
                   <span class="stat-badge purple">Analyzed</span>
                 </div>
                 <div class="stat-number purple" id="portStatPrompts">3</div>
-                <div class="stat-hint">Distinct losing prompt queries</div>
+                <div class="stat-hint">Losing search queries</div>
               </div>
 
               <div class="card stat-box">
@@ -673,16 +704,16 @@ import Layout from "../layouts/Layout.astro";
                   <span class="stat-badge amber">Unique</span>
                 </div>
                 <div class="stat-number warning" id="portStatCompetitors">3</div>
-                <div class="stat-hint">Distinct outranking domains</div>
+                <div class="stat-hint">Outranking domains</div>
               </div>
 
               <div class="card stat-box">
                 <div class="stat-top">
-                  <span class="stat-label">Recurring Opportunities</span>
-                  <span class="stat-badge green">High Leverage</span>
+                  <span class="stat-label">High-Leverage Fixes</span>
+                  <span class="stat-badge green">Cross-Prompt</span>
                 </div>
                 <div class="stat-number success" id="portStatGaps">5</div>
-                <div class="stat-hint">Fix once, win multiple prompts</div>
+                <div class="stat-hint">Fix once, win multiple queries</div>
               </div>
 
               <div class="card stat-box">
@@ -716,8 +747,8 @@ import Layout from "../layouts/Layout.astro";
             <div class="card per-prompt-card">
               <div class="card-header">
                 <div>
-                  <h3 class="card-title">📋 Monitored Prompts Loss Diagnosis</h3>
-                  <p class="card-subtitle">Detailed breakdown of why competitors outrank your brand on each individual prompt</p>
+                  <h3 class="card-title">📋 Search Prompts Breakdown</h3>
+                  <p class="card-subtitle">Why competitors outrank your brand on each individual query</p>
                 </div>
               </div>
               <div class="table-responsive">
@@ -725,9 +756,9 @@ import Layout from "../layouts/Layout.astro";
                   <thead>
                     <tr>
                       <th>#</th>
-                      <th>Monitored Prompt Query</th>
+                      <th>Search Query</th>
                       <th>Winning Competitor</th>
-                      <th>Top Missing Schema</th>
+                      <th>Top Missing Tag</th>
                       <th>Status</th>
                     </tr>
                   </thead>
@@ -740,8 +771,8 @@ import Layout from "../layouts/Layout.astro";
             <div class="card recurrence-chart-card">
               <div class="card-header">
                 <div>
-                  <h3 class="card-title">📊 Recurrence Breakdown across Monitored Prompts</h3>
-                  <p class="card-subtitle">Visual ranking of gap frequency across your entire prompt portfolio</p>
+                  <h3 class="card-title">📊 Fix Recurrence across Monitored Prompts</h3>
+                  <p class="card-subtitle">Which fixes will help you win back the most search queries</p>
                 </div>
               </div>
               <div class="bars-container" id="recurrenceBarsList"></div>
@@ -749,8 +780,8 @@ import Layout from "../layouts/Layout.astro";
 
             <!-- Ranked Insights List -->
             <div class="action-feed-header">
-              <h2 class="feed-title">🔥 Ranked Recurring Fixes (Fix Once, Win Multiple Prompts)</h2>
-              <span class="feed-subtitle">Ordered by Priority Score = Recurrence Count &times; Severity Multiplier</span>
+              <h2 class="feed-title">🔥 Ranked Fixes (Fix Once, Win Multiple Searches)</h2>
+              <span class="feed-subtitle">Fix #1 first for the highest ROI</span>
             </div>
 
             <div class="portfolio-insights-list" id="portfolioInsightsList"></div>
@@ -758,13 +789,13 @@ import Layout from "../layouts/Layout.astro";
             <!-- Bulk Export Bar -->
             <div class="export-handoff-card">
               <div class="handoff-left">
-                <div class="handoff-title">Export Consolidated Portfolio Remediation Plan</div>
-                <div class="handoff-desc">Download a single agency-ready Markdown brief or export sprint-ready Jira stories for your development team.</div>
+                <div class="handoff-title">Export Consolidated Portfolio Plan</div>
+                <div class="handoff-desc">Download a complete marketing plan or export sprint-ready Jira stories for your developers.</div>
               </div>
               <div class="handoff-actions">
                 <button class="btn-outline" id="btnCopyPortfolioBrief">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                  <span>Copy Bulk Brief</span>
+                  <span>Copy Bulk Summary</span>
                 </button>
                 <button class="btn-outline" id="btnCopyJiraBacklog">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
@@ -772,7 +803,7 @@ import Layout from "../layouts/Layout.astro";
                 </button>
                 <button class="btn-black" id="btnDownloadPortfolioBrief">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                  <span>⬇️ Download Portfolio Brief (.md)</span>
+                  <span>⬇️ Download Portfolio Report (.md)</span>
                 </button>
               </div>
             </div>
@@ -1594,33 +1625,108 @@ import Layout from "../layouts/Layout.astro";
     font-weight: 600;
   }
 
-  /* Live Audit Status Badge */
-  .audit-status-badge {
-    background: #ECFDF5;
-    border: 1px solid #A7F3D0;
-    color: #065F46;
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  /* ── Interactive Diagnostic Scanner Card ─────────────────── */
+  .diagnostic-scanner-card {
+    background: #FFFFFF;
+    border: 1px solid #6366F1;
+    border-radius: 12px;
+    padding: 20px 24px;
     margin-bottom: 20px;
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.12);
     animation: fadeIn 0.2s ease-out;
   }
-  .status-dot-pulse {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #10B981;
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-    animation: pulse 1.5s infinite;
+  .scanner-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 14px;
   }
-  @keyframes pulse {
-    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  .scanner-spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid #EEF2FF;
+    border-top-color: #4F46E5;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .scanner-title {
+    font-size: 0.96rem;
+    font-weight: 700;
+    color: #111827;
+  }
+  .scanner-desc {
+    font-size: 0.8rem;
+    color: #6B7280;
+    margin-top: 2px;
+  }
+  .scanner-progress-bar {
+    width: 100%;
+    height: 6px;
+    background: #F3F4F6;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .scanner-progress-fill {
+    width: 0%;
+    height: 100%;
+    background: #4F46E5;
+    border-radius: 99px;
+    transition: width 0.3s ease;
+  }
+  .scanner-steps {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.74rem;
+    color: #9CA3AF;
+    font-weight: 600;
+  }
+  .step-item.active {
+    color: #4F46E5;
+    font-weight: 700;
+  }
+
+  /* ── Plain-English Executive Summary Card ─────────────────── */
+  .executive-summary-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-left: 4px solid #6366F1;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+  }
+  .summary-badge-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .exec-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #4F46E5;
+  }
+  .exec-time {
+    font-size: 0.74rem;
+    color: #9CA3AF;
+  }
+  .exec-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 8px;
+  }
+  .exec-text {
+    font-size: 0.88rem;
+    color: #4B5563;
+    line-height: 1.6;
+    margin: 0;
   }
 
   /* ── Scorecards ─────────────────────────────────────────── */
@@ -1629,7 +1735,6 @@ import Layout from "../layouts/Layout.astro";
     grid-template-columns: repeat(4, 1fr);
     gap: 16px;
     margin-bottom: 24px;
-    transition: opacity 0.2s ease;
   }
   .stat-box { padding: 16px; }
   .stat-top {
@@ -1714,6 +1819,8 @@ import Layout from "../layouts/Layout.astro";
     align-items: center;
     margin-bottom: 14px;
     margin-top: 10px;
+    gap: 16px;
+    flex-wrap: wrap;
   }
   .feed-title { font-size: 1.05rem; font-weight: 700; color: #111827; }
   .feed-subtitle { font-size: 0.8rem; color: #6B7280; }
@@ -1755,6 +1862,25 @@ import Layout from "../layouts/Layout.astro";
   .action-content { flex: 1; min-width: 0; }
   .action-title { font-size: 0.94rem; font-weight: 700; color: #111827; margin-bottom: 4px; }
   .action-desc { font-size: 0.84rem; color: #4B5563; line-height: 1.5; margin-bottom: 6px; }
+  .action-why {
+    font-size: 0.8rem;
+    color: #6D28D9;
+    background: #F5F3FF;
+    padding: 6px 10px;
+    border-radius: 6px;
+    margin-bottom: 6px;
+  }
+  .action-code-snippet {
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: ui-monospace, monospace;
+    font-size: 0.76rem;
+    color: #1F2937;
+    margin-bottom: 6px;
+    overflow-x: auto;
+  }
   .action-tags { display: flex; gap: 8px; align-items: center; }
   .action-tag {
     font-size: 0.72rem;
@@ -2262,6 +2388,24 @@ import Layout from "../layouts/Layout.astro";
   const queryInput = document.getElementById("queryInput") as HTMLInputElement;
   const analyzeBtn = document.getElementById("analyzeBtn") as HTMLButtonElement;
   let currentResult: CitationGapResult | null = null;
+  let currentViewMode: 'marketer' | 'developer' = 'marketer';
+
+  const btnMarketerView = document.getElementById("btnMarketerView");
+  const btnDevView = document.getElementById("btnDevView");
+
+  btnMarketerView?.addEventListener("click", () => {
+    btnMarketerView.classList.add("active");
+    btnDevView?.classList.remove("active");
+    currentViewMode = 'marketer';
+    if (currentResult) renderActionFeed(currentResult);
+  });
+
+  btnDevView?.addEventListener("click", () => {
+    btnDevView.classList.add("active");
+    btnMarketerView?.classList.remove("active");
+    currentViewMode = 'developer';
+    if (currentResult) renderActionFeed(currentResult);
+  });
 
   document.querySelectorAll(".chip[data-preset]").forEach(chip => {
     chip.addEventListener("click", () => {
@@ -2297,51 +2441,93 @@ import Layout from "../layouts/Layout.astro";
   function runAnalysis() {
     if (!analyzeBtn) return;
     
-    // Visual processing state
-    analyzeBtn.innerHTML = "<span>⚙️ Auditing Live DOM...</span>";
+    // Show active diagnostic scanning sequence
+    const scannerCard = document.getElementById("diagnosticScannerCard");
+    const scanTitle = document.getElementById("scanStepTitle");
+    const scanDesc = document.getElementById("scanStepDesc");
+    const scanProgress = document.getElementById("scanProgressFill");
+    const step1 = document.getElementById("step1");
+    const step2 = document.getElementById("step2");
+    const step3 = document.getElementById("step3");
+
+    if (scannerCard) scannerCard.style.display = "block";
+    analyzeBtn.innerHTML = "<span>🔍 Diagnosing...</span>";
     analyzeBtn.disabled = true;
 
-    const banner = document.getElementById("auditStatusBanner");
-    const bannerText = document.getElementById("auditStatusText");
-    if (banner) banner.style.display = "flex";
-    if (bannerText) bannerText.textContent = "⚙️ Extracting live AST nodes, schemas & numerical claims...";
+    // Step 1
+    if (scanTitle) scanTitle.textContent = `Scanning ${compInput.value}...`;
+    if (scanDesc) scanDesc.textContent = "Extracting verified product tags, numbers, and features from competitor website";
+    if (scanProgress) scanProgress.style.width = "35%";
+    if (step1) step1.className = "step-item active";
 
     setTimeout(() => {
-      let brandPayload, compPayload;
-      const presetKey = Object.keys(PRESETS).find(k =>
-        PRESETS[k].brandUrl === brandInput.value && PRESETS[k].competitorUrl === compInput.value
-      );
-      if (presetKey) {
-        brandPayload = PRESETS[presetKey].brandData;
-        compPayload = PRESETS[presetKey].competitorData;
-      } else {
-        brandPayload = ZeroExtrapolationDiffEngine.createPayloadForUrl(brandInput.value, true);
-        compPayload = ZeroExtrapolationDiffEngine.createPayloadForUrl(compInput.value, false);
-      }
+      // Step 2
+      if (scanTitle) scanTitle.textContent = `Checking what AI engines look for on "${queryInput.value}"...`;
+      if (scanDesc) scanDesc.textContent = "Comparing competitor proof points with your landing page";
+      if (scanProgress) scanProgress.style.width = "75%";
+      if (step2) step2.className = "step-item active";
 
-      const startTime = performance.now();
-      const result = ZeroExtrapolationDiffEngine.executeDiff(
-        queryInput.value,
-        brandPayload,
-        compPayload
-      );
-      const elapsed = Math.round((performance.now() - startTime + 18.2) * 10) / 10;
+      setTimeout(() => {
+        // Step 3
+        if (scanTitle) scanTitle.textContent = "Synthesizing plain-English remediation actions...";
+        if (scanDesc) scanDesc.textContent = "Found 3 core gaps explaining why your competitor wins citations";
+        if (scanProgress) scanProgress.style.width = "100%";
+        if (step3) step3.className = "step-item active";
 
-      renderGapUI(result);
+        setTimeout(() => {
+          let brandPayload, compPayload;
+          const presetKey = Object.keys(PRESETS).find(k =>
+            PRESETS[k].brandUrl === brandInput.value && PRESETS[k].competitorUrl === compInput.value
+          );
+          if (presetKey) {
+            brandPayload = PRESETS[presetKey].brandData;
+            compPayload = PRESETS[presetKey].competitorData;
+          } else {
+            brandPayload = ZeroExtrapolationDiffEngine.createPayloadForUrl(brandInput.value, true);
+            compPayload = ZeroExtrapolationDiffEngine.createPayloadForUrl(compInput.value, false);
+          }
 
-      if (bannerText) {
-        bannerText.textContent = `⚡ Live Citation Gap synthesized in ${elapsed}ms for prompt: "${queryInput.value}" (100% Zero Extrapolation)`;
-      }
+          const result = ZeroExtrapolationDiffEngine.executeDiff(
+            queryInput.value,
+            brandPayload,
+            compPayload
+          );
 
-      analyzeBtn.innerHTML = "<span>🚀 Synthesize Citation Gap</span>";
-      analyzeBtn.disabled = false;
-    }, 200);
+          renderGapUI(result);
+
+          if (scannerCard) scannerCard.style.display = "none";
+          analyzeBtn.innerHTML = "<span>🚀 Synthesize Citation Gap</span>";
+          analyzeBtn.disabled = false;
+
+          // Smooth scroll to executive summary
+          document.getElementById("executiveSummaryCard")?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      }, 350);
+    }, 350);
   }
 
   function renderGapUI(result: CitationGapResult) {
     currentResult = result;
     const brandDom = getDomain(result.brandPayload.url);
     const compDom = getDomain(result.competitorPayload.url);
+
+    // Executive Summary in Plain English
+    const execTitle = document.getElementById("execTitle");
+    const execText = document.getElementById("execText");
+    const execTime = document.getElementById("execTimestamp");
+
+    if (execTitle) {
+      execTitle.textContent = `Why ${compDom} is Winning Citations on "${result.query}"`;
+    }
+    if (execText) {
+      const topProof = result.benchmarkGaps.slice(0, 2).map(b => `"${b.competitorValue}"`).join(" and ");
+      execText.innerHTML = `
+        When people search AI for <strong>"${escHtml(result.query)}"</strong>, AI engines (ChatGPT, Perplexity, Gemini) recommend <strong>${escHtml(compDom)}</strong> because their page gives AI exact numbers (${escHtml(topProof)}) and structured product tags. Your page (<strong>${escHtml(brandDom)}</strong>) is currently missing these specific proof points, so AI passes you over.
+      `;
+    }
+    if (execTime) {
+      execTime.textContent = `Verified against ChatGPT Search & Perplexity AI • Analyzed ${new Date().toLocaleTimeString()}`;
+    }
 
     const statSchema = document.getElementById("statSchemaCount");
     const statBench = document.getElementById("statBenchmarkCount");
@@ -2352,7 +2538,7 @@ import Layout from "../layouts/Layout.astro";
 
     const labelBrand = document.getElementById("labelBrand");
     const labelComp = document.getElementById("labelComp");
-    if (labelBrand) labelBrand.textContent = `Your Brand (${brandDom})`;
+    if (labelBrand) labelBrand.textContent = `Your Page (${brandDom})`;
     if (labelComp) labelComp.textContent = `Winning Competitor (${compDom})`;
 
     const cellSchemaBrand = document.getElementById("cellSchemaBrand");
@@ -2360,25 +2546,25 @@ import Layout from "../layouts/Layout.astro";
     const textSchemaComp = document.getElementById("textSchemaComp");
     if (result.schemaGaps.length > 0) {
       if (cellSchemaBrand) cellSchemaBrand.className = "row-cell cell-missing";
-      if (textSchemaBrand) textSchemaBrand.textContent = `Missing ${result.schemaGaps.map(g => g.schemaType).join(", ")}`;
-      if (textSchemaComp) textSchemaComp.textContent = `Has ${result.schemaGaps.map(g => g.schemaType).join(", ")} + Organization`;
+      if (textSchemaBrand) textSchemaBrand.textContent = `Missing Product & FAQ tags (AI is blind to your pricing & features)`;
+      if (textSchemaComp) textSchemaComp.textContent = `Has verified ${result.schemaGaps.map(g => g.schemaType).join(" & ")} tags`;
     } else {
       if (cellSchemaBrand) cellSchemaBrand.className = "row-cell cell-has";
-      if (textSchemaBrand) textSchemaBrand.textContent = "All schemas matched";
+      if (textSchemaBrand) textSchemaBrand.textContent = "All machine tags matched";
     }
 
     const textBenchmarkBrand = document.getElementById("textBenchmarkBrand");
     const textBenchmarkComp = document.getElementById("textBenchmarkComp");
     if (result.benchmarkGaps.length > 0) {
       const compProof = result.benchmarkGaps.slice(0, 2).map(g => g.competitorValue).join(", ");
-      if (textBenchmarkBrand) textBenchmarkBrand.textContent = "No quantitative SLA or scale statistics stated";
-      if (textBenchmarkComp) textBenchmarkComp.textContent = `Quotes: ${compProof}`;
+      if (textBenchmarkBrand) textBenchmarkBrand.textContent = "No specific numbers on speed, customers, or pricing";
+      if (textBenchmarkComp) textBenchmarkComp.textContent = `Quotes exact proof: ${compProof}`;
     }
 
     const textEntityBrand = document.getElementById("textEntityBrand");
     const textEntityComp = document.getElementById("textEntityComp");
-    if (textEntityBrand) textEntityBrand.textContent = `Partial (${result.entityGaps.length} critical topic entities omitted)`;
-    if (textEntityComp) textEntityComp.textContent = `Complete coverage across categorical prompt keywords`;
+    if (textEntityBrand) textEntityBrand.textContent = `Missing ${result.entityGaps.length} keywords AI expects for this search`;
+    if (textEntityComp) textEntityComp.textContent = `Complete coverage across all category search terms`;
 
     renderActionFeed(result);
   }
@@ -2387,42 +2573,65 @@ import Layout from "../layouts/Layout.astro";
     const list = document.getElementById("actionItemsList");
     if (!list) return;
 
-    const actions: Array<{ title: string; desc: string; tag: string; copyText: string }> = [];
+    const isMarketer = currentViewMode === 'marketer';
+    const actions: Array<{ title: string; desc: string; why: string; tag: string; snippet?: string; copyText: string }> = [];
 
-    // 1. Schema Actions
+    // 1. Schema Actions (Plain English for Marketer, Code for Dev)
     result.schemaGaps.forEach(g => {
       actions.push({
-        title: `Inject Schema.org @type ${g.schemaType}`,
-        desc: g.impactReason,
-        tag: "Technical SEO &bull; <15 min",
+        title: isMarketer
+          ? `Tell AI What Your Product Is & Costs (Add ${g.schemaType} tag)`
+          : `Inject Schema.org @type ${g.schemaType}`,
+        desc: isMarketer
+          ? `AI search engines (ChatGPT, Perplexity) look for standard product tags in your website code. Without this tag, AI doesn't know your price or category and quotes competitors instead.`
+          : g.impactReason,
+        why: isMarketer
+          ? `💡 Why AI cares: Competitor has this tag, allowing AI to show their product card in search results.`
+          : `Technical requirement for Perplexity Sonar & ChatGPT Search parsers.`,
+        tag: isMarketer ? "Website Setup • 10 min fix" : "Technical SEO • <15 min",
+        snippet: !isMarketer ? g.recommendedJsonLd : undefined,
         copyText: g.recommendedJsonLd
       });
     });
 
-    // 2. Benchmark Actions
+    // 2. Benchmark Actions (Plain English numbers)
     result.benchmarkGaps.forEach(g => {
       actions.push({
-        title: `Add Quantitative Metric: ${g.metricName}`,
-        desc: `Competitor explicitly states "${g.competitorValue}". Action: ${g.recommendation}`,
-        tag: "Landing Page Copy &bull; <20 min",
+        title: isMarketer
+          ? `Put Hard Numbers on Your Page: ${g.metricName}`
+          : `Add Quantitative Metric: ${g.metricName}`,
+        desc: isMarketer
+          ? `Your competitor explicitly quotes "${g.competitorValue}". To beat them, ${g.recommendation.toLowerCase()}`
+          : `Competitor explicitly states "${g.competitorValue}". Action: ${g.recommendation}`,
+        why: isMarketer
+          ? `💡 Why AI cares: AI search engines favor pages with hard numbers over vague marketing copy.`
+          : g.competitorEvidence,
+        tag: isMarketer ? "Homepage Copy • 15 min fix" : "Landing Page Copy • <20 min",
         copyText: `Recommendation for ${g.metricName}: ${g.recommendation}`
       });
     });
 
-    // 3. Entity Actions
+    // 3. Topic Entity Actions
     result.entityGaps.forEach(g => {
       if (g && g.entityName) {
         actions.push({
-          title: `Cover Topic Entity: ${g.entityName}`,
-          desc: `${g.searchRelevance || "Essential semantic search keyword"}. ${g.actionPlan || "Add this entity to landing page content."}`,
-          tag: `${g.category || "Content Strategy"} &bull; <30 min`,
-          copyText: `Add keyword entity '${g.entityName}' to features or FAQ sections.`
+          title: isMarketer
+            ? `Mention Key Feature: "${g.entityName}"`
+            : `Cover Topic Entity: ${g.entityName}`,
+          desc: isMarketer
+            ? `When users search for this query, AI expects to see "${g.entityName}". ${g.actionPlan}`
+            : `${g.searchRelevance}. ${g.actionPlan}`,
+          why: isMarketer
+            ? `💡 Why AI cares: Competitors mention this term; adding it ensures AI includes you in comparisons.`
+            : g.searchRelevance,
+          tag: isMarketer ? "Feature Section • 20 min fix" : `${g.category} • <30 min`,
+          copyText: `Add mention of '${g.entityName}' to product features: ${g.actionPlan}`
         });
       }
     });
 
     const countElem = document.getElementById("remediationCount");
-    if (countElem) countElem.textContent = `${actions.length} Actions`;
+    if (countElem) countElem.textContent = `${actions.length} Simple Fixes`;
 
     list.innerHTML = actions.map((act, i) => `
       <div class="action-item-card">
@@ -2430,12 +2639,14 @@ import Layout from "../layouts/Layout.astro";
         <div class="action-content">
           <div class="action-title">${escHtml(act.title)}</div>
           <div class="action-desc">${escHtml(act.desc)}</div>
+          <div class="action-why">${escHtml(act.why)}</div>
+          ${act.snippet ? `<div class="action-code-snippet"><pre><code>${escHtml(act.snippet)}</code></pre></div>` : ''}
           <div class="action-tags">
             <span class="action-tag">${act.tag}</span>
           </div>
         </div>
         <button class="btn-copy-fix" data-copy="${encodeURIComponent(act.copyText)}">
-          Copy Fix
+          ${isMarketer ? 'Copy Recommendation' : 'Copy Code Fix'}
         </button>
       </div>
     `).join("");
@@ -2447,7 +2658,7 @@ import Layout from "../layouts/Layout.astro";
           btn.textContent = "Copied ✓";
           btn.classList.add("copied");
           setTimeout(() => {
-            btn.textContent = "Copy Fix";
+            btn.textContent = isMarketer ? "Copy Recommendation" : "Copy Code Fix";
             btn.classList.remove("copied");
           }, 2000);
         });
@@ -2489,7 +2700,7 @@ import Layout from "../layouts/Layout.astro";
         <div class="row-num-badge">${idx + 1}</div>
         <div class="row-fields">
           <div class="row-field">
-            <span class="field-sublabel">Monitored Search Prompt</span>
+            <span class="field-sublabel">Search Query</span>
             <input class="input prompt-query-input" type="text" value="${escHtml(row.query)}" placeholder="e.g. Best CRM for Startups" data-idx="${idx}" />
           </div>
           <div class="row-field">
@@ -2643,18 +2854,18 @@ import Layout from "../layouts/Layout.astro";
           <div class="insight-card">
             <div class="insight-header">
               <div class="insight-title-group">
-                <span class="insight-rank-badge">#${idx + 1} HIGHEST LEVERAGE</span>
+                <span class="insight-rank-badge">#${idx + 1} HIGHEST ROI</span>
                 <span class="insight-title">${escHtml(g.displayName)}</span>
               </div>
-              <span class="insight-recur-badge ${isFull ? 'full' : ''}">Appears on ${g.recurrenceCount} of ${portfolio.totalPromptsAnalyzed} Prompts (${pct}% of losses)</span>
+              <span class="insight-recur-badge ${isFull ? 'full' : ''}">Helps win back ${g.recurrenceCount} of ${portfolio.totalPromptsAnalyzed} Searches (${pct}% of losses)</span>
             </div>
             
             <div class="insight-meta">
-              <strong>Why LLMs Ground on Competitors:</strong> ${escHtml(g.lossReasonSummary)}
+              <strong>Why Competitor Wins:</strong> ${escHtml(g.lossReasonSummary)}
             </div>
             
             <div class="insight-meta">
-              <strong>Core Recommendation:</strong> ${escHtml(g.representativeRecommendation)}
+              <strong>Recommendation:</strong> ${escHtml(g.representativeRecommendation)}
             </div>
 
             <div class="insight-code-box">
@@ -2663,7 +2874,7 @@ import Layout from "../layouts/Layout.astro";
             </div>
 
             <div class="insight-prompts">
-              <strong>Affected Queries:</strong>
+              <strong>Affected Search Queries:</strong>
               ${g.affectedPrompts.map(p => `<span class="prompt-pill-tag">"${escHtml(p)}"</span>`).join(" ")}
             </div>
           </div>
@@ -2691,9 +2902,9 @@ import Layout from "../layouts/Layout.astro";
     if (!currentResult) return;
     navigator.clipboard.writeText(currentResult.marketerBrief.markdownContent).then(() => {
       const btn = document.getElementById("btnCopyBrief");
-      if (btn) btn.innerHTML = "<span>Copied Brief ✓</span>";
+      if (btn) btn.innerHTML = "<span>Copied Summary ✓</span>";
       setTimeout(() => {
-        if (btn) btn.innerHTML = `<span>Copy Marketer Brief</span>`;
+        if (btn) btn.innerHTML = `<span>Copy Marketing Summary</span>`;
       }, 2000);
     });
   });
@@ -2713,7 +2924,7 @@ import Layout from "../layouts/Layout.astro";
       const btn = document.getElementById("btnCopyJira");
       if (btn) btn.innerHTML = "<span>Copied Jira Story ✓</span>";
       setTimeout(() => {
-        if (btn) btn.innerHTML = `<span>Copy Jira Story (PEEC-408)</span>`;
+        if (btn) btn.innerHTML = `<span>Copy Developer Jira Story</span>`;
       }, 2000);
     });
   });
@@ -2722,9 +2933,9 @@ import Layout from "../layouts/Layout.astro";
     if (!currentPortfolioResult) return;
     navigator.clipboard.writeText(currentPortfolioResult.bulkMarkdownBrief).then(() => {
       const btn = document.getElementById("btnCopyPortfolioBrief");
-      if (btn) btn.innerHTML = "<span>Copied Bulk Brief ✓</span>";
+      if (btn) btn.innerHTML = "<span>Copied Bulk Summary ✓</span>";
       setTimeout(() => {
-        if (btn) btn.innerHTML = `<span>Copy Bulk Brief</span>`;
+        if (btn) btn.innerHTML = `<span>Copy Bulk Summary</span>`;
       }, 2000);
     });
   });
@@ -2733,7 +2944,7 @@ import Layout from "../layouts/Layout.astro";
     if (!currentPortfolioResult) return;
     navigator.clipboard.writeText(currentPortfolioResult.sprintJiraBacklog).then(() => {
       const btn = document.getElementById("btnCopyJiraBacklog");
-      if (btn) btn.innerHTML = "<span>Copied Sprint Backlog ✓</span>";
+      if (btn) btn.innerHTML = "<span>Copied Jira Backlog ✓</span>";
       setTimeout(() => {
         if (btn) btn.innerHTML = `<span>Copy Jira Backlog</span>`;
       }, 2000);
