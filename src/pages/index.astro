@@ -2,275 +2,1323 @@
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="Citation Gap Analyzer — Peec AI">
-  <div class="page">
-
-    <!-- Nav -->
-    <nav class="nav">
-      <div class="nav-inner">
-        <div class="nav-brand">
-          <span class="nav-logo">◆</span>
-          <span class="nav-name">Peec AI</span>
-          <span class="nav-sep">/</span>
-          <span class="nav-tool">Citation Gap Analyzer</span>
+<Layout title="Peec AI — AI Search Analytics & Citation Gap Synthesizer">
+  <div class="peec-app">
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-dropdown">
+          <div class="brand-avatar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <span class="brand-name">Attio's Dashboard</span>
+          <svg class="chevron-down" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
         </div>
-        <a class="nav-link" href="https://peec.ai" target="_blank" rel="noopener">peec.ai ↗</a>
-      </div>
-    </nav>
-
-    <main class="main">
-
-      <!-- Hero -->
-      <div class="hero">
-        <h1 class="hero-title">What does your competitor have that you don't?</h1>
-        <p class="hero-sub">Enter two URLs and see exactly which schema types, proof points, and keywords make your competitor get cited by AI — and you don't.</p>
       </div>
 
-      <!-- Input Card -->
-      <div class="input-card">
-        <div class="input-grid">
-          <div class="field">
-            <label class="label" for="brandUrlInput">Your brand URL</label>
-            <input id="brandUrlInput" class="input" type="url" placeholder="https://your-site.com" value="https://our-saas-crm.io" />
+      <div class="search-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span>Quick Actions</span>
+        <span class="shortcut">⌘K</span>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Pages</div>
+        <nav class="nav-menu">
+          <button class="nav-item active" data-view="view-overview" id="navOverview">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>Overview</span>
+          </button>
+          
+          <button class="nav-item" data-view="view-gap" id="navGap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+            <span>Citation Gap</span>
+            <span class="badge-new">NEW</span>
+          </button>
+
+          <button class="nav-item" data-view="view-prompts" id="navPrompts">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span>Prompts</span>
+          </button>
+
+          <button class="nav-item" data-view="view-sources" id="navSources">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+            </svg>
+            <span>Sources</span>
+          </button>
+
+          <button class="nav-item" data-view="view-models" id="navModels">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+            <span>Models</span>
+          </button>
+
+          <button class="nav-item" data-view="view-settings" id="navSettings">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            <span>Settings</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-pill">
+          <div class="user-avatar">M</div>
+          <div class="user-info">
+            <span class="user-name">Mereke D.</span>
+            <span class="user-role">Head of Product</span>
           </div>
-          <div class="field">
-            <label class="label" for="compUrlInput">Competitor URL</label>
-            <input id="compUrlInput" class="input" type="url" placeholder="https://competitor.com" value="https://attio.com" />
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      <!-- Topbar Header -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="filter-pill primary">
+            <span class="pill-icon">◆</span>
+            <span>Attio</span>
+          </div>
+          <div class="filter-pill">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Last 7 days</span>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+          <div class="filter-pill">
+            <span>All tags</span>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+          <div class="filter-pill">
+            <span>All Models (ChatGPT, Perplexity, Gemini)</span>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </div>
         </div>
 
-        <div class="query-row">
-          <div class="field" style="flex:1">
-            <label class="label" for="queryInput">Search query being monitored <span class="label-opt">(optional)</span></label>
-            <input id="queryInput" class="input" type="text" placeholder="e.g. best CRM for startups" value="best b2b crm for fast-growing startups" />
+        <div class="topbar-right">
+          <button class="icon-btn" title="Help & Documentation">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+          </button>
+          <button class="export-btn" id="headerExportBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Export</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- View 1: Overview Dashboard (Peec AI Native Look) -->
+      <main id="view-overview" class="view-pane active">
+        <!-- Overview Banner & KPIs -->
+        <div class="overview-header">
+          <div class="overview-title-group">
+            <span class="sparkle-icon">✨</span>
+            <h1 class="overview-title">Overview &bull; Attio's Visibility trending up by 5.2% this month</h1>
           </div>
-          <button id="analyzeBtn" class="btn-primary">
-            Analyze gap →
+          <div class="kpi-pills">
+            <div class="kpi-tag">
+              <span class="kpi-label">Visibility:</span>
+              <span class="kpi-val">3/14</span>
+              <span class="kpi-arrow down">▾</span>
+            </div>
+            <div class="kpi-tag">
+              <span class="kpi-label">Sentiment:</span>
+              <span class="kpi-val">2/14</span>
+              <span class="kpi-arrow up">▴</span>
+            </div>
+            <div class="kpi-tag">
+              <span class="kpi-label">Position:</span>
+              <span class="kpi-val">5/14</span>
+              <span class="kpi-arrow up">▴</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Problem Banner: The Citation Gap Pain Point -->
+        <div class="pain-point-callout">
+          <div class="callout-left">
+            <div class="callout-icon">⚡</div>
+            <div>
+              <div class="callout-heading">Attention: 2 Competitors Outrank Attio on Prompt <em>"Best CRM for Startups"</em></div>
+              <div class="callout-sub">Salesforce (62%) and Monday.com (65%) win citations due to missing structured schemas and unstated latency SLAs.</div>
+            </div>
+          </div>
+          <button class="callout-btn" id="openGapFromBanner">
+            <span>Diagnose Citation Gap &amp; Fixes →</span>
           </button>
         </div>
 
-        <!-- Preset chips -->
-        <div class="presets">
-          <span class="presets-label">Quick load:</span>
-          <button class="chip chip-active" data-preset="crm_early_stage">Attio vs CRM</button>
-          <button class="chip" data-preset="geo_search_analytics">Peec AI vs Tracker</button>
-          <button class="chip" data-preset="billing_usage_based">Lago vs Billing</button>
-          <button class="chip" data-preset="vector_database_rag">Qdrant vs Vector DB</button>
+        <!-- Grid 2-col: Chart & Competitor Leaderboard -->
+        <div class="dashboard-grid-top">
+          <!-- Visibility Trend Card -->
+          <div class="card chart-card">
+            <div class="card-header">
+              <div class="tab-toggle-group">
+                <button class="tab-toggle active">👁 Visibility</button>
+                <button class="tab-toggle">😊 Sentiment</button>
+                <button class="tab-toggle">🧭 Position</button>
+              </div>
+              <div class="card-actions">
+                <button class="mini-icon-btn">📈</button>
+                <button class="mini-icon-btn">📊</button>
+              </div>
+            </div>
+
+            <!-- Simulated Line Graph with Interactive Tooltip -->
+            <div class="chart-canvas">
+              <svg class="chart-svg" viewBox="0 0 500 180" preserveAspectRatio="none">
+                <!-- Grid Lines -->
+                <line x1="0" y1="30" x2="500" y2="30" stroke="#F3F4F6" stroke-width="1"/>
+                <line x1="0" y1="75" x2="500" y2="75" stroke="#F3F4F6" stroke-width="1"/>
+                <line x1="0" y1="120" x2="500" y2="120" stroke="#F3F4F6" stroke-width="1"/>
+                <line x1="0" y1="165" x2="500" y2="165" stroke="#F3F4F6" stroke-width="1"/>
+
+                <!-- Lines: Monday (Red/Orange), Salesforce (Blue), Attio (Indigo), Zero (Gold), Pipedrive (Green) -->
+                <path d="M0,110 Q120,80 250,50 T500,60" fill="none" stroke="#EF4444" stroke-width="2.5"/>
+                <path d="M0,90 Q120,95 250,70 T500,80" fill="none" stroke="#3B82F6" stroke-width="2.5"/>
+                <path d="M0,130 Q120,120 250,95 T500,105" fill="none" stroke="#6366F1" stroke-width="3"/>
+                <path d="M0,150 Q120,140 250,135 T500,140" fill="none" stroke="#F59E0B" stroke-width="2"/>
+                <path d="M0,140 Q120,130 250,145 T500,150" fill="none" stroke="#10B981" stroke-width="2"/>
+              </svg>
+
+              <!-- Floating Tooltip Box (like in Peec AI screenshot) -->
+              <div class="chart-tooltip">
+                <div class="tooltip-title">March 2026</div>
+                <div class="tooltip-row"><span class="dot red"></span> Monday <span class="val">72%</span></div>
+                <div class="tooltip-row"><span class="dot blue"></span> Salesforce <span class="val">65%</span></div>
+                <div class="tooltip-row active"><span class="dot indigo"></span> Attio (You) <span class="val">54%</span></div>
+                <div class="tooltip-row"><span class="dot gold"></span> Zero <span class="val">33%</span></div>
+                <div class="tooltip-row"><span class="dot green"></span> Pipedrive <span class="val">28%</span></div>
+              </div>
+
+              <!-- Month X-Axis -->
+              <div class="chart-x-axis">
+                <span>Jan</span>
+                <span>Feb</span>
+                <span>Mar</span>
+                <span>Apr</span>
+                <span>May</span>
+                <span>Jun</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Competitor Leaderboard Table Card -->
+          <div class="card leaderboard-card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Attio's competitors</h3>
+                <p class="card-subtitle">Compare Attio with its competitors in AI Search citations</p>
+              </div>
+              <button class="pop-out-btn" title="Open full table">↗</button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="peec-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Brand</th>
+                    <th>Visibility</th>
+                    <th>Sentiment</th>
+                    <th>Position</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="competitor-row">
+                    <td>1</td>
+                    <td class="brand-cell">
+                      <span class="table-logo red">M</span>
+                      <strong>Monday.com</strong>
+                    </td>
+                    <td><span class="pill-stat">65%</span></td>
+                    <td><span class="sentiment-bar">86</span></td>
+                    <td>#2.7</td>
+                    <td>
+                      <button class="table-diagnose-btn" data-comp="monday.com">
+                        <span>Diagnose Gap ⚡</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="competitor-row">
+                    <td>2</td>
+                    <td class="brand-cell">
+                      <span class="table-logo blue">S</span>
+                      <strong>Salesforce</strong>
+                    </td>
+                    <td><span class="pill-stat">62%</span></td>
+                    <td><span class="sentiment-bar">62</span> <span class="trend down">↘ 0.2</span></td>
+                    <td>#2.9 <span class="trend down">↘ 0.1</span></td>
+                    <td>
+                      <button class="table-diagnose-btn" data-comp="salesforce.com">
+                        <span>Diagnose Gap ⚡</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="competitor-row you-row">
+                    <td>3</td>
+                    <td class="brand-cell">
+                      <span class="table-logo indigo">A</span>
+                      <strong>Attio (Your Brand)</strong>
+                    </td>
+                    <td><span class="pill-stat highlight">47%</span> <span class="trend up">↗ 0.3</span></td>
+                    <td><span class="sentiment-bar">89</span></td>
+                    <td>#3.6</td>
+                    <td><span class="you-badge">Your Brand</span></td>
+                  </tr>
+                  <tr class="competitor-row">
+                    <td>4</td>
+                    <td class="brand-cell">
+                      <span class="table-logo green">P</span>
+                      <strong>Pipedrive</strong>
+                    </td>
+                    <td><span class="pill-stat">41%</span> <span class="trend down">↘ 0.3</span></td>
+                    <td><span class="sentiment-bar">76</span></td>
+                    <td>#3.9</td>
+                    <td>
+                      <button class="table-diagnose-btn" data-comp="pipedrive.com">
+                        <span>Diagnose Gap ⚡</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="competitor-row">
+                    <td>5</td>
+                    <td class="brand-cell">
+                      <span class="table-logo black">Z</span>
+                      <strong>Zero</strong>
+                    </td>
+                    <td><span class="pill-stat">28%</span></td>
+                    <td><span class="sentiment-bar">88</span> <span class="trend up">↗ 0.4</span></td>
+                    <td>#2.3 <span class="trend up">↗ 0.2</span></td>
+                    <td>
+                      <button class="table-diagnose-btn" data-comp="zero.io">
+                        <span>Diagnose Gap ⚡</span>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- Gap Report (hidden until analysis runs) -->
-      <div id="reportSection" class="report-section" style="display:none">
+        <!-- Grid 2-col: Domains Table & Donut Breakdown -->
+        <div class="dashboard-grid-bottom">
+          <div class="card domains-card">
+            <div class="card-header">
+              <div class="tab-toggle-group">
+                <button class="tab-toggle active">Domains</button>
+                <button class="tab-toggle">URLs</button>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="peec-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Domain</th>
+                    <th>Type</th>
+                    <th>Used</th>
+                    <th>Avg. Citations</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td class="domain-cell">🔴 reddit.com</td>
+                    <td><span class="type-pill ugc">UGC</span></td>
+                    <td>32%</td>
+                    <td>41%</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td class="domain-cell">📰 techradar.com</td>
+                    <td><span class="type-pill editorial">Editorial</span></td>
+                    <td>43%</td>
+                    <td>46%</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td class="domain-cell">📚 wikipedia.org</td>
+                    <td><span class="type-pill reference">Reference</span></td>
+                    <td>28%</td>
+                    <td>34%</td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td class="domain-cell">▶️ youtube.com</td>
+                    <td><span class="type-pill ugc">UGC</span></td>
+                    <td>19%</td>
+                    <td>22%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-        <!-- Report header -->
-        <div class="report-header">
+          <div class="card donut-card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Domains by Type</h3>
+                <p class="card-subtitle">Most used domains categorized by citation source type</p>
+              </div>
+              <button class="pop-out-btn">↗</button>
+            </div>
+            <div class="donut-content">
+              <div class="donut-circle">
+                <span class="donut-percentage">12%</span>
+                <span class="donut-caption">Brand share</span>
+              </div>
+              <div class="donut-legend">
+                <div class="legend-row"><span class="dot blue"></span> UGC (42%)</div>
+                <div class="legend-row"><span class="dot purple"></span> Editorial (31%)</div>
+                <div class="legend-row"><span class="dot indigo"></span> Corporate (15%)</div>
+                <div class="legend-row"><span class="dot red"></span> Competitor (12%)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- View 2: Autonomous Citation Gap Synthesizer (The Solution) -->
+      <main id="view-gap" class="view-pane">
+        <!-- Diagnostic Workspace Header -->
+        <div class="gap-workspace-header">
           <div>
-            <div class="report-badge">Gap Report</div>
-            <h2 class="report-title">
-              <span id="compDomainTitle" class="highlight">attio.com</span>
-              outranks
-              <span id="brandDomainTitle">your-crm.io</span>
-            </h2>
-            <p class="report-meta" id="reportMeta">Query: "best b2b crm for fast-growing startups" · Analyzed in <span id="latencyDisplay">14ms</span></p>
+            <div class="workspace-tag">Peec AI &bull; Autonomous Remediation Engine</div>
+            <h1 class="workspace-title">Citation Gap Synthesizer</h1>
+            <p class="workspace-sub">
+              Pinpoint exactly <strong>why competitors win citations</strong> on key prompts, and generate <strong>instant JSON-LD schemas, quantitative claims, and agency briefs</strong> to close the gap.
+            </p>
           </div>
-          <div class="report-score-wrap">
-            <div class="score-ring">
-              <span id="gapCountDisplay" class="score-num">3</span>
-              <span class="score-label">gaps</span>
+        </div>
+
+        <!-- Diagnostic Input Bar -->
+        <div class="card gap-input-card">
+          <div class="input-grid">
+            <div class="field">
+              <label class="label" for="brandUrlInput">🏢 Your Brand Landing Page:</label>
+              <input id="brandUrlInput" class="input" type="url" value="https://attio.com" />
+            </div>
+            <div class="field">
+              <label class="label" for="compUrlInput">🏆 Cited Competitor URL (Winning Page):</label>
+              <input id="compUrlInput" class="input" type="url" value="https://monday.com/crm" />
+            </div>
+          </div>
+
+          <div class="query-row">
+            <div class="field" style="flex:1">
+              <label class="label" for="queryInput">🎯 Monitored Search Prompt / Query:</label>
+              <input id="queryInput" class="input" type="text" value="best b2b crm for fast-growing startups" />
+            </div>
+            <button id="analyzeBtn" class="btn-primary-black">
+              <span>🚀 Synthesize Citation Gap</span>
+            </button>
+          </div>
+
+          <!-- Presets for 1-click loading -->
+          <div class="presets-row">
+            <span class="presets-label">Quick Preset Scenarios:</span>
+            <button class="chip chip-active" data-preset="crm_early_stage">Attio vs Our Brand CRM</button>
+            <button class="chip" data-preset="geo_search_analytics">Peec AI vs Legacy Tracker</button>
+            <button class="chip" data-preset="billing_usage_based">Lago vs Generic Billing</button>
+            <button class="chip" data-preset="vector_database_rag">Qdrant vs Basic Vector DB</button>
+          </div>
+        </div>
+
+        <!-- Delta Scorecard (Summary Metrics) -->
+        <div class="scorecard-grid">
+          <div class="card stat-box">
+            <div class="stat-top">
+              <span class="stat-label">Missing Schema Types</span>
+              <span class="stat-badge red">Critical</span>
+            </div>
+            <div class="stat-number danger" id="statSchemaCount">2</div>
+            <div class="stat-hint">JSON-LD missing in page &lt;head&gt;</div>
+          </div>
+
+          <div class="card stat-box">
+            <div class="stat-top">
+              <span class="stat-label">Unstated Proof Points</span>
+              <span class="stat-badge amber">High Priority</span>
+            </div>
+            <div class="stat-number warning" id="statBenchmarkCount">4</div>
+            <div class="stat-hint">Quantitative metrics stated by competitor</div>
+          </div>
+
+          <div class="card stat-box">
+            <div class="stat-top">
+              <span class="stat-label">Omitted Topic Entities</span>
+              <span class="stat-badge purple">Semantic</span>
+            </div>
+            <div class="stat-number purple" id="statEntityCount">6</div>
+            <div class="stat-hint">Essential keywords searched by LLMs</div>
+          </div>
+
+          <div class="card stat-box">
+            <div class="stat-top">
+              <span class="stat-label">Projected Win Probability</span>
+              <span class="stat-badge green">Post-Fix</span>
+            </div>
+            <div class="stat-number success" id="statWinProb">85%</div>
+            <div class="stat-hint">+38% lift after injecting fixes</div>
+          </div>
+        </div>
+
+        <!-- Side-by-Side Comparison Matrix -->
+        <div class="card matrix-card">
+          <div class="matrix-header">
+            <div class="col-category">Diagnostic Category</div>
+            <div class="col-brand">
+              <span class="dot red"></span>
+              <span id="labelBrand">Your Brand (attio.com)</span>
+            </div>
+            <div class="col-comp">
+              <span class="dot green"></span>
+              <span id="labelComp">Winning Competitor (monday.com)</span>
+            </div>
+          </div>
+
+          <!-- Row 1: Schema -->
+          <div class="matrix-row">
+            <div class="row-info">
+              <div class="row-title">Structured Schema.org</div>
+              <div class="row-desc">Parsed by Perplexity &amp; ChatGPT Search for product cards</div>
+            </div>
+            <div class="row-cell cell-missing" id="cellSchemaBrand">
+              <span class="icon">✗</span>
+              <span id="textSchemaBrand">Missing SoftwareApplication &amp; FAQPage</span>
+            </div>
+            <div class="row-cell cell-has" id="cellSchemaComp">
+              <span class="icon">✓</span>
+              <span id="textSchemaComp">Has SoftwareApplication, FAQPage, AggregateRating</span>
+            </div>
+          </div>
+
+          <!-- Row 2: Numerical Proof Points -->
+          <div class="matrix-row">
+            <div class="row-info">
+              <div class="row-title">Numerical Proof Points</div>
+              <div class="row-desc">Hard data claims quoted in generative search summaries</div>
+            </div>
+            <div class="row-cell cell-missing" id="cellBenchmarkBrand">
+              <span class="icon">✗</span>
+              <span id="textBenchmarkBrand">No explicit SLA latency or customer counts stated</span>
+            </div>
+            <div class="row-cell cell-has" id="cellBenchmarkComp">
+              <span class="icon">✓</span>
+              <span id="textBenchmarkComp">Quotes: 10,000+ teams, sub-10ms sync, SOC-2 Type II</span>
+            </div>
+          </div>
+
+          <!-- Row 3: Entity Keywords -->
+          <div class="matrix-row">
+            <div class="row-info">
+              <div class="row-title">Semantic Topic Entities</div>
+              <div class="row-desc">Entity co-occurrences used to compute ranking relevance</div>
+            </div>
+            <div class="row-cell cell-partial" id="cellEntityBrand">
+              <span class="icon">~</span>
+              <span id="textEntityBrand">Partial (4/10 topic entities detected)</span>
+            </div>
+            <div class="row-cell cell-has" id="cellEntityComp">
+              <span class="icon">✓</span>
+              <span id="textEntityComp">Complete (10/10 topic entities detected)</span>
             </div>
           </div>
         </div>
 
-        <!-- Side-by-side comparison -->
-        <div class="comparison-table">
-          <div class="comparison-header">
-            <div class="col-label">Category</div>
-            <div class="col-label col-you">
-              <span class="dot dot-red"></span>
-              <span id="brandColLabel">Your brand</span>
-            </div>
-            <div class="col-label col-comp">
-              <span class="dot dot-green"></span>
-              <span id="compColLabel">Competitor</span>
-            </div>
-          </div>
-
-          <!-- Schema row -->
-          <div class="comparison-row">
-            <div class="row-category">
-              <div class="row-cat-title">Schema markup</div>
-              <div class="row-cat-sub">JSON-LD in &lt;head&gt;</div>
-            </div>
-            <div class="row-cell cell-missing" id="schemaBrandCell">
-              <span class="cell-icon">✗</span>
-              <span id="schemaBrandText">Missing SoftwareApp, FAQPage</span>
-            </div>
-            <div class="row-cell cell-has" id="schemaCompCell">
-              <span class="cell-icon">✓</span>
-              <span id="schemaCompText">Has SoftwareApp, FAQPage, Organization</span>
-            </div>
-          </div>
-
-          <!-- Proof points row -->
-          <div class="comparison-row">
-            <div class="row-category">
-              <div class="row-cat-title">Proof points</div>
-              <div class="row-cat-sub">Numbers &amp; benchmarks</div>
-            </div>
-            <div class="row-cell cell-missing" id="benchmarkBrandCell">
-              <span class="cell-icon">✗</span>
-              <span id="benchmarkBrandText">No stated metrics</span>
-            </div>
-            <div class="row-cell cell-has" id="benchmarkCompCell">
-              <span class="cell-icon">✓</span>
-              <span id="benchmarkCompText">10k+ customers, 99.9% uptime, &lt;200ms API</span>
-            </div>
-          </div>
-
-          <!-- Topics row -->
-          <div class="comparison-row">
-            <div class="row-category">
-              <div class="row-cat-title">Topic coverage</div>
-              <div class="row-cat-sub">Key entities</div>
-            </div>
-            <div class="row-cell cell-partial" id="entityBrandCell">
-              <span class="cell-icon">~</span>
-              <span id="entityBrandText">Partial — 4 / 10 topics covered</span>
-            </div>
-            <div class="row-cell cell-has" id="entityCompCell">
-              <span class="cell-icon">✓</span>
-              <span id="entityCompText">Full — 9 / 10 topics covered</span>
-            </div>
-          </div>
+        <!-- Remediation Action Feed (Zero Extrapolation Action Items) -->
+        <div class="action-feed-header">
+          <h2 class="feed-title">⚡ High-Impact Remediation Actions (<span id="remediationCount">5 Actions</span>)</h2>
+          <span class="feed-subtitle">Zero-Extrapolation fixes ready to copy and deploy in under 30 minutes</span>
         </div>
 
-        <!-- Fixes list -->
-        <div class="fixes-section">
-          <h3 class="fixes-title">
-            <span id="fixCountLabel">3 gaps to fix</span>
-            <span class="fixes-time">~30 min total</span>
-          </h3>
-          <div id="fixesList" class="fixes-list"></div>
-        </div>
+        <div class="action-items-list" id="actionItemsList"></div>
 
-        <!-- Export bar -->
-        <div class="export-bar">
-          <div class="export-info">Ready to share with your team</div>
-          <div class="export-actions">
-            <button id="copyReportBtn" class="btn-export">
+        <!-- Export & Handoff Bar -->
+        <div class="export-handoff-card">
+          <div class="handoff-left">
+            <div class="handoff-title">Ready to hand off to your team or client?</div>
+            <div class="handoff-desc">Export client-ready Markdown briefs or sprint-ready Jira stories with Gherkin acceptance criteria.</div>
+          </div>
+          <div class="handoff-actions">
+            <button class="btn-outline" id="btnCopyBrief">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-              Copy report
+              <span>Copy Marketer Brief</span>
             </button>
-            <button id="downloadReportBtn" class="btn-export-primary">
+            <button class="btn-outline" id="btnDownloadBrief">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              Download .md
+              <span>Download Brief (.md)</span>
+            </button>
+            <button class="btn-black" id="btnCopyJira">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+              <span>Copy Jira Story (PEEC-408)</span>
             </button>
           </div>
         </div>
+      </main>
 
-      </div>
-      <!-- end report -->
+      <!-- View 3: Prompts Tab Placeholder -->
+      <main id="view-prompts" class="view-pane">
+        <div class="empty-state-card">
+          <h2>🎯 Monitored Search Prompts</h2>
+          <p>Tracking 24 prompts across ChatGPT Search, Perplexity AI, and Google Gemini.</p>
+          <button class="btn-primary-black" style="margin-top: 14px;" id="btnGoToGap">Run Citation Gap Analysis on Active Prompts →</button>
+        </div>
+      </main>
 
-    </main>
+      <!-- View 4: Sources Tab Placeholder -->
+      <main id="view-sources" class="view-pane">
+        <div class="empty-state-card">
+          <h2>🌐 Citation Sources &amp; Domains</h2>
+          <p>Auditing 142 citation domains (UGC, Editorial, Industry Directories).</p>
+        </div>
+      </main>
 
-    <footer class="footer">
-      <span>Peec AI · Citation Gap Analyzer</span>
-      <span>Made by Mereke Dadabayeva</span>
-    </footer>
+      <!-- View 5: Models Tab Placeholder -->
+      <main id="view-models" class="view-pane">
+        <div class="empty-state-card">
+          <h2>🤖 AI Engine Breakdown</h2>
+          <p>Comparing citation visibility across OpenAI ChatGPT-4o, Perplexity Sonar, and Google Gemini 1.5 Pro.</p>
+        </div>
+      </main>
+
+      <!-- View 6: Settings Tab Placeholder -->
+      <main id="view-settings" class="view-pane">
+        <div class="empty-state-card">
+          <h2>⚙️ Brand &amp; Workspace Settings</h2>
+          <p>Manage workspace team members, brand profiles, and webhook alerts.</p>
+        </div>
+      </main>
+    </div>
   </div>
 </Layout>
 
 <style>
-  /* ─── Page Shell ─────────────────────────────────── */
-  .page {
+  /* ── Layout Shell ────────────────────────────────────────── */
+  .peec-app {
+    display: flex;
     min-height: 100vh;
+    background-color: #F8F9FA;
+    color: #111827;
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  /* ── Left Sidebar (Exact Peec AI Style) ─────────────────── */
+  .sidebar {
+    width: 240px;
+    background: #FFFFFF;
+    border-right: 1px solid #E5E7EB;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+
+  .sidebar-header {
+    padding: 16px;
+    border-bottom: 1px solid #F3F4F6;
+  }
+
+  .brand-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+  .brand-dropdown:hover {
+    background: #F3F4F6;
+  }
+
+  .brand-avatar {
+    width: 28px;
+    height: 28px;
+    background: #111827;
+    color: #FFFFFF;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+  }
+
+  .brand-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #111827;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .chevron-down {
+    color: #9CA3AF;
+  }
+
+  .search-box {
+    margin: 14px 16px 8px;
+    padding: 8px 12px;
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: #6B7280;
+    cursor: pointer;
+  }
+  .shortcut {
+    margin-left: auto;
+    font-size: 0.72rem;
+    background: #E5E7EB;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .nav-section {
+    padding: 12px 8px;
+    flex: 1;
+  }
+  .nav-section-title {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #9CA3AF;
+    padding: 4px 12px 8px;
+  }
+
+  .nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: #4B5563;
+    font-size: 0.86rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    transition: all 0.12s;
+  }
+  .nav-item:hover {
+    background: #F3F4F6;
+    color: #111827;
+  }
+  .nav-item.active {
+    background: #F3F4F6;
+    color: #111827;
+    font-weight: 600;
+  }
+
+  .badge-new {
+    margin-left: auto;
+    background: #6366F1;
+    color: #FFFFFF;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 99px;
+  }
+
+  .sidebar-footer {
+    padding: 14px 16px;
+    border-top: 1px solid #F3F4F6;
+  }
+  .user-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    background: #EEF2FF;
+    color: #6366F1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+  .user-info {
     display: flex;
     flex-direction: column;
   }
+  .user-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+  .user-role {
+    font-size: 0.72rem;
+    color: #9CA3AF;
+  }
 
-  /* ─── Nav ─────────────────────────────────────────── */
-  .nav {
-    border-bottom: 1px solid var(--border);
-    background: var(--bg);
+  /* ── Main Wrapper & Topbar ───────────────────────────────── */
+  .main-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .topbar {
+    height: 56px;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E5E7EB;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
     position: sticky;
     top: 0;
     z-index: 10;
   }
-  .nav-inner {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 24px;
-    height: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .nav-brand {
+
+  .topbar-left {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.9rem;
-    font-weight: 500;
   }
-  .nav-logo { color: var(--accent); font-size: 1rem; }
-  .nav-name { font-weight: 600; }
-  .nav-sep { color: var(--border-strong); }
-  .nav-tool { color: var(--text-secondary); }
-  .nav-link {
+
+  .filter-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    border-radius: 99px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #4B5563;
+    cursor: pointer;
+  }
+  .filter-pill.primary {
+    background: #111827;
+    color: #FFFFFF;
+    border-color: #111827;
+  }
+  .pill-icon {
+    color: #6366F1;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .icon-btn {
+    width: 34px;
+    height: 34px;
+    border: 1px solid #E5E7EB;
+    background: #FFFFFF;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6B7280;
+    cursor: pointer;
+  }
+  .icon-btn:hover {
+    background: #F3F4F6;
+  }
+
+  .export-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
     font-size: 0.82rem;
-    color: var(--text-secondary);
-    font-weight: 500;
+    font-weight: 600;
+    color: #111827;
+    cursor: pointer;
+    transition: all 0.12s;
   }
-  .nav-link:hover { color: var(--text); text-decoration: none; }
+  .export-btn:hover {
+    background: #F9FAFB;
+    border-color: #D1D5DB;
+  }
 
-  /* ─── Main ────────────────────────────────────────── */
-  .main {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 56px 24px 80px;
-    flex: 1;
+  /* ── View Panes ─────────────────────────────────────────── */
+  .view-pane {
+    display: none;
+    padding: 24px 32px 60px;
+    max-width: 1200px;
     width: 100%;
+    margin: 0 auto;
+  }
+  .view-pane.active {
+    display: block;
+    animation: fadeIn 0.15s ease-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
-  /* ─── Hero ────────────────────────────────────────── */
-  .hero {
-    margin-bottom: 32px;
-  }
-  .hero-title {
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: -0.04em;
-    line-height: 1.15;
-    color: var(--text);
-    margin-bottom: 12px;
-  }
-  .hero-sub {
-    font-size: 1rem;
-    color: var(--text-secondary);
-    max-width: 560px;
-    line-height: 1.6;
-  }
-
-  /* ─── Input Card ──────────────────────────────────── */
-  .input-card {
-    background: var(--bg);
-    border: 1px solid var(--border);
+  /* ── Cards General ──────────────────────────────────────── */
+  .card {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
     border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 32px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    padding: 20px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 2px;
+  }
+  .card-subtitle {
+    font-size: 0.78rem;
+    color: #6B7280;
+  }
+  .pop-out-btn {
+    background: transparent;
+    border: none;
+    color: #9CA3AF;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  /* ── Overview Header ────────────────────────────────────── */
+  .overview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+  .overview-title-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sparkle-icon { font-size: 1.1rem; }
+  .overview-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #111827;
+  }
+  .kpi-pills {
+    display: flex;
+    gap: 12px;
+  }
+  .kpi-tag {
+    font-size: 0.8rem;
+    color: #4B5563;
+  }
+  .kpi-val {
+    font-weight: 700;
+    color: #111827;
+  }
+  .kpi-arrow.up { color: #10B981; font-weight: 700; }
+  .kpi-arrow.down { color: #EF4444; font-weight: 700; }
+
+  /* ── Pain Point Callout (The Bridge) ─────────────────────── */
+  .pain-point-callout {
+    background: #EEF2FF;
+    border: 1px solid #C7D2FE;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .callout-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .callout-icon {
+    width: 36px;
+    height: 36px;
+    background: #6366F1;
+    color: #FFFFFF;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .callout-heading {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #1E1B4B;
+  }
+  .callout-sub {
+    font-size: 0.82rem;
+    color: #4338CA;
+    margin-top: 2px;
+  }
+  .callout-btn {
+    background: #111827;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.12s;
+  }
+  .callout-btn:hover {
+    background: #000000;
+  }
+
+  /* ── Dashboard Grids ────────────────────────────────────── */
+  .dashboard-grid-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .dashboard-grid-bottom {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 20px;
+  }
+
+  .tab-toggle-group {
+    display: flex;
+    background: #F3F4F6;
+    padding: 3px;
+    border-radius: 8px;
+    gap: 2px;
+  }
+  .tab-toggle {
+    border: none;
+    background: transparent;
+    padding: 5px 12px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #6B7280;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .tab-toggle.active {
+    background: #FFFFFF;
+    color: #111827;
+    font-weight: 600;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  /* ── Chart Canvas & Tooltip ─────────────────────────────── */
+  .chart-canvas {
+    position: relative;
+    padding-top: 10px;
+  }
+  .chart-svg {
+    width: 100%;
+    height: 160px;
+  }
+  .chart-tooltip {
+    position: absolute;
+    top: 15px;
+    left: 45%;
+    background: #111827;
+    color: #FFFFFF;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.76rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 5;
+    min-width: 140px;
+  }
+  .tooltip-title {
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #9CA3AF;
+  }
+  .tooltip-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 3px;
+    color: #D1D5DB;
+  }
+  .tooltip-row.active {
+    color: #FFFFFF;
+    font-weight: 700;
+  }
+  .tooltip-row .val {
+    margin-left: auto;
+    font-weight: 600;
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .dot.red { background: #EF4444; }
+  .dot.blue { background: #3B82F6; }
+  .dot.indigo { background: #6366F1; }
+  .dot.gold { background: #F59E0B; }
+  .dot.green { background: #10B981; }
+  .dot.purple { background: #8B5CF6; }
+
+  .chart-x-axis {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #9CA3AF;
+    padding-top: 8px;
+  }
+
+  /* ── Leaderboard & Peec Tables ───────────────────────────── */
+  .table-responsive {
+    overflow-x: auto;
+  }
+  .peec-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+  .peec-table th {
+    text-align: left;
+    padding: 8px 10px;
+    font-weight: 600;
+    color: #9CA3AF;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #F3F4F6;
+  }
+  .peec-table td {
+    padding: 10px 10px;
+    border-bottom: 1px solid #F9FAFB;
+    color: #374151;
+  }
+  .competitor-row:hover {
+    background: #F9FAFB;
+  }
+  .you-row {
+    background: #EEF2FF;
+  }
+
+  .brand-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .table-logo {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+  .table-logo.red { background: #EF4444; }
+  .table-logo.blue { background: #3B82F6; }
+  .table-logo.indigo { background: #6366F1; }
+  .table-logo.green { background: #10B981; }
+  .table-logo.black { background: #111827; }
+
+  .pill-stat {
+    font-weight: 600;
+    color: #111827;
+  }
+  .pill-stat.highlight {
+    color: #6366F1;
+  }
+  .sentiment-bar {
+    font-weight: 600;
+  }
+  .trend.up { color: #10B981; font-size: 0.75rem; font-weight: 600; }
+  .trend.down { color: #EF4444; font-size: 0.75rem; font-weight: 600; }
+
+  .table-diagnose-btn {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: #6366F1;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .table-diagnose-btn:hover {
+    background: #EEF2FF;
+    border-color: #C7D2FE;
+  }
+  .you-badge {
+    background: #C7D2FE;
+    color: #3730A3;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .type-pill {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+  .type-pill.ugc { background: #DBEAFE; color: #1E40AF; }
+  .type-pill.editorial { background: #FEF3C7; color: #92400E; }
+  .type-pill.reference { background: #F3F4F6; color: #4B5563; }
+
+  /* ── Donut Content ──────────────────────────────────────── */
+  .donut-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 10px 0;
+  }
+  .donut-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 8px solid #3B82F6;
+    border-top-color: #8B5CF6;
+    border-right-color: #6366F1;
+    border-bottom-color: #EF4444;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .donut-percentage {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #111827;
+  }
+  .donut-caption {
+    font-size: 0.62rem;
+    color: #9CA3AF;
+    text-transform: uppercase;
+  }
+  .donut-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.78rem;
+    color: #4B5563;
+  }
+  .legend-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── View 2: Citation Gap View Styles ───────────────────── */
+  .gap-workspace-header {
+    margin-bottom: 20px;
+  }
+  .workspace-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6366F1;
+    margin-bottom: 4px;
+  }
+  .workspace-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #111827;
+    margin-bottom: 6px;
+  }
+  .workspace-sub {
+    font-size: 0.9rem;
+    color: #6B7280;
+    max-width: 800px;
+    line-height: 1.5;
+  }
+
+  .gap-input-card {
+    margin-bottom: 24px;
   }
   .input-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
   .query-row {
     display: flex;
     gap: 12px;
     align-items: flex-end;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
   .field {
     display: flex;
@@ -279,462 +1327,424 @@ import Layout from "../layouts/Layout.astro";
   }
   .label {
     font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-  }
-  .label-opt {
-    font-weight: 400;
-    color: var(--text-tertiary);
+    font-weight: 600;
+    color: #374151;
   }
   .input {
-    border: 1px solid var(--border);
+    border: 1px solid #D1D5DB;
     border-radius: 8px;
     padding: 9px 12px;
-    font-size: 0.9rem;
-    color: var(--text);
-    background: var(--bg);
+    font-size: 0.88rem;
+    color: #111827;
+    background: #FFFFFF;
     outline: none;
     transition: border-color 0.15s, box-shadow 0.15s;
     width: 100%;
   }
   .input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-  }
-  .input::placeholder {
-    color: var(--text-tertiary);
+    border-color: #6366F1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
   }
 
-  /* ─── Buttons ─────────────────────────────────────── */
-  .btn-primary {
-    background: var(--accent);
-    color: #fff;
+  .btn-primary-black {
+    background: #111827;
+    color: #FFFFFF;
     border: none;
     border-radius: 8px;
     padding: 10px 20px;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
     transition: background 0.15s, transform 0.1s;
     height: 40px;
     flex-shrink: 0;
-    align-self: flex-end;
   }
-  .btn-primary:hover { background: var(--accent-hover); }
-  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary-black:hover { background: #000000; }
+  .btn-primary-black:active { transform: scale(0.98); }
 
-  /* ─── Presets ─────────────────────────────────────── */
-  .presets {
+  .presets-row {
     display: flex;
     align-items: center;
     gap: 8px;
     flex-wrap: wrap;
+    padding-top: 12px;
+    border-top: 1px solid #F3F4F6;
   }
   .presets-label {
-    font-size: 0.78rem;
-    color: var(--text-tertiary);
-    font-weight: 500;
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: #9CA3AF;
   }
   .chip {
-    border: 1px solid var(--border);
-    background: var(--bg);
+    border: 1px solid #E5E7EB;
+    background: #FFFFFF;
     border-radius: 99px;
     padding: 4px 12px;
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     font-weight: 500;
-    color: var(--text-secondary);
+    color: #4B5563;
     cursor: pointer;
     transition: all 0.12s;
   }
   .chip:hover {
-    border-color: var(--accent);
-    color: var(--accent-text);
-    background: var(--accent-light);
+    border-color: #6366F1;
+    color: #6366F1;
+    background: #EEF2FF;
   }
   .chip-active {
-    border-color: var(--accent);
-    color: var(--accent-text);
-    background: var(--accent-light);
+    border-color: #6366F1;
+    color: #6366F1;
+    background: #EEF2FF;
+    font-weight: 600;
   }
 
-  /* ─── Report Section ──────────────────────────────── */
-  .report-section {
-    animation: fadeIn 0.2s ease;
+  /* ── Scorecards ─────────────────────────────────────────── */
+  .scorecard-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
   }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
+  .stat-box {
+    padding: 16px;
   }
-
-  /* ─── Report Header ───────────────────────────────── */
-  .report-header {
+  .stat-top {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 24px;
-    gap: 24px;
-  }
-  .report-badge {
-    display: inline-block;
-    background: var(--accent-light);
-    color: var(--accent-text);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border-radius: 99px;
+    align-items: center;
     margin-bottom: 8px;
   }
-  .report-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 1.2;
-    margin-bottom: 6px;
-  }
-  .highlight {
-    color: var(--accent);
-  }
-  .report-meta {
-    font-size: 0.82rem;
-    color: var(--text-tertiary);
-  }
-  .report-score-wrap {
-    flex-shrink: 0;
-  }
-  .score-ring {
-    width: 72px;
-    height: 72px;
-    border: 2px solid var(--danger);
-    border-radius: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: var(--danger-light);
-  }
-  .score-num {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--danger);
-    line-height: 1;
-  }
-  .score-label {
-    font-size: 0.6rem;
+  .stat-label {
+    font-size: 0.78rem;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--danger);
+    color: #6B7280;
+  }
+  .stat-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .stat-badge.red { background: #FEE2E2; color: #B91C1C; }
+  .stat-badge.amber { background: #FEF3C7; color: #B45309; }
+  .stat-badge.purple { background: #EDE9FE; color: #6D28D9; }
+  .stat-badge.green { background: #D1FAE5; color: #047857; }
+
+  .stat-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .stat-number.danger { color: #EF4444; }
+  .stat-number.warning { color: #F59E0B; }
+  .stat-number.purple { color: #8B5CF6; }
+  .stat-number.success { color: #10B981; }
+  .stat-hint {
+    font-size: 0.72rem;
+    color: #9CA3AF;
   }
 
-  /* ─── Comparison Table ────────────────────────────── */
-  .comparison-table {
-    border: 1px solid var(--border);
-    border-radius: 12px;
+  /* ── Matrix Card ────────────────────────────────────────── */
+  .matrix-card {
+    padding: 0;
     overflow: hidden;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
   }
-  .comparison-header {
+  .matrix-header {
     display: grid;
-    grid-template-columns: 180px 1fr 1fr;
-    background: var(--bg-subtle);
-    border-bottom: 1px solid var(--border);
-    padding: 10px 20px;
-    gap: 0;
-  }
-  .col-label {
+    grid-template-columns: 240px 1fr 1fr;
+    background: #F9FAFB;
+    border-bottom: 1px solid #E5E7EB;
+    padding: 12px 20px;
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--text-tertiary);
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    color: #6B7280;
   }
-  .dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .dot-red { background: var(--danger); }
-  .dot-green { background: var(--success); }
-
-  .comparison-row {
+  .matrix-row {
     display: grid;
-    grid-template-columns: 180px 1fr 1fr;
-    border-bottom: 1px solid var(--border);
+    grid-template-columns: 240px 1fr 1fr;
+    border-bottom: 1px solid #E5E7EB;
   }
-  .comparison-row:last-child {
+  .matrix-row:last-child {
     border-bottom: none;
   }
-
-  .row-category {
-    padding: 16px 20px;
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 2px;
-    background: var(--bg-subtle);
+  .row-info {
+    padding: 18px 20px;
+    background: #F9FAFB;
+    border-right: 1px solid #E5E7EB;
   }
-  .row-cat-title {
-    font-size: 0.85rem;
+  .row-title {
+    font-size: 0.88rem;
     font-weight: 600;
-    color: var(--text);
+    color: #111827;
+    margin-bottom: 2px;
   }
-  .row-cat-sub {
-    font-size: 0.75rem;
-    color: var(--text-tertiary);
+  .row-desc {
+    font-size: 0.74rem;
+    color: #6B7280;
+    line-height: 1.4;
   }
-
   .row-cell {
-    padding: 16px 20px;
+    padding: 18px 20px;
     font-size: 0.85rem;
     display: flex;
     align-items: flex-start;
     gap: 8px;
-    border-right: 1px solid var(--border);
+    border-right: 1px solid #E5E7EB;
     line-height: 1.45;
   }
-  .row-cell:last-child {
-    border-right: none;
-  }
-  .cell-icon {
-    font-weight: 700;
-    font-size: 0.9rem;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-  .cell-missing {
-    background: var(--danger-light);
-    color: #991B1B;
-  }
-  .cell-missing .cell-icon { color: var(--danger); }
-  .cell-has {
-    background: var(--success-light);
-    color: #065F46;
-  }
-  .cell-has .cell-icon { color: var(--success); }
-  .cell-partial {
-    background: var(--warning-light);
-    color: #92400E;
-  }
-  .cell-partial .cell-icon { color: var(--warning); }
+  .row-cell:last-child { border-right: none; }
+  .row-cell .icon { font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
+  .row-cell.cell-missing { background: #FEF2F2; color: #991B1B; }
+  .row-cell.cell-missing .icon { color: #EF4444; }
+  .row-cell.cell-has { background: #F0FDF4; color: #166534; }
+  .row-cell.cell-has .icon { color: #10B981; }
+  .row-cell.cell-partial { background: #FFFBEB; color: #92400E; }
+  .row-cell.cell-partial .icon { color: #F59E0B; }
 
-  /* ─── Fixes Section ───────────────────────────────── */
-  .fixes-section {
-    margin-bottom: 32px;
-  }
-  .fixes-title {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 12px;
+  /* ── Action Items Feed ──────────────────────────────────── */
+  .action-feed-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    align-items: center;
+    margin-bottom: 12px;
   }
-  .fixes-time {
-    font-size: 0.75rem;
-    color: var(--text-tertiary);
-    font-weight: 400;
-    text-transform: none;
-    letter-spacing: 0;
+  .feed-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #111827;
   }
-  .fixes-list {
+  .feed-subtitle {
+    font-size: 0.78rem;
+    color: #6B7280;
+  }
+  .action-items-list {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    margin-bottom: 24px;
   }
-  .fix-item {
+  .action-item-card {
     display: flex;
     align-items: flex-start;
     gap: 14px;
-    padding: 14px 16px;
-    border: 1px solid var(--border);
+    padding: 14px 18px;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
     border-radius: 10px;
-    background: var(--bg);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
     transition: border-color 0.12s;
   }
-  .fix-item:hover {
-    border-color: var(--accent);
+  .action-item-card:hover {
+    border-color: #6366F1;
   }
-  .fix-num {
+  .action-num {
+    width: 24px;
+    height: 24px;
+    background: #EEF2FF;
+    color: #4F46E5;
+    border-radius: 50%;
     font-size: 0.75rem;
     font-weight: 700;
-    color: var(--accent-text);
-    background: var(--accent-light);
-    border-radius: 50%;
-    width: 22px;
-    height: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    margin-top: 1px;
+    margin-top: 2px;
   }
-  .fix-body {
+  .action-content {
     flex: 1;
   }
-  .fix-title {
+  .action-title {
     font-size: 0.88rem;
     font-weight: 600;
-    color: var(--text);
+    color: #111827;
     margin-bottom: 2px;
   }
-  .fix-desc {
+  .action-desc {
     font-size: 0.8rem;
-    color: var(--text-secondary);
-    line-height: 1.5;
+    color: #4B5563;
+    line-height: 1.45;
   }
-  .fix-meta {
-    font-size: 0.73rem;
-    color: var(--text-tertiary);
-    margin-top: 4px;
-  }
-  .fix-action {
+  .action-tags {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .action-tag {
+    font-size: 0.68rem;
+    padding: 2px 6px;
+    background: #F3F4F6;
+    border-radius: 4px;
+    color: #6B7280;
+    font-weight: 500;
+  }
+  .btn-copy-fix {
+    border: 1px solid #E5E7EB;
+    background: #FFFFFF;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: #4B5563;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.12s;
     flex-shrink: 0;
   }
-  .btn-copy {
-    border: 1px solid var(--border);
-    background: var(--bg);
-    border-radius: 6px;
-    padding: 5px 10px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.12s;
+  .btn-copy-fix:hover {
+    border-color: #6366F1;
+    color: #6366F1;
+    background: #EEF2FF;
   }
-  .btn-copy:hover {
-    border-color: var(--accent);
-    color: var(--accent-text);
-    background: var(--accent-light);
-  }
-  .btn-copy.copied {
-    border-color: var(--success);
-    color: var(--success);
-    background: var(--success-light);
-  }
-  .effort-badge {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--text-tertiary);
-    background: var(--bg-hover);
-    border-radius: 4px;
-    padding: 2px 7px;
-    white-space: nowrap;
+  .btn-copy-fix.copied {
+    border-color: #10B981;
+    color: #10B981;
+    background: #ECFDF5;
   }
 
-  /* ─── Export Bar ──────────────────────────────────── */
-  .export-bar {
+  /* ── Export & Handoff Bar ───────────────────────────────── */
+  .export-handoff-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 20px 24px;
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 16px 20px;
-    background: var(--bg-subtle);
-    border: 1px solid var(--border);
-    border-radius: 10px;
+    align-items: center;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
   }
-  .export-info {
-    font-size: 0.82rem;
-    color: var(--text-secondary);
+  .handoff-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #111827;
   }
-  .export-actions {
+  .handoff-desc {
+    font-size: 0.8rem;
+    color: #6B7280;
+    margin-top: 2px;
+  }
+  .handoff-actions {
     display: flex;
-    gap: 8px;
+    gap: 10px;
+    flex-shrink: 0;
   }
-  .btn-export {
+  .btn-outline {
     display: flex;
     align-items: center;
     gap: 6px;
-    border: 1px solid var(--border);
-    background: var(--bg);
-    border-radius: 7px;
-    padding: 7px 14px;
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: var(--text-secondary);
+    padding: 8px 14px;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #374151;
     cursor: pointer;
     transition: all 0.12s;
   }
-  .btn-export:hover {
-    border-color: var(--border-strong);
-    color: var(--text);
+  .btn-outline:hover {
+    background: #F9FAFB;
+    border-color: #D1D5DB;
   }
-  .btn-export-primary {
+  .btn-black {
     display: flex;
     align-items: center;
     gap: 6px;
+    padding: 8px 16px;
+    background: #111827;
+    color: #FFFFFF;
     border: none;
-    background: var(--accent);
-    border-radius: 7px;
-    padding: 7px 14px;
-    font-size: 0.82rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
     font-weight: 600;
-    color: #fff;
     cursor: pointer;
     transition: background 0.12s;
   }
-  .btn-export-primary:hover {
-    background: var(--accent-hover);
+  .btn-black:hover {
+    background: #000000;
   }
 
-  /* ─── Footer ──────────────────────────────────────── */
-  .footer {
-    border-top: 1px solid var(--border);
-    padding: 16px 24px;
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.78rem;
-    color: var(--text-tertiary);
-    max-width: 900px;
-    margin: 0 auto;
-    width: 100%;
+  /* ── Empty States ───────────────────────────────────────── */
+  .empty-state-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    color: #4B5563;
   }
 
-  /* ─── Responsive ──────────────────────────────────── */
-  @media (max-width: 640px) {
-    .hero-title { font-size: 1.5rem; }
-    .input-grid { grid-template-columns: 1fr; }
-    .query-row { flex-direction: column; align-items: stretch; }
-    .btn-primary { height: auto; padding: 11px 20px; }
-    .comparison-header,
-    .comparison-row {
-      grid-template-columns: 120px 1fr 1fr;
-    }
-    .report-header { flex-direction: column-reverse; }
-    .report-title { font-size: 1.2rem; }
-    .export-bar { flex-direction: column; gap: 12px; align-items: flex-start; }
-    .footer { flex-direction: column; gap: 4px; }
+  /* ── Responsive ─────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .dashboard-grid-top,
+    .dashboard-grid-bottom { grid-template-columns: 1fr; }
+    .scorecard-grid { grid-template-columns: 1fr 1fr; }
+    .matrix-header, .matrix-row { grid-template-columns: 140px 1fr 1fr; }
+    .export-handoff-card { flex-direction: column; gap: 14px; align-items: flex-start; }
   }
 </style>
 
 <script>
-  // ── Imports ────────────────────────────────────────────────────────────
   import type { CitationGapResult } from "../lib/types";
   import { PRESETS } from "../lib/presets";
   import { ZeroExtrapolationDiffEngine } from "../lib/diffEngine";
 
-  // ── DOM refs ───────────────────────────────────────────────────────────
-  const brandInput    = document.getElementById("brandUrlInput") as HTMLInputElement;
-  const compInput     = document.getElementById("compUrlInput") as HTMLInputElement;
-  const queryInput    = document.getElementById("queryInput") as HTMLInputElement;
-  const analyzeBtn    = document.getElementById("analyzeBtn") as HTMLButtonElement;
-  const reportSection = document.getElementById("reportSection") as HTMLElement;
+  // ── Tab & View Navigation ─────────────────────────────────────────────
+  const navButtons = document.querySelectorAll(".nav-item[data-view]");
+  const viewPanes = document.querySelectorAll(".view-pane");
+
+  function switchView(viewId: string) {
+    viewPanes.forEach(pane => pane.classList.remove("active"));
+    navButtons.forEach(btn => btn.classList.remove("active"));
+
+    const targetPane = document.getElementById(viewId);
+    if (targetPane) targetPane.classList.add("active");
+
+    const targetBtn = document.querySelector(`.nav-item[data-view="${viewId}"]`);
+    if (targetBtn) targetBtn.classList.add("active");
+  }
+
+  navButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const viewId = (btn as HTMLElement).dataset.view!;
+      switchView(viewId);
+    });
+  });
+
+  // Callout & Leaderboard Quick Actions to jump into Citation Gap view
+  document.getElementById("openGapFromBanner")?.addEventListener("click", () => {
+    switchView("view-gap");
+  });
+
+  document.getElementById("btnGoToGap")?.addEventListener("click", () => {
+    switchView("view-gap");
+  });
+
+  document.querySelectorAll(".table-diagnose-btn").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const comp = (btn as HTMLElement).dataset.comp || "monday.com";
+      const compInput = document.getElementById("compUrlInput") as HTMLInputElement;
+      if (compInput) compInput.value = `https://${comp}`;
+      switchView("view-gap");
+      runAnalysis();
+    });
+  });
+
+  // ── Gap Analyzer Engine ────────────────────────────────────────────────
+  const brandInput = document.getElementById("brandUrlInput") as HTMLInputElement;
+  const compInput = document.getElementById("compUrlInput") as HTMLInputElement;
+  const queryInput = document.getElementById("queryInput") as HTMLInputElement;
+  const analyzeBtn = document.getElementById("analyzeBtn") as HTMLButtonElement;
   let currentResult: CitationGapResult | null = null;
 
-  // ── Preset chips ───────────────────────────────────────────────────────
+  // Preset Chips
   document.querySelectorAll(".chip[data-preset]").forEach(chip => {
     chip.addEventListener("click", () => {
       document.querySelectorAll(".chip").forEach(c => c.classList.remove("chip-active"));
@@ -743,49 +1753,15 @@ import Layout from "../layouts/Layout.astro";
       const p = PRESETS[key];
       if (p) {
         brandInput.value = p.brandUrl;
-        compInput.value  = p.competitorUrl;
+        compInput.value = p.competitorUrl;
         queryInput.value = p.query;
+        runAnalysis();
       }
     });
   });
 
-  // ── Analyze ────────────────────────────────────────────────────────────
-  analyzeBtn.addEventListener("click", runAnalysis);
+  analyzeBtn?.addEventListener("click", runAnalysis);
 
-  function runAnalysis() {
-    analyzeBtn.textContent = "Analyzing…";
-    analyzeBtn.disabled = true;
-
-    setTimeout(() => {
-      const t0 = performance.now();
-      // Try preset match first, fall back to creating payloads from URLs
-      let brandPayload, compPayload;
-      const presetKey = Object.keys(PRESETS).find(k =>
-        PRESETS[k].brandUrl === brandInput.value && PRESETS[k].competitorUrl === compInput.value
-      );
-      if (presetKey) {
-        brandPayload = PRESETS[presetKey].brandData;
-        compPayload  = PRESETS[presetKey].competitorData;
-      } else {
-        brandPayload = ZeroExtrapolationDiffEngine.createPayloadForUrl(brandInput.value, true);
-        compPayload  = ZeroExtrapolationDiffEngine.createPayloadForUrl(compInput.value, false);
-      }
-      const result = ZeroExtrapolationDiffEngine.executeDiff(
-        queryInput.value,
-        brandPayload,
-        compPayload
-      );
-      const ms = (performance.now() - t0).toFixed(1);
-      renderReport(result, parseFloat(ms));
-      analyzeBtn.textContent = "Analyze gap →";
-      analyzeBtn.disabled = false;
-    }, 0);
-  }
-
-  // Run on load
-  runAnalysis();
-
-  // ── Helpers ────────────────────────────────────────────────────────────
   function getDomain(url: string) {
     try { return new URL(url).hostname.replace(/^www\./, ""); }
     catch { return url; }
@@ -799,164 +1775,196 @@ import Layout from "../layouts/Layout.astro";
       .replace(/"/g,"&quot;");
   }
 
-  // ── Render ─────────────────────────────────────────────────────────────
-  function renderReport(result: CitationGapResult, ms: number) {
-    currentResult = result;
+  function runAnalysis() {
+    if (!analyzeBtn) return;
+    analyzeBtn.innerHTML = "<span>Analyzing...</span>";
+    analyzeBtn.disabled = true;
 
-    const brandDomain = getDomain(result.brandPayload.url);
-    const compDomain  = getDomain(result.competitorPayload.url);
-    const criticalEntities = result.entityGaps.filter(g => g.citationWeight === "CRITICAL");
-    const totalGaps = result.schemaGaps.length + result.benchmarkGaps.length + criticalEntities.length;
-
-    // Header
-    document.getElementById("compDomainTitle")!.textContent  = compDomain;
-    document.getElementById("brandDomainTitle")!.textContent = brandDomain;
-    document.getElementById("reportMeta")!.textContent       = `Query: "${result.query}" · Analyzed in ${ms}ms`;
-    document.getElementById("gapCountDisplay")!.textContent  = String(totalGaps);
-    document.getElementById("brandColLabel")!.textContent    = brandDomain;
-    document.getElementById("compColLabel")!.textContent     = compDomain;
-
-    // Schema row
-    const schemaBrandCell = document.getElementById("schemaBrandCell")!;
-    const schemaCompCell  = document.getElementById("schemaCompCell")!;
-    if (result.schemaGaps.length === 0) {
-      schemaBrandCell.className = "row-cell cell-has";
-      schemaBrandCell.innerHTML = `<span class="cell-icon">✓</span><span>Schema markup present</span>`;
-      schemaCompCell.className  = "row-cell cell-has";
-      schemaCompCell.innerHTML  = `<span class="cell-icon">✓</span><span>Schema markup present</span>`;
-    } else {
-      const missing = result.schemaGaps.map(g => g.schemaType).join(", ");
-      schemaBrandCell.className = "row-cell cell-missing";
-      schemaBrandCell.innerHTML = `<span class="cell-icon">✗</span><span>Missing ${escHtml(missing)}</span>`;
-      schemaCompCell.className  = "row-cell cell-has";
-      schemaCompCell.innerHTML  = `<span class="cell-icon">✓</span><span>Has ${escHtml(missing)} + more</span>`;
-    }
-
-    // Benchmark row
-    const benchmarkBrandCell = document.getElementById("benchmarkBrandCell")!;
-    const benchmarkCompCell  = document.getElementById("benchmarkCompCell")!;
-    if (result.benchmarkGaps.length === 0) {
-      benchmarkBrandCell.className = "row-cell cell-has";
-      benchmarkBrandCell.innerHTML = `<span class="cell-icon">✓</span><span>Proof points present</span>`;
-      benchmarkCompCell.className  = "row-cell cell-has";
-      benchmarkCompCell.innerHTML  = `<span class="cell-icon">✓</span><span>Proof points present</span>`;
-    } else {
-      const compProofs = result.benchmarkGaps.slice(0, 2).map(g => g.competitorValue).join(", ");
-      benchmarkBrandCell.className = "row-cell cell-missing";
-      benchmarkBrandCell.innerHTML = `<span class="cell-icon">✗</span><span>No explicit numbers stated</span>`;
-      benchmarkCompCell.className  = "row-cell cell-has";
-      benchmarkCompCell.innerHTML  = `<span class="cell-icon">✓</span><span>${escHtml(compProofs)}</span>`;
-    }
-
-    // Entity row
-    const entityBrandCell = document.getElementById("entityBrandCell")!;
-    const entityCompCell  = document.getElementById("entityCompCell")!;
-    const total   = result.entityGaps.length;
-    const missing = criticalEntities.length;
-    const covered = total - missing;
-    if (missing === 0) {
-      entityBrandCell.className = "row-cell cell-has";
-      entityBrandCell.innerHTML = `<span class="cell-icon">✓</span><span>Full coverage — ${total}/${total} topics</span>`;
-      entityCompCell.className  = "row-cell cell-has";
-      entityCompCell.innerHTML  = `<span class="cell-icon">✓</span><span>Full coverage — ${total}/${total} topics</span>`;
-    } else {
-      entityBrandCell.className = "row-cell cell-partial";
-      entityBrandCell.innerHTML = `<span class="cell-icon">~</span><span>Partial — ${covered}/${total} topics covered</span>`;
-      entityCompCell.className  = "row-cell cell-has";
-      entityCompCell.innerHTML  = `<span class="cell-icon">✓</span><span>Full — ${total}/${total} topics covered</span>`;
-    }
-
-    renderFixes(result);
-
-    reportSection.style.display = "block";
     setTimeout(() => {
-      reportSection.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 50);
+      let brandPayload, compPayload;
+      const presetKey = Object.keys(PRESETS).find(k =>
+        PRESETS[k].brandUrl === brandInput.value && PRESETS[k].competitorUrl === compInput.value
+      );
+      if (presetKey) {
+        brandPayload = PRESETS[presetKey].brandData;
+        compPayload = PRESETS[presetKey].competitorData;
+      } else {
+        brandPayload = ZeroExtrapolationDiffEngine.createPayloadForUrl(brandInput.value, true);
+        compPayload = ZeroExtrapolationDiffEngine.createPayloadForUrl(compInput.value, false);
+      }
+
+      const result = ZeroExtrapolationDiffEngine.executeDiff(
+        queryInput.value,
+        brandPayload,
+        compPayload
+      );
+
+      renderGapUI(result);
+      analyzeBtn.innerHTML = "<span>🚀 Synthesize Citation Gap</span>";
+      analyzeBtn.disabled = false;
+    }, 150);
   }
 
-  function renderFixes(result: CitationGapResult) {
-    const fixesList = document.getElementById("fixesList")!;
-    const fixes: Array<{title: string; desc: string; effort: string; copyText: string}> = [];
+  function renderGapUI(result: CitationGapResult) {
+    currentResult = result;
+    const brandDom = getDomain(result.brandPayload.url);
+    const compDom = getDomain(result.competitorPayload.url);
 
-    result.schemaGaps.slice(0, 2).forEach(g => {
-      fixes.push({
-        title: `Add ${g.schemaType} JSON-LD schema`,
+    // Scorecard stats
+    const statSchema = document.getElementById("statSchemaCount");
+    const statBench = document.getElementById("statBenchmarkCount");
+    const statEntity = document.getElementById("statEntityCount");
+    if (statSchema) statSchema.textContent = String(result.schemaGaps.length);
+    if (statBench) statBench.textContent = String(result.benchmarkGaps.length);
+    if (statEntity) statEntity.textContent = String(result.entityGaps.length);
+
+    // Matrix headers
+    const labelBrand = document.getElementById("labelBrand");
+    const labelComp = document.getElementById("labelComp");
+    if (labelBrand) labelBrand.textContent = `Your Brand (${brandDom})`;
+    if (labelComp) labelComp.textContent = `Winning Competitor (${compDom})`;
+
+    // Matrix cells - Schema
+    const cellSchemaBrand = document.getElementById("cellSchemaBrand");
+    const textSchemaBrand = document.getElementById("textSchemaBrand");
+    const textSchemaComp = document.getElementById("textSchemaComp");
+    if (result.schemaGaps.length > 0) {
+      if (cellSchemaBrand) cellSchemaBrand.className = "row-cell cell-missing";
+      if (textSchemaBrand) textSchemaBrand.textContent = `Missing ${result.schemaGaps.map(g => g.schemaType).join(", ")}`;
+      if (textSchemaComp) textSchemaComp.textContent = `Has ${result.schemaGaps.map(g => g.schemaType).join(", ")} + Organization`;
+    } else {
+      if (cellSchemaBrand) cellSchemaBrand.className = "row-cell cell-has";
+      if (textSchemaBrand) textSchemaBrand.textContent = "All schemas matched";
+    }
+
+    // Matrix cells - Benchmarks
+    const textBenchmarkBrand = document.getElementById("textBenchmarkBrand");
+    const textBenchmarkComp = document.getElementById("textBenchmarkComp");
+    if (result.benchmarkGaps.length > 0) {
+      const compProof = result.benchmarkGaps.slice(0, 2).map(g => g.competitorValue).join(", ");
+      if (textBenchmarkBrand) textBenchmarkBrand.textContent = "No quantitative SLA or scale statistics stated";
+      if (textBenchmarkComp) textBenchmarkComp.textContent = `Quotes: ${compProof}`;
+    }
+
+    // Matrix cells - Entities
+    const textEntityBrand = document.getElementById("textEntityBrand");
+    const textEntityComp = document.getElementById("textEntityComp");
+    if (textEntityBrand) textEntityBrand.textContent = `Partial (${result.entityGaps.length} critical topic entities omitted)`;
+    if (textEntityComp) textEntityComp.textContent = `Complete coverage across categorical prompt keywords`;
+
+    // Action Feed
+    renderActionFeed(result);
+  }
+
+  function renderActionFeed(result: CitationGapResult) {
+    const list = document.getElementById("actionItemsList");
+    if (!list) return;
+
+    const actions: Array<{ title: string; desc: string; tag: string; copyText: string }> = [];
+
+    // Schema Actions
+    result.schemaGaps.forEach(g => {
+      actions.push({
+        title: `Inject Schema.org @type ${g.schemaType}`,
         desc: g.impactReason,
-        effort: "< 15 min",
-        copyText: g.recommendedJsonLd,
+        tag: "Technical SEO &bull; &lt;15 min",
+        copyText: g.recommendedJsonLd
       });
     });
 
-    result.benchmarkGaps.slice(0, 2).forEach(g => {
-      fixes.push({
-        title: `State your ${g.metricName.toLowerCase()}`,
-        desc: `Competitor states "${g.competitorValue}". Add a comparable claim to your page.`,
-        effort: "< 30 min",
-        copyText: g.recommendation,
+    // Benchmark Actions
+    result.benchmarkGaps.forEach(g => {
+      actions.push({
+        title: `Add Quantitative Metric: ${g.metricName}`,
+        desc: `Competitor explicitly states "${g.competitorValue}". Action: ${g.recommendation}`,
+        tag: "Landing Page Copy &bull; &lt;20 min",
+        copyText: `Recommendation for ${g.metricName}: ${g.recommendation}`
       });
     });
 
-    result.entityGaps.filter(g => g.citationWeight === "CRITICAL").slice(0, 2).forEach(g => {
-      fixes.push({
-        title: `Add "${g.entityName}" to your content`,
-        desc: g.searchRelevance,
-        effort: "< 20 min",
-        copyText: g.actionPlan,
+    // Entity Actions
+    result.entityGaps.slice(0, 2).forEach(g => {
+      actions.push({
+        title: `Cover Topic Entity: ${g.entityName}`,
+        desc: `${g.searchRelevance}. ${g.actionPlan}`,
+        tag: "Content Strategy &bull; &lt;30 min",
+        copyText: `Add keyword entity '${g.entityName}' to features or FAQ sections.`
       });
     });
 
-    const topFixes = fixes.slice(0, 5);
-    const totalMins = topFixes.reduce((sum, f) => sum + (parseInt(f.effort.replace(/[^0-9]/g, "")) || 15), 0);
+    const countElem = document.getElementById("remediationCount");
+    if (countElem) countElem.textContent = `${actions.length} Actions`;
 
-    document.getElementById("fixCountLabel")!.textContent = `${topFixes.length} gap${topFixes.length !== 1 ? "s" : ""} to fix`;
-    const fixesTime = fixesList.closest(".fixes-section")?.querySelector(".fixes-time") as HTMLElement | null;
-    if (fixesTime) fixesTime.textContent = `~${totalMins} min total`;
-
-    fixesList.innerHTML = topFixes.map((fix, i) => `
-      <div class="fix-item">
-        <div class="fix-num">${i + 1}</div>
-        <div class="fix-body">
-          <div class="fix-title">${escHtml(fix.title)}</div>
-          <div class="fix-desc">${escHtml(fix.desc)}</div>
-          <div class="fix-meta">${fix.effort}</div>
+    list.innerHTML = actions.map((act, i) => `
+      <div class="action-item-card">
+        <div class="action-num">${i + 1}</div>
+        <div class="action-content">
+          <div class="action-title">${escHtml(act.title)}</div>
+          <div class="action-desc">${escHtml(act.desc)}</div>
+          <div class="action-tags">
+            <span class="action-tag">${act.tag}</span>
+          </div>
         </div>
-        <div class="fix-action">
-          <button class="btn-copy" data-copy="${encodeURIComponent(fix.copyText)}">Copy fix</button>
-        </div>
+        <button class="btn-copy-fix" data-copy="${encodeURIComponent(act.copyText)}">
+          Copy Fix
+        </button>
       </div>
     `).join("");
 
-    fixesList.querySelectorAll(".btn-copy").forEach(btn => {
+    // Wire up Copy Fix buttons
+    list.querySelectorAll(".btn-copy-fix").forEach(btn => {
       btn.addEventListener("click", () => {
         const text = decodeURIComponent((btn as HTMLElement).dataset.copy || "");
         navigator.clipboard.writeText(text).then(() => {
           btn.textContent = "Copied ✓";
           btn.classList.add("copied");
-          setTimeout(() => { btn.textContent = "Copy fix"; btn.classList.remove("copied"); }, 2000);
+          setTimeout(() => {
+            btn.textContent = "Copy Fix";
+            btn.classList.remove("copied");
+          }, 2000);
         });
       });
     });
   }
 
-  // ── Export ─────────────────────────────────────────────────────────────
-  document.getElementById("copyReportBtn")!.addEventListener("click", () => {
+  // ── Handoff Actions ────────────────────────────────────────────────────
+  document.getElementById("btnCopyBrief")?.addEventListener("click", () => {
     if (!currentResult) return;
-    const md = currentResult.marketerBrief.markdownContent;
-    navigator.clipboard.writeText(md).then(() => {
-      const btn = document.getElementById("copyReportBtn")!;
-      const orig = btn.innerHTML;
-      btn.textContent = "Copied ✓";
-      setTimeout(() => { btn.innerHTML = orig; }, 2000);
+    navigator.clipboard.writeText(currentResult.marketerBrief.markdownContent).then(() => {
+      const btn = document.getElementById("btnCopyBrief");
+      if (btn) btn.innerHTML = "<span>Copied Brief ✓</span>";
+      setTimeout(() => {
+        if (btn) btn.innerHTML = `<span>Copy Marketer Brief</span>`;
+      }, 2000);
     });
   });
 
-  document.getElementById("downloadReportBtn")!.addEventListener("click", () => {
+  document.getElementById("btnDownloadBrief")?.addEventListener("click", () => {
     if (!currentResult) return;
-    const md = currentResult.marketerBrief.markdownContent;
-    const blob = new Blob([md], { type: "text/markdown" });
+    const blob = new Blob([currentResult.marketerBrief.markdownContent], { type: "text/markdown" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = `citation-gap-${getDomain(currentResult.brandPayload.url)}-vs-${getDomain(currentResult.competitorPayload.url)}.md`;
+    a.download = `peec-ai-citation-gap-${getDomain(currentResult.brandPayload.url)}-vs-${getDomain(currentResult.competitorPayload.url)}.md`;
     a.click();
   });
+
+  document.getElementById("btnCopyJira")?.addEventListener("click", () => {
+    if (!currentResult) return;
+    navigator.clipboard.writeText(currentResult.engineeringJira.jiraMarkdown).then(() => {
+      const btn = document.getElementById("btnCopyJira");
+      if (btn) btn.innerHTML = "<span>Copied Jira Story ✓</span>";
+      setTimeout(() => {
+        if (btn) btn.innerHTML = `<span>Copy Jira Story (PEEC-408)</span>`;
+      }, 2000);
+    });
+  });
+
+  document.getElementById("headerExportBtn")?.addEventListener("click", () => {
+    switchView("view-gap");
+    const exportBtn = document.getElementById("btnDownloadBrief");
+    exportBtn?.click();
+  });
+
+  // Initial Run
+  runAnalysis();
 </script>
