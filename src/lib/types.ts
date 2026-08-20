@@ -29,6 +29,7 @@ export interface SchemaGap {
   missingProperties: string[];
   recommendedJsonLd: string;
   impactReason: string;
+  verified: boolean;
 }
 
 export interface BenchmarkGap {
@@ -38,6 +39,7 @@ export interface BenchmarkGap {
   competitorEvidence: string;
   sourceUrl: string;
   recommendation: string;
+  verified: boolean;
 }
 
 export interface EntityGap {
@@ -46,33 +48,42 @@ export interface EntityGap {
   citationWeight: 'CRITICAL' | 'HIGH' | 'MEDIUM';
   searchRelevance: string;
   actionPlan: string;
+  verified: boolean;
 }
 
 export interface RemediationBrief {
-  title: string;
-  targetQuery: string;
-  brandDomain: string;
-  competitorDomain: string;
+  title?: string;
+  targetQuery?: string;
+  targetBrand?: string;
+  competitorBrand?: string;
+  promptQuery?: string;
+  brandDomain?: string;
+  competitorDomain?: string;
+  currentCitationShareBrand?: string;
+  currentCitationShareCompetitor?: string;
   executiveSummary: string;
-  missingSchemasSummary: string[];
-  benchmarkComparisonTable: string;
-  topicEntitiesCoverage: string[];
-  suggestedPageSections: string[];
+  missingSchemasSummary?: string[];
+  benchmarkComparisonTable?: string;
+  topicEntitiesCoverage?: string[];
+  suggestedPageSections?: string[];
   markdownContent: string;
+  generatedAt: string;
 }
 
 export interface JiraTicket {
   ticketKey: string;
   summary: string;
-  issueType: string;
+  issueType?: string;
   storyPoints: number;
-  component: string;
-  assigneeRole: string;
-  gherkinScenarios: string;
-  v1InScope: string[];
-  v1ScopeLimits: string[];
-  definitionOfDone: string[];
+  priority?: string;
+  component?: string;
+  assigneeRole?: string;
+  gherkinScenarios?: string;
+  v1InScope?: string[];
+  v1ScopeLimits?: string[];
+  definitionOfDone?: string[];
   jiraMarkdown: string;
+  generatedAt: string;
 }
 
 export interface CitationGapResult {
@@ -87,6 +98,7 @@ export interface CitationGapResult {
   executionTimeMs: number;
   isCached: boolean;
   isFallback: boolean;
+  dataQuality: 'live_both' | 'live_partial' | 'fallback_heuristic';
 }
 
 export interface PresetScenario {

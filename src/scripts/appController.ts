@@ -22,8 +22,7 @@ export class AppController {
     this.initPortfolioMode();
     this.initExportHandlers();
 
-    // Initial Execution
-    this.runSingleAnalysis();
+    // Portfolio only: render rows and run analysis on load
     this.renderPortfolioRows();
     this.runPortfolioAnalysis();
   }
@@ -233,6 +232,18 @@ export class AppController {
     const brandDom = this.getDomain(result.brandPayload.url);
     const compDom = this.getDomain(result.competitorPayload.url);
 
+    // Reveal all results sections (hidden by default until analysis runs)
+    const executiveSummaryCard = document.getElementById('executiveSummaryCard');
+    const scorecardGrid = document.getElementById('scorecardGrid');
+    const matrixCard = document.getElementById('matrixCard');
+    const actionsSection = document.getElementById('actionsSection');
+    const exportHandoffCard = document.getElementById('exportHandoffCard');
+    if (executiveSummaryCard) executiveSummaryCard.style.display = '';
+    if (scorecardGrid) scorecardGrid.style.display = '';
+    if (matrixCard) matrixCard.style.display = '';
+    if (actionsSection) actionsSection.style.display = '';
+    if (exportHandoffCard) exportHandoffCard.style.display = '';
+
     // Executive Summary
     const execTitle = document.getElementById('execTitle');
     const execText = document.getElementById('execText');
@@ -248,16 +259,54 @@ export class AppController {
       `;
     }
     if (execTime) {
-      execTime.textContent = `Live Scraped • Verified against AI Search • ${result.executionTimeMs}ms`;
+      const qualityLabel = result.dataQuality === 'live_both' ? '🟢 Both Pages Live Scraped'
+        : result.dataQuality === 'live_partial' ? '🟡 One Page Unreachable — Partial Data'
+        : '⚠️ Live Fetch Failed — Heuristic Guidance Only';
+      execTime.textContent = `${qualityLabel} • ${result.executionTimeMs}ms`;
     }
 
     // Scorecard stats
     const statSchema = document.getElementById('statSchemaCount');
+    const statSchemaBadge = document.getElementById('statSchemaBadge');
+    const statSchemaHint = document.getElementById('statSchemaHint');
     const statBench = document.getElementById('statBenchmarkCount');
+    const statBenchBadge = document.getElementById('statBenchmarkBadge');
+    const statBenchHint = document.getElementById('statBenchmarkHint');
     const statEntity = document.getElementById('statEntityCount');
+    const statEntityBadge = document.getElementById('statEntityBadge');
+    const statEntityHint = document.getElementById('statEntityHint');
+
     if (statSchema) statSchema.textContent = String(result.schemaGaps.length);
+    if (statSchemaBadge) statSchemaBadge.textContent = `${result.schemaGaps.length} Missing`;
+    if (statSchemaHint) statSchemaHint.textContent = result.schemaGaps.length === 0 ? 'All machine tags matched' : `Missing: ${result.schemaGaps.map(g => g.schemaType).join(', ')}`;
+
     if (statBench) statBench.textContent = String(result.benchmarkGaps.length);
+    if (statBenchBadge) statBenchBadge.textContent = `${result.benchmarkGaps.length} Gaps`;
+    if (statBenchHint) {
+      const topQuotes = result.benchmarkGaps.slice(0, 2).map(b => b.competitorValue).join(', ');
+      statBenchHint.textContent = topQuotes ? `Quotes: ${topQuotes}` : 'Your page lacks hard proof stats';
+    }
+
     if (statEntity) statEntity.textContent = String(result.entityGaps.length);
+    if (statEntityBadge) statEntityBadge.textContent = `${result.entityGaps.length} Keywords`;
+    if (statEntityHint) {
+      const topEntities = result.entityGaps.slice(0, 2).map(e => e.entityName).join(', ');
+      statEntityHint.textContent = topEntities ? `Missing: ${topEntities}` : 'Category terms AI expects';
+    }
+
+    // Evidence-backed fixes ratio — real count of verified:true items vs total
+    const allItems = [...result.schemaGaps, ...result.benchmarkGaps, ...result.entityGaps];
+    const verifiedCount = allItems.filter(i => i.verified).length;
+    const verifiedPct = allItems.length > 0 ? Math.round((100 * verifiedCount) / allItems.length) : 0;
+    const statWinProb = document.getElementById('statWinProb');
+    const statWinHint = document.getElementById('statWinHint') || document.getElementById('statWinProbHint');
+    const statWinBadge = document.getElementById('statWinBadge') || document.getElementById('statWinProbBadge');
+    
+    if (statWinProb) statWinProb.textContent = allItems.length > 0 ? `${verifiedCount}/${allItems.length}` : '0/0';
+    if (statWinHint) statWinHint.textContent = allItems.length > 0
+      ? `${verifiedPct}% of listed fixes are confirmed from live scraped text; the rest are category-typical suggestions.`
+      : 'No gaps detected — either pages are well-optimized or live content was unreachable.';
+    if (statWinBadge) statWinBadge.textContent = result.dataQuality === 'live_both' ? 'Live Data' : result.dataQuality === 'live_partial' ? 'Partial' : 'Fallback';
 
     // Matrix
     const labelBrand = document.getElementById('labelBrand');
@@ -298,7 +347,7 @@ export class AppController {
     if (!list) return;
 
     const isMarketer = this.currentViewMode === 'marketer';
-    const actions: Array<{ title: string; desc: string; why: string; tag: string; snippet?: string; copyText: string }> = [];
+    const actions: Array<{ title: string; desc: string; why: string; tag: string; snippet?: string; copyText: string; verified: boolean }> = [];
 
     // 1. Schema Actions
     result.schemaGaps.forEach(g => {
@@ -307,14 +356,15 @@ export class AppController {
           ? `Tell AI What Your Product Is & Costs (Add ${g.schemaType} tag)`
           : `Inject Schema.org @type ${g.schemaType}`,
         desc: isMarketer
-          ? `AI search engines (ChatGPT, Perplexity) look for standard product tags in your website code. Without this tag, AI doesn't know your price or category and quotes competitors instead.`
+          ? `AI search engines (ChatGPT, Perplexity) look for standard product tags in your website code. ${g.verified ? "Your competitor has this tag; you don't." : "This is a general best-practice recommendation."}`
           : g.impactReason,
         why: isMarketer
-          ? `💡 Why AI cares: Competitor has this tag, allowing AI to show their product card in search results.`
+          ? (g.verified ? `💡 Confirmed: this tag was detected on the competitor's live page.` : `💡 Suggested best practice — not confirmed on the competitor's page.`)
           : `Technical requirement for Perplexity Sonar & ChatGPT Search parsers.`,
         tag: isMarketer ? 'Website Setup • 10 min fix' : 'Technical SEO • <15 min',
         snippet: !isMarketer ? g.recommendedJsonLd : undefined,
-        copyText: g.recommendedJsonLd
+        copyText: g.recommendedJsonLd,
+        verified: g.verified
       });
     });
 
@@ -325,13 +375,14 @@ export class AppController {
           ? `Put Hard Numbers on Your Page: ${g.metricName}`
           : `Add Quantitative Metric: ${g.metricName}`,
         desc: isMarketer
-          ? `Your competitor explicitly quotes "${g.competitorValue}". To beat them, ${g.recommendation.toLowerCase()}`
-          : `Competitor explicitly states "${g.competitorValue}". Action: ${g.recommendation}`,
+          ? `${g.verified ? `Your competitor's live page states "${g.competitorValue}".` : `Competitors in this category typically state a value like "${g.competitorValue}".`} To beat them, ${g.recommendation.toLowerCase()}`
+          : `${g.verified ? `Competitor's live page states "${g.competitorValue}".` : `Typical category value: "${g.competitorValue}" (not confirmed on this competitor's page).`} Action: ${g.recommendation}`,
         why: isMarketer
           ? `💡 Why AI cares: AI search engines favor pages with hard numbers over vague marketing copy.`
           : g.competitorEvidence,
         tag: isMarketer ? 'Homepage Copy • 15 min fix' : 'Landing Page Copy • <20 min',
-        copyText: `Recommendation for ${g.metricName}: ${g.recommendation}`
+        copyText: `Recommendation for ${g.metricName}: ${g.recommendation}`,
+        verified: g.verified
       });
     });
 
@@ -343,19 +394,21 @@ export class AppController {
             ? `Mention Key Feature: "${g.entityName}"`
             : `Cover Topic Entity: ${g.entityName}`,
           desc: isMarketer
-            ? `When users search for this query, AI expects to see "${g.entityName}". ${g.actionPlan}`
+            ? `${g.verified ? `Your competitor's page mentions "${g.entityName}".` : `AI often expects to see "${g.entityName}" for this kind of search (not confirmed on this competitor's page).`} ${g.actionPlan}`
             : `${g.searchRelevance}. ${g.actionPlan}`,
           why: isMarketer
-            ? `💡 Why AI cares: Competitors mention this term; adding it ensures AI includes you in comparisons.`
+            ? (g.verified ? `💡 Confirmed: this term appears in the competitor's live page text.` : `💡 Suggested topic — not confirmed on the competitor's page.`)
             : g.searchRelevance,
           tag: isMarketer ? 'Feature Section • 20 min fix' : `${g.category} • <30 min`,
-          copyText: `Add mention of '${g.entityName}' to product features: ${g.actionPlan}`
+          copyText: `Add mention of '${g.entityName}' to product features: ${g.actionPlan}`,
+          verified: g.verified
         });
       }
     });
 
+    const verifiedActionCount = actions.filter(a => a.verified).length;
     const countElem = document.getElementById('remediationCount');
-    if (countElem) countElem.textContent = `${actions.length} Simple Fixes`;
+    if (countElem) countElem.textContent = `${actions.length} Fixes (${verifiedActionCount} Confirmed, ${actions.length - verifiedActionCount} Suggested)`;
 
     list.innerHTML = actions.map((act, i) => `
       <div class="action-item-card">
@@ -367,6 +420,7 @@ export class AppController {
           ${act.snippet ? `<div class="action-code-snippet"><pre><code>${this.escHtml(act.snippet)}</code></pre></div>` : ''}
           <div class="action-tags">
             <span class="action-tag">${act.tag}</span>
+            <span class="action-tag" style="${act.verified ? 'background:rgba(16,185,129,0.15);color:#065F46;' : 'background:rgba(245,158,11,0.15);color:#92400E;'}">${act.verified ? '✓ Confirmed Live' : '~ Suggested'}</span>
           </div>
         </div>
         <button class="btn-copy-fix" data-copy="${encodeURIComponent(act.copyText)}">
@@ -516,6 +570,31 @@ export class AppController {
       const top = portfolio.recurringGaps[0];
       pMax.textContent = `${top.recurrenceCount} / ${portfolio.totalPromptsAnalyzed}`;
     }
+
+    // Gap Coverage Banner — computed from real affectedPrompts data
+    const liftTitle = document.getElementById('liftTitle');
+    const liftDesc = document.getElementById('liftDesc');
+    const liftBarFill = document.getElementById('liftBarFill');
+    const liftBarLabel = document.getElementById('liftBarLabel');
+    const topFixes = portfolio.recurringGaps.slice(0, 2);
+    const coveredPrompts = new Set<string>();
+    topFixes.forEach(g => g.affectedPrompts.forEach(p => coveredPrompts.add(p)));
+    const coveragePct = portfolio.totalPromptsAnalyzed > 0
+      ? Math.round((100 * coveredPrompts.size) / portfolio.totalPromptsAnalyzed)
+      : 0;
+
+    if (liftTitle) {
+      liftTitle.textContent = topFixes.length > 0
+        ? `Top ${topFixes.length} Fix${topFixes.length > 1 ? 'es' : ''} Would Resolve Gaps on ${coveredPrompts.size}/${portfolio.totalPromptsAnalyzed} Prompts (${coveragePct}%)`
+        : 'No recurring gaps detected across analyzed prompts';
+    }
+    if (liftDesc) {
+      liftDesc.textContent = topFixes.length > 0
+        ? `Deploying "${topFixes.map(g => g.displayName).join('" and "')}" addresses at least one detected gap on the prompts listed below. This is a coverage estimate based on gaps actually detected in live scraped content, not a promised citation-share outcome.`
+        : 'Run the analysis with more monitored prompts, or check that the brand and competitor URLs are reachable.';
+    }
+    if (liftBarFill) liftBarFill.style.width = `${coveragePct}%`;
+    if (liftBarLabel) liftBarLabel.textContent = `${coveragePct}% Gap Coverage`;
 
     const tbody = document.getElementById('perPromptTableBody');
     if (tbody) {
