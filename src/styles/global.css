@@ -2309,6 +2309,167 @@
   transform: translateY(-1px);
 }
 
+/* ── Interactive Resume / CV Modal Styles ────────────────── */
+.resume-modal-card {
+  max-width: 720px;
+  width: 95%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 28px;
+}
+.resume-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.resume-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.resume-contact-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 10px 0 14px 0;
+  border-bottom: 1px solid var(--border-card);
+  margin-bottom: 16px;
+}
+.resume-contact-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-card);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.12s ease;
+}
+.resume-contact-chip:hover {
+  border-color: var(--accent-indigo);
+  color: var(--accent-indigo);
+  background: var(--accent-indigo-light);
+}
+.resume-contact-chip.highlight {
+  border-color: #0A66C2;
+  color: #0A66C2;
+  background: #E8F4F9;
+  font-weight: 600;
+}
+.resume-contact-chip.primary {
+  background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
+  color: #FFFFFF;
+  border: none;
+  font-weight: 600;
+}
+.resume-contact-chip.primary:hover {
+  background: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%);
+  color: #FFFFFF;
+}
+
+.resume-modal-body {
+  overflow-y: auto;
+  padding-right: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+}
+.resume-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.resume-section-title {
+  font-size: 0.94rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.resume-text {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin: 0;
+}
+.resume-skills-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.resume-skill-box {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+.resume-exp-item {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.exp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.exp-role {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+.exp-company {
+  color: var(--accent-indigo-hover);
+  font-weight: 700;
+}
+.exp-date {
+  font-size: 0.74rem;
+  color: var(--text-subdued);
+  font-weight: 500;
+}
+.exp-bullets {
+  margin: 4px 0 0 0;
+  padding-left: 18px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.resume-edu-item {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  padding: 6px 12px;
+  background: var(--bg-subtle);
+  border-radius: 6px;
+  border: 1px solid var(--border-card);
+}
+.resume-modal-footer {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-card);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 /* ── Mobile Commute Test Responsive Overrides (Diagnostic 4) ── */
 @media (max-width: 900px) {
   .sidebar { display: none; }
@@ -2351,5 +2512,10 @@
   .pipeline-arrow { transform: rotate(90deg); margin: 4px 0; }
   .pipeline-stage { width: 100%; }
   .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .resume-skills-grid { grid-template-columns: 1fr; }
+  .resume-modal-footer { flex-direction: column; align-items: stretch; }
+  .resume-modal-footer .btn-outline, .resume-modal-footer .btn-black { justify-content: center; width: 100%; }
 }
+
+
 

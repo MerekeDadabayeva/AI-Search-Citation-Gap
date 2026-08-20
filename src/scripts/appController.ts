@@ -329,11 +329,87 @@ export class AppController {
   }
 
   private initCtaTracking() {
+    // Resume Modal Open/Close
+    const resumeModal = document.getElementById('resumeModal');
+    const openResume = () => {
+      if (resumeModal) resumeModal.style.display = 'flex';
+      TelemetryService.track('cta_view_resume_clicked');
+    };
+
+    document.getElementById('ctaViewResume')?.addEventListener('click', openResume);
+    document.querySelector('.sidebar-footer .user-pill')?.addEventListener('click', openResume);
+
+    document.getElementById('btnCloseResumeModal')?.addEventListener('click', () => {
+      if (resumeModal) resumeModal.style.display = 'none';
+    });
+
+    resumeModal?.addEventListener('click', (e) => {
+      if (e.target === resumeModal) resumeModal.style.display = 'none';
+    });
+
+    // Download CV as Markdown
+    document.getElementById('btnDownloadResumeMd')?.addEventListener('click', () => {
+      const cvMarkdown = `# MEREKE DADABAYEVA
+**Technical Product Manager / Technical Product Owner**
+Berlin, Germany | +49 179 108 2712 | merekedadabayeva@gmail.com | https://linkedin.com/in/mereke | https://calendar.app.google/RizPgktVUDzH2xtx7
+
+---
+
+## PROFESSIONAL SUMMARY
+Technical Product Manager with a Computer Science background and a decade of experience delivering high-impact software solutions for enterprise clients like Samsung and Goldn. Expert at driving growth through data-backed UX and SEO strategies, evidenced by a 65% increase in conversion traffic. Skilled in bridging the gap between complex technical engineering and business strategy to launch scalable B2B SaaS features, manage complex backlogs, and define winning product roadmaps in Agile environments.
+
+---
+
+## CORE COMPETENCIES & STACK
+- **Product & Delivery:** Product Management, Project Management, MVP Scoping, User Stories & Journeys, Product Flowcharts, Backlog Grooming, Feature Launches
+- **UX & Optimisation:** User Experience (UX) Design, User Flow Optimisation, SEO Optimisation, Keyword Analysis, Competitor & Market Research
+- **Technical & Methods:** Computer Science Foundation, Mobile App Development, Agile / Scrum Methodologies, Software Development Lifecycle (SDLC), AI Agents & Vibe Coding
+- **Languages:** English (Fluent), German (Intermediate), Russian (Native), Kazakh (Native), Turkish (Intermediate)
+
+---
+
+## PROFESSIONAL EXPERIENCE
+
+### Technical Product Manager | Goldn
+*Nov 2021 – Jan 2023 | Heidelberg, Germany*
+- **Problem:** Stagnant organic traffic on the B2B marketplace; **Action:** Executed a comprehensive SEO and UX audit, followed by keyword optimisation; **Result:** Increased marketing website clicks by +65%; **Insight:** Data-driven UX improvements are as critical as technical SEO for conversion; **Skill:** SEO & UX Optimisation.
+- **Problem:** Lack of standardised vendor terms leading to customer friction; **Action:** Led deep-dive vendor service research to define pricing and refund policies; **Result:** Increased customer satisfaction scores and platform trust; **Insight:** Transparent commercial policies directly reduce churn in B2B SaaS; **Skill:** Market Research & Policy Design.
+- **Problem:** Siloed development slowing down feature releases; **Action:** Facilitated cross-functional workshops between design and engineering to launch new B2B tools; **Result:** Achieved seamless integration and high user adoption rates; **Insight:** Early engineering involvement in the design phase prevents technical debt; **Skill:** Cross-functional Leadership.
+- **Problem:** High competitive pressure in the cosmetic supplier niche; **Action:** Conducted in-depth competitor benchmarking to pivot the product roadmap; **Result:** Identified 3 key differentiation opportunities now central to the company strategy; **Insight:** Competitive intelligence must be continuous, not a one-off project; **Skill:** Strategic Roadmapping.
+
+### Product Management Associate / Intern | Product People
+*Nov 2020 – Feb 2021 | Berlin, Germany (Remote)*
+- Scoped MVPs and designed product flowcharts, user stories, and user journeys for healthcare and mobility startups (Doctorly, Tier Mobility), accelerating early product development.
+- Conducted comprehensive market research on food delivery and meal kit sectors for a global supply chain client to support strategic planning.
+- Supported the growth of the Product People online community by defining target audience personas and engagement strategies.
+
+### IT Project Manager / Technical Delivery Lead | iBEC Systems
+*Dec 2014 – Aug 2017 | Almaty, Kazakhstan*
+- Led a 5-person international software development team to build a distributor fraud-detection application for Samsung Asia & Pacific, successfully launched in Central Asian markets.
+- Directed a comprehensive website re-architecture project for Eurasian Resources Group (ERG), driving a +40% increase in website traffic and improved user experience.
+- Delivered cross-functional client software projects across SaaS, B2B, and B2C business models utilising structured product research and data analysis.
+
+### Career Break — Parental Leave | Personal Focus
+*Jan 2023 – Present | Berlin, Germany*
+- Planned parental leave period in Germany while maintaining active knowledge in modern software product management practices and in AI Agents: Intensive Vibe Coding.
+
+---
+
+## EDUCATION & CERTIFICATIONS
+- **BSc in Computer Science** — SDU University, Kazakhstan (2012 – 2016)
+- **Google Project Management Professional Certificate** — Issued by Coursera (May 2021 | ID: V4U2RJCZXKPB)
+- **Agile Project Management Certification** — Issued by Coursera (Jul 2021 | ID: 9CY3ZZUA7C6H)
+`;
+      const blob = new Blob([cvMarkdown], { type: 'text/markdown' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'Mereke_Dadabayeva_Technical_Product_Owner_CV.md';
+      a.click();
+      TelemetryService.track('cv_markdown_downloaded');
+    });
+
     document.getElementById('ctaBookCall')?.addEventListener('click', () => {
       TelemetryService.track('cta_book_call_clicked');
-    });
-    document.getElementById('ctaViewResume')?.addEventListener('click', () => {
-      TelemetryService.track('cta_view_resume_clicked');
     });
     document.getElementById('ctaLinkedIn')?.addEventListener('click', () => {
       TelemetryService.track('cta_linkedin_clicked');
