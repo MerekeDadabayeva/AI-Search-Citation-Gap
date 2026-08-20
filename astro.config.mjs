@@ -10,6 +10,6 @@ export default defineConfig({
     port: 3000
   },
   build: {
-    format: 'directory'
+    assets: 'assets'
   }
 });
