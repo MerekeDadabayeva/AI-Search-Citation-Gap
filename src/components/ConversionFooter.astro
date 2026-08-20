@@ -1,12 +1,27 @@
 ---
 ---
 
-<div class="card conversion-footer-card" id="conversionFooterCard">
-  <div class="conversion-content">
-    <div class="tpo-badge-row">
-      <span class="badge-tpo">🚀 Technical Product Owner Candidate</span>
-      <span class="badge-brand">Engineered for Peec AI</span>
-      <span class="badge-brand">Berlin, Germany</span>
+<!-- Floating Trigger Button with Pulsing Animation -->
+<button id="btnFloatingConversion" class="floating-conversion-btn" aria-label="Open Senior TPO Proposal & Case Study">
+  <span class="floating-ping-dot"></span>
+  <span class="floating-btn-icon">🚀</span>
+  <div class="floating-btn-copy">
+    <span class="floating-btn-title">Built by Mereke</span>
+    <span class="floating-btn-sub">TPO Case Study &bull; Tap to view</span>
+  </div>
+  <span class="floating-btn-pill">Open ↗</span>
+</button>
+
+<!-- Full Senior TPO Conversion Modal / Drawer (Animated Entrance) -->
+<div id="conversionModal" class="conversion-modal-backdrop" style="display: none;">
+  <div class="conversion-modal-card" id="conversionModalCard">
+    <div class="conversion-modal-header">
+      <div class="tpo-badge-row">
+        <span class="badge-tpo">🚀 Technical Product Owner Candidate</span>
+        <span class="badge-brand">Engineered for Peec AI</span>
+        <span class="badge-brand">Berlin, Germany</span>
+      </div>
+      <button id="btnCloseConversionModal" class="btn-close-conversion" aria-label="Close Proposal">✕</button>
     </div>
 
     <h2 class="conversion-title">

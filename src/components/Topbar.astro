@@ -3,11 +3,15 @@
 
 <header class="topbar">
   <div class="topbar-left">
-    <div class="filter-pill primary">
+    <button class="filter-pill primary" title="Active Brand Filter" aria-label="Brand Filter">
       <span class="pill-icon">◆</span>
       <span>Attio</span>
-    </div>
-    <div class="filter-pill">
+      <svg class="filter-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
+
+    <div class="topbar-divider"></div>
+
+    <button class="filter-pill" title="Time range" aria-label="Time range">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
         <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -15,24 +19,34 @@
         <line x1="3" y1="10" x2="21" y2="10"></line>
       </svg>
       <span>Last 7 days</span>
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-    </div>
-    <div class="filter-pill">
+      <svg class="filter-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
+
+    <button class="filter-pill" title="Tag filter" aria-label="Tag filter">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+        <line x1="7" y1="7" x2="7.01" y2="7"></line>
+      </svg>
       <span>All tags</span>
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-    </div>
-    <div class="filter-pill">
-      <span>All Models (ChatGPT, Perplexity, Gemini)</span>
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-    </div>
+      <svg class="filter-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
+
+    <button class="filter-pill" title="Engine filter" aria-label="AI Search Engine filter">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polygon points="12 8 8 12 12 16 16 12 12 8"></polygon>
+      </svg>
+      <span>All AI Engines</span>
+      <svg class="filter-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
   </div>
 
   <div class="topbar-right">
-    <button class="export-btn" id="btnOpenApiKeyModal" title="Add Gemini or OpenAI API Key for Live Prompting">
+    <button class="export-btn btn-ai-mode" id="btnOpenApiKeyModal" title="Configure Live Gemini API Key">
       <span>🔑 Live AI Mode</span>
     </button>
-    <button class="export-btn" id="headerExportBtn">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <button class="export-btn" id="headerExportBtn" title="Export Dashboard Data">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
         <polyline points="7 10 12 15 17 10"></polyline>
         <line x1="12" y1="15" x2="12" y2="3"></line>

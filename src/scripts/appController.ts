@@ -329,6 +329,27 @@ export class AppController {
   }
 
   private initCtaTracking() {
+    // Conversion Modal Open/Close (Floating Button)
+    const conversionModal = document.getElementById('conversionModal');
+    const btnFloatingConversion = document.getElementById('btnFloatingConversion');
+    const btnCloseConversionModal = document.getElementById('btnCloseConversionModal');
+
+    const openConversionModal = () => {
+      if (conversionModal) conversionModal.style.display = 'flex';
+      TelemetryService.track('conversion_modal_opened');
+    };
+
+    const closeConversionModal = () => {
+      if (conversionModal) conversionModal.style.display = 'none';
+      TelemetryService.track('conversion_modal_closed');
+    };
+
+    btnFloatingConversion?.addEventListener('click', openConversionModal);
+    btnCloseConversionModal?.addEventListener('click', closeConversionModal);
+    conversionModal?.addEventListener('click', (e) => {
+      if (e.target === conversionModal) closeConversionModal();
+    });
+
     // Resume Modal Open/Close
     const resumeModal = document.getElementById('resumeModal');
     const openResume = () => {
@@ -336,7 +357,10 @@ export class AppController {
       TelemetryService.track('cta_view_resume_clicked');
     };
 
-    document.getElementById('ctaViewResume')?.addEventListener('click', openResume);
+    document.getElementById('ctaViewResume')?.addEventListener('click', () => {
+      closeConversionModal();
+      openResume();
+    });
     document.querySelector('.sidebar-footer .user-pill')?.addEventListener('click', openResume);
 
     document.getElementById('btnCloseResumeModal')?.addEventListener('click', () => {
@@ -345,6 +369,18 @@ export class AppController {
 
     resumeModal?.addEventListener('click', (e) => {
       if (e.target === resumeModal) resumeModal.style.display = 'none';
+    });
+
+    // Global Escape Key Listener
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (conversionModal && conversionModal.style.display === 'flex') {
+          closeConversionModal();
+        }
+        if (resumeModal && resumeModal.style.display === 'flex') {
+          resumeModal.style.display = 'none';
+        }
+      }
     });
 
     // Download CV as Markdown
