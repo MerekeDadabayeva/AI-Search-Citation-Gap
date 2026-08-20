@@ -85,15 +85,29 @@ export class AppController {
       });
     });
 
-    document.getElementById('openGapFromBanner')?.addEventListener('click', () => switchView('view-gap'));
+    document.getElementById('openGapFromBanner')?.addEventListener('click', () => {
+      const brandInput = document.getElementById('brandUrlInput') as HTMLInputElement;
+      const compInput = document.getElementById('compUrlInput') as HTMLInputElement;
+      const queryInput = document.getElementById('queryInput') as HTMLInputElement;
+      if (brandInput) brandInput.value = 'https://attio.com';
+      if (compInput) compInput.value = 'https://monday.com';
+      if (queryInput) queryInput.value = 'best b2b crm for fast-growing startups';
+      switchView('view-gap');
+      this.runSingleAnalysis();
+    });
+
     document.getElementById('btnGoToGap')?.addEventListener('click', () => switchView('view-gap'));
 
     document.querySelectorAll('.table-diagnose-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const comp = (btn as HTMLElement).dataset.comp || 'monday.com';
+        const brandInput = document.getElementById('brandUrlInput') as HTMLInputElement;
         const compInput = document.getElementById('compUrlInput') as HTMLInputElement;
+        const queryInput = document.getElementById('queryInput') as HTMLInputElement;
+        if (brandInput) brandInput.value = 'https://attio.com';
         if (compInput) compInput.value = `https://${comp}`;
+        if (queryInput) queryInput.value = 'best b2b crm for fast-growing startups';
         switchView('view-gap');
         this.runSingleAnalysis();
       });
@@ -552,7 +566,7 @@ export class AppController {
   }
 
   private async runPortfolioAnalysis() {
-    const brandUrl = (document.getElementById('portfolioBrandUrlInput') as HTMLInputElement)?.value || 'https://our-saas-crm.io';
+    const brandUrl = (document.getElementById('portfolioBrandUrlInput') as HTMLInputElement)?.value || 'https://attio.com';
     const brandDomain = this.getDomain(brandUrl);
     const results: CitationGapResult[] = [];
 

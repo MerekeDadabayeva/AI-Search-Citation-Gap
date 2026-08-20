@@ -235,16 +235,30 @@ export const PRESETS: Record<string, PresetScenario> = {
   }
 };
 
-export const PORTFOLIO_DEMO_BRAND: ScrapedPayload = PRESETS.crm_early_stage.brandData;
+export const PORTFOLIO_DEMO_BRAND: ScrapedPayload = {
+  url: 'https://attio.com',
+  domain: 'attio.com',
+  statusCode: 200,
+  isFallback: false,
+  contentLengthChars: 1250,
+  title: 'Attio — The Next-Generation Data-Driven CRM',
+  metaDescription: 'Attio is the CRM built for high-growth tech companies with real-time data sync and relationship intelligence.',
+  h1Tags: ['The Next-Generation Data-Driven CRM'],
+  h2Tags: ['Real-time 10ms sync engine', 'Automatic Relationship Intelligence', 'Transparent Usage & Tier Pricing'],
+  cleanedText: 'Attio is the CRM built for high-growth tech companies. Real-time data sync, powerful workflow automation, and custom objects. Pricing starts with a free starter tier and transparent per-seat plans.',
+  rawHtmlSnippet: '<html>...</html>',
+  jsonLdSchemas: [],
+  schemaTypes: [],
+  extractedStatistics: [],
+  pricingClaims: [],
+  complianceBadges: [],
+  detectedEntities: ['REST API', 'GraphQL'],
+  fetchTimestamp: '2026-08-20 12:00:00 UTC'
+};
 
 export const PORTFOLIO_DEMO_PROMPTS = [
   {
-    query: "Best CRM for Early-Stage B2B Startups",
-    competitorUrl: "https://attio.com",
-    competitorData: PRESETS.crm_early_stage.competitorData,
-  },
-  {
-    query: "Best AI-Native Sales Platform for Tech Companies",
+    query: "Best B2B CRM for Fast-Growing Startups",
     competitorUrl: "https://monday.com",
     competitorData: {
       url: 'https://monday.com',
@@ -265,17 +279,6 @@ export const PORTFOLIO_DEMO_PROMPTS = [
           'name': 'Monday CRM',
           'applicationCategory': 'BusinessApplication',
           'offers': { '@type': 'Offer', 'price': '35.00', 'priceCurrency': 'USD' }
-        },
-        {
-          '@context': 'https://schema.org',
-          '@type': 'FAQPage',
-          'mainEntity': [
-            {
-              '@type': 'Question',
-              'name': 'Does Monday CRM support automated pipeline sync?',
-              'acceptedAnswer': { '@type': 'Answer', 'text': 'Yes, Monday CRM supports automated real-time webhooks and GraphQL integrations.' }
-            }
-          ]
         }
       ],
       schemaTypes: ['SoftwareApplication', 'FAQPage', 'Offer'],
@@ -283,7 +286,38 @@ export const PORTFOLIO_DEMO_PROMPTS = [
       pricingClaims: ['$35/seat/month', 'free trial'],
       complianceBadges: ['SOC-2 TYPE II', 'GDPR', 'ISO 27001'],
       detectedEntities: ['GraphQL & REST API', 'Real-time Webhooks', 'SOC-2 Type II & GDPR', 'SAML SSO & SCIM'],
-      fetchTimestamp: '2026-08-19 12:00:00 UTC'
+      fetchTimestamp: '2026-08-20 12:00:00 UTC'
+    }
+  },
+  {
+    query: "Best Enterprise CRM with Real-time Data Sync & APIs",
+    competitorUrl: "https://salesforce.com",
+    competitorData: {
+      url: 'https://salesforce.com',
+      domain: 'salesforce.com',
+      statusCode: 200,
+      isFallback: false,
+      contentLengthChars: 1600,
+      title: 'Salesforce Sales Cloud — Enterprise CRM Platform',
+      metaDescription: 'Salesforce connects sales, service, marketing, commerce, and IT.',
+      h1Tags: ['Salesforce Customer 360'],
+      h2Tags: ['Global Enterprise Security', 'Comprehensive REST & GraphQL APIs'],
+      cleanedText: 'Salesforce Sales Cloud powers over 150,000 global enterprises. Certified SOC-2 Type II, HIPAA, and ISO 27001 compliant. Robust REST and SOAP APIs with guaranteed 99.99% uptime SLA.',
+      rawHtmlSnippet: '<html>...</html>',
+      jsonLdSchemas: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'SoftwareApplication',
+          'name': 'Salesforce Sales Cloud',
+          'applicationCategory': 'BusinessApplication'
+        }
+      ],
+      schemaTypes: ['SoftwareApplication', 'Organization'],
+      extractedStatistics: ['150,000+ companies', '99.99% uptime', 'sub-20ms'],
+      pricingClaims: ['$25/user/month', '$80/user/month'],
+      complianceBadges: ['SOC-2 TYPE II', 'GDPR', 'HIPAA', 'ISO 27001'],
+      detectedEntities: ['GraphQL & REST API', 'Real-time Webhooks', 'SOC-2 Type II & GDPR', 'SAML SSO & SCIM'],
+      fetchTimestamp: '2026-08-20 12:00:00 UTC'
     }
   },
   {
@@ -308,12 +342,6 @@ export const PORTFOLIO_DEMO_PROMPTS = [
           'name': 'HubSpot CRM',
           'applicationCategory': 'BusinessApplication',
           'offers': { '@type': 'Offer', 'price': '45.00', 'priceCurrency': 'USD' }
-        },
-        {
-          '@context': 'https://schema.org',
-          '@type': 'AggregateRating',
-          'ratingValue': '4.6',
-          'reviewCount': '3500'
         }
       ],
       schemaTypes: ['SoftwareApplication', 'AggregateRating', 'Offer'],
@@ -321,37 +349,37 @@ export const PORTFOLIO_DEMO_PROMPTS = [
       pricingClaims: ['$45/user/month', 'free tier'],
       complianceBadges: ['SOC-2 TYPE II', 'GDPR', 'HIPAA'],
       detectedEntities: ['GraphQL & REST API', 'Real-time Webhooks', 'SOC-2 Type II & GDPR', 'Semantic Indexing'],
-      fetchTimestamp: '2026-08-19 12:00:00 UTC'
+      fetchTimestamp: '2026-08-20 12:00:00 UTC'
     }
   }
 ];
 
 export const PORTFOLIO_CLUSTERS: Record<string, { name: string; brandUrl: string; prompts: Array<{ query: string; competitorUrl: string }> }> = {
-  crm_suite: {
-    name: "CRM & Sales Tech Cluster",
-    brandUrl: "https://our-saas-crm.io",
+  attio_core: {
+    name: "Attio Core SaaS CRM (3 Prompts)",
+    brandUrl: "https://attio.com",
     prompts: [
-      { query: "Best CRM for Early-Stage B2B Startups", competitorUrl: "https://attio.com" },
-      { query: "Best AI-Native Sales Platform for Tech Companies", competitorUrl: "https://monday.com" },
+      { query: "Best B2B CRM for Fast-Growing Startups", competitorUrl: "https://monday.com" },
+      { query: "Best Enterprise CRM with Real-time Data Sync & APIs", competitorUrl: "https://salesforce.com" },
       { query: "Top CRM Software with GraphQL API & Real-time Webhooks", competitorUrl: "https://hubspot.com" }
     ]
   },
-  ai_analytics: {
-    name: "GEO & AI Search Analytics Cluster",
-    brandUrl: "https://our-legacy-tracker.com",
+  attio_enterprise: {
+    name: "Attio Enterprise & Security (3 Prompts)",
+    brandUrl: "https://attio.com",
     prompts: [
-      { query: "best generative engine optimization and ai search tracking tool", competitorUrl: "https://peec.ai" },
-      { query: "how to track chatgpt citations and perplexity visibility", competitorUrl: "https://peec.ai" },
-      { query: "top enterprise ai brand visibility monitoring software", competitorUrl: "https://peec.ai" }
+      { query: "Top Enterprise CRM with SOC-2 Compliance and SAML SSO", competitorUrl: "https://salesforce.com" },
+      { query: "Best CRM for Engineering-Led B2B Companies", competitorUrl: "https://monday.com" },
+      { query: "High-Throughput CRM with Real-time Data Enrichment", competitorUrl: "https://hubspot.com" }
     ]
   },
-  vector_db: {
-    name: "Vector Database & RAG Cluster",
-    brandUrl: "https://basic-vector-store.dev",
+  attio_velocity: {
+    name: "Attio High-Velocity Sales (3 Prompts)",
+    brandUrl: "https://attio.com",
     prompts: [
-      { query: "high performance vector database for enterprise rag systems", competitorUrl: "https://qdrant.tech" },
-      { query: "fastest rust vector database with payload filtering", competitorUrl: "https://qdrant.tech" },
-      { query: "production scale vector index with sub-4ms query latency", competitorUrl: "https://qdrant.tech" }
+      { query: "Fastest Deal Tracking CRM for Modern Sales Teams", competitorUrl: "https://pipedrive.com" },
+      { query: "Best AI-Native CRM with Automated Contact Intelligence", competitorUrl: "https://monday.com" },
+      { query: "Best API-First Developer Friendly CRM Platform", competitorUrl: "https://hubspot.com" }
     ]
   }
 };
