@@ -7,6 +7,8 @@ export interface ScrapedPayload {
   domain: string;
   statusCode: number;
   isFallback: boolean;
+  isSnapshotFallback?: boolean;
+  snapshotSource?: string;
   contentLengthChars: number;
   title: string;
   metaDescription: string;
@@ -51,6 +53,39 @@ export interface EntityGap {
   verified: boolean;
 }
 
+export interface QueryIntent {
+  intentKey: string;
+  title: string;
+  description: string;
+  brandCovered: boolean;
+  compCovered: boolean;
+  evidence: string;
+  recommendation: string;
+}
+
+export type TargetEngine = 'chatgpt' | 'perplexity' | 'gemini';
+
+export interface EngineSpecificAdvice {
+  engine: TargetEngine;
+  name: string;
+  badge: string;
+  geoFocus: string;
+  keyRankingSignal: string;
+  strategicAdvice: string;
+  schemaWeightMultiplier: number;
+  benchmarkWeightMultiplier: number;
+}
+
+export interface DataSanitizationMetrics {
+  rawDomBytes: number;
+  sanitizedBytes: number;
+  tokenSavingsPercent: number;
+  rawEstimatedTokens: number;
+  sanitizedEstimatedTokens: number;
+  estimatedLatencyMs: number;
+  cogsSavingsPercent: number;
+}
+
 export interface RemediationBrief {
   title?: string;
   targetQuery?: string;
@@ -93,12 +128,18 @@ export interface CitationGapResult {
   schemaGaps: SchemaGap[];
   benchmarkGaps: BenchmarkGap[];
   entityGaps: EntityGap[];
+  queryIntents: QueryIntent[];
+  targetEngine: TargetEngine;
+  engineAdvice: EngineSpecificAdvice;
+  sanitizationMetrics: DataSanitizationMetrics;
   marketerBrief: RemediationBrief;
   engineeringJira: JiraTicket;
   executionTimeMs: number;
   isCached: boolean;
   isFallback: boolean;
-  dataQuality: 'live_both' | 'live_partial' | 'fallback_heuristic';
+  isCORSBlockedFallback: boolean;
+  corsMessage?: string;
+  dataQuality: 'live_both' | 'live_partial' | 'snapshot_verified' | 'fallback_heuristic';
 }
 
 export interface PresetScenario {

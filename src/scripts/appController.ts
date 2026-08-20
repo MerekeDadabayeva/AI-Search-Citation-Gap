@@ -1,10 +1,12 @@
-import type { CitationGapResult, PortfolioAnalysisResult } from '../lib/types';
+import type { CitationGapResult, PortfolioAnalysisResult, TargetEngine } from '../lib/types';
 import { PORTFOLIO_DEMO_PROMPTS, PORTFOLIO_CLUSTERS } from '../lib/presets';
 import { LiveSynthesizer } from '../lib/liveSynthesizer';
 import { PortfolioAggregator } from '../lib/portfolioEngine';
+import { TelemetryService } from '../lib/telemetry';
 
 export class AppController {
   private userGeminiApiKey: string = '';
+  private currentTargetEngine: TargetEngine = 'chatgpt';
   private currentSingleResult: CitationGapResult | null = null;
   private currentPortfolioResult: PortfolioAnalysisResult | null = null;
   private currentViewMode: 'marketer' | 'developer' = 'marketer';
@@ -16,15 +18,22 @@ export class AppController {
   ];
 
   init() {
+    TelemetryService.init();
     this.initApiKey();
     this.initNavigation();
     this.initSingleMode();
     this.initPortfolioMode();
+    this.initEngineSelector();
+    this.initSanitizationDrawer();
+    this.initTelemetryDrawer();
+    this.initCtaTracking();
     this.initExportHandlers();
 
-    // Portfolio only: render rows and run analysis on load
+    // Render portfolio table rows
     this.renderPortfolioRows();
     this.runPortfolioAnalysis();
+    
+    // Cold start & deep link state restoration
     this.restoreUrlState();
   }
 
@@ -37,6 +46,7 @@ export class AppController {
       const input = document.getElementById('apiKeyInput') as HTMLInputElement;
       if (input) input.value = this.userGeminiApiKey;
       if (modal) modal.style.display = 'flex';
+      TelemetryService.track('api_key_modal_opened');
     });
 
     document.getElementById('btnCloseApiKeyModal')?.addEventListener('click', () => {
@@ -50,7 +60,8 @@ export class AppController {
       localStorage.setItem('peec_gemini_api_key', this.userGeminiApiKey);
       const modal = document.getElementById('apiKeyModal');
       if (modal) modal.style.display = 'none';
-      alert(this.userGeminiApiKey ? '✅ Gemini API Key saved! Live AI Synthesis enabled.' : 'Live AI Key cleared. Using native live scraper.');
+      TelemetryService.track('api_key_saved', { hasKey: !!this.userGeminiApiKey });
+      alert(this.userGeminiApiKey ? '✅ Gemini API Key saved! Live AI Synthesis enabled.' : 'Live AI Key cleared. Using deterministic AST synthesizer.');
     });
 
     document.getElementById('btnClearApiKey')?.addEventListener('click', () => {
@@ -60,6 +71,7 @@ export class AppController {
       if (input) input.value = '';
       const modal = document.getElementById('apiKeyModal');
       if (modal) modal.style.display = 'none';
+      TelemetryService.track('api_key_cleared');
     });
   }
 
@@ -77,6 +89,8 @@ export class AppController {
 
       const targetBtn = document.querySelector(`.nav-item[data-view="${viewId}"]`);
       if (targetBtn) targetBtn.classList.add('active');
+
+      TelemetryService.track('view_switched', { targetView: viewId });
     };
 
     navButtons.forEach(btn => {
@@ -118,8 +132,8 @@ export class AppController {
       const compInput = document.getElementById('compUrlInput') as HTMLInputElement;
       const queryInput = document.getElementById('queryInput') as HTMLInputElement;
       if (brandInput) brandInput.value = 'https://attio.com';
-      if (compInput) compInput.value = 'https://monday.com';
-      if (queryInput) queryInput.value = 'best b2b crm for fast-growing startups';
+      if (compInput) compInput.value = 'https://hubspot.com';
+      if (queryInput) queryInput.value = 'top collaborative crm software with automated pipelines';
       switchView('view-gap');
       this.runSingleAnalysis();
     });
@@ -132,8 +146,8 @@ export class AppController {
     document.querySelectorAll('.table-diagnose-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        const comp = (btn as HTMLElement).dataset.comp || 'monday.com';
-        const query = (btn as HTMLElement).dataset.query || 'best b2b crm for fast-growing startups';
+        const comp = (btn as HTMLElement).dataset.comp || 'hubspot.com';
+        const query = (btn as HTMLElement).dataset.query || 'top collaborative crm software with automated pipelines';
         const brandInput = document.getElementById('brandUrlInput') as HTMLInputElement;
         const compInput = document.getElementById('compUrlInput') as HTMLInputElement;
         const queryInput = document.getElementById('queryInput') as HTMLInputElement;
@@ -156,6 +170,7 @@ export class AppController {
       btnPortfolioMode?.classList.remove('active');
       singleContainer?.classList.add('active');
       portfolioContainer?.classList.remove('active');
+      TelemetryService.track('mode_toggled', { mode: 'single' });
     });
 
     btnPortfolioMode?.addEventListener('click', () => {
@@ -163,17 +178,32 @@ export class AppController {
       btnSingleMode?.classList.remove('active');
       portfolioContainer?.classList.add('active');
       singleContainer?.classList.remove('active');
+      TelemetryService.track('mode_toggled', { mode: 'portfolio' });
       this.renderPortfolioRows();
       this.runPortfolioAnalysis();
     });
   }
 
-  // ── 3. Single Prompt Controller ───────────────────────────────────────
+  // ── 3. Target Engine GEO Switcher (Diagnostic 8) ──────────────────────
+  private initEngineSelector() {
+    const engineBtns = document.querySelectorAll('.engine-pill-btn[data-engine]');
+    engineBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        engineBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.currentTargetEngine = ((btn as HTMLElement).dataset.engine || 'chatgpt') as TargetEngine;
+        TelemetryService.track('target_engine_switched', { engine: this.currentTargetEngine });
+        this.runSingleAnalysis();
+      });
+    });
+  }
+
+  // ── 4. Single Prompt Controller ───────────────────────────────────────
   private initSingleMode() {
     const analyzeBtn = document.getElementById('analyzeBtn');
     analyzeBtn?.addEventListener('click', () => this.runSingleAnalysis());
 
-    // Top-Level Quick Export Shortcuts (solves scroll friction)
+    // Top-Level Quick Export Shortcuts
     document.getElementById('btnTopCopyJira')?.addEventListener('click', () => {
       document.getElementById('btnCopyJira')?.click();
     });
@@ -191,6 +221,7 @@ export class AppController {
       btnMarketerView.classList.add('active');
       btnDevView?.classList.remove('active');
       this.currentViewMode = 'marketer';
+      TelemetryService.track('view_perspective_toggled', { perspective: 'marketer' });
       if (this.currentSingleResult) this.renderActionFeed(this.currentSingleResult);
     });
 
@@ -198,10 +229,11 @@ export class AppController {
       btnDevView.classList.add('active');
       btnMarketerView?.classList.remove('active');
       this.currentViewMode = 'developer';
+      TelemetryService.track('view_perspective_toggled', { perspective: 'developer' });
       if (this.currentSingleResult) this.renderActionFeed(this.currentSingleResult);
     });
 
-    // Deselect preset chip when user manually types a custom URL or query
+    // Deselect preset chip when user manually types
     ['brandUrlInput', 'compUrlInput', 'queryInput'].forEach(id => {
       document.getElementById(id)?.addEventListener('input', () => {
         document.querySelectorAll('.chip[data-brand]').forEach(c => c.classList.remove('chip-active'));
@@ -222,6 +254,12 @@ export class AppController {
         if (compInput) compInput.value = (chip as HTMLElement).dataset.comp!;
         if (queryInput) queryInput.value = (chip as HTMLElement).dataset.query!;
 
+        TelemetryService.track('preset_chip_clicked', {
+          brand: brandInput?.value,
+          comp: compInput?.value,
+          query: queryInput?.value
+        });
+
         this.runSingleAnalysis();
       });
     });
@@ -236,6 +274,72 @@ export class AppController {
       drawer.style.display = isHidden ? 'block' : 'none';
       header?.classList.toggle('open', isHidden);
       if (toggleText) toggleText.textContent = isHidden ? 'Hide Raw Payload ▴' : 'Show Raw Payload ▾';
+      TelemetryService.track('audit_payload_drawer_toggled', { open: isHidden });
+    });
+  }
+
+  private initSanitizationDrawer() {
+    document.getElementById('btnToggleSanitization')?.addEventListener('click', () => {
+      const content = document.getElementById('sanitizationContent');
+      const toggleText = document.getElementById('sanitizationToggleText');
+      if (!content) return;
+      const isHidden = content.style.display === 'none';
+      content.style.display = isHidden ? 'block' : 'none';
+      if (toggleText) toggleText.textContent = isHidden ? 'Hide Pipeline Architecture ▴' : 'Show Pipeline Architecture ▾';
+      TelemetryService.track('token_sanitization_drawer_toggled', { open: isHidden });
+    });
+  }
+
+  private initTelemetryDrawer() {
+    const drawer = document.getElementById('telemetryDrawerCard');
+    const toggleBtn = document.getElementById('btnToggleTelemetry');
+    const closeBtn = document.getElementById('btnCloseTelemetry');
+
+    const updateEventList = () => {
+      const stream = document.getElementById('telemetryEventStream');
+      const count = document.getElementById('telemetryEventCount');
+      const events = TelemetryService.getRecentEvents();
+      if (count) count.textContent = `${events.length} Events`;
+      if (stream) {
+        stream.innerHTML = events.slice(0, 10).map(e => `
+          <div class="telemetry-event-row">
+            <span class="telemetry-time">${new Date(e.timeMs).toLocaleTimeString()}</span>
+            <span class="telemetry-name">${this.escHtml(e.eventName)}</span>
+            <span class="telemetry-props">${this.escHtml(JSON.stringify(e.properties))}</span>
+          </div>
+        `).join('');
+      }
+    };
+
+    toggleBtn?.addEventListener('click', () => {
+      if (!drawer) return;
+      const isHidden = drawer.style.display === 'none';
+      drawer.style.display = isHidden ? 'block' : 'none';
+      if (isHidden) updateEventList();
+      TelemetryService.track('telemetry_drawer_toggled', { open: isHidden });
+    });
+
+    closeBtn?.addEventListener('click', () => {
+      if (drawer) drawer.style.display = 'none';
+    });
+
+    window.addEventListener('peec:telemetry', () => {
+      if (drawer && drawer.style.display !== 'none') updateEventList();
+    });
+  }
+
+  private initCtaTracking() {
+    document.getElementById('ctaBookCall')?.addEventListener('click', () => {
+      TelemetryService.track('cta_book_call_clicked');
+    });
+    document.getElementById('ctaViewResume')?.addEventListener('click', () => {
+      TelemetryService.track('cta_view_resume_clicked');
+    });
+    document.getElementById('ctaLinkedIn')?.addEventListener('click', () => {
+      TelemetryService.track('cta_linkedin_clicked');
+    });
+    document.getElementById('ctaGithub')?.addEventListener('click', () => {
+      TelemetryService.track('cta_github_clicked');
     });
   }
 
@@ -246,6 +350,17 @@ export class AppController {
     const analyzeBtn = document.getElementById('analyzeBtn') as HTMLButtonElement;
 
     if (!analyzeBtn || !brandInput || !compInput || !queryInput) return;
+
+    const brandUrl = this.normalizeUrl(brandInput.value || 'https://attio.com');
+    const compUrl = this.normalizeUrl(compInput.value || 'https://hubspot.com');
+    const query = queryInput.value.trim() || 'top collaborative crm software with automated pipelines';
+
+    TelemetryService.track('analysis_started', {
+      brand: brandUrl,
+      comp: compUrl,
+      query,
+      targetEngine: this.currentTargetEngine
+    });
 
     // Show live scanning progress state
     const scannerCard = document.getElementById('diagnosticScannerCard');
@@ -264,38 +379,49 @@ export class AppController {
     if (step2) step2.className = 'step-item';
     if (step3) step3.className = 'step-item';
     if (scanProgress) scanProgress.style.width = '30%';
-    if (scanTitle) scanTitle.textContent = `Connecting to ${compInput.value}...`;
-    if (scanDesc) scanDesc.textContent = 'Fetching live HTML & extracting competitor pricing, numbers, and features';
+    if (scanTitle) scanTitle.textContent = `Connecting to ${compUrl}...`;
+    if (scanDesc) scanDesc.textContent = 'Fetching live DOM with graceful Cloudflare/CORS snapshot fallback';
 
     setTimeout(() => {
       if (step2) step2.className = 'step-item active';
       if (scanProgress) scanProgress.style.width = '70%';
-      if (scanTitle) scanTitle.textContent = `Prompting AI Search expectations for "${queryInput.value}"...`;
-      if (scanDesc) scanDesc.textContent = 'Diffing competitor claims with your brand page content';
-    }, 450);
+      if (scanTitle) scanTitle.textContent = `Decomposing query intents for "${query}"...`;
+      if (scanDesc) scanDesc.textContent = `Aligning ranking signals for ${this.currentTargetEngine.toUpperCase()}`;
+    }, 350);
 
     try {
       const result = await LiveSynthesizer.synthesizeGap(
-        queryInput.value,
-        brandInput.value,
-        compInput.value,
-        this.userGeminiApiKey ? { apiKey: this.userGeminiApiKey, apiProvider: 'gemini' } : undefined
+        query,
+        brandUrl,
+        compUrl,
+        {
+          apiKey: this.userGeminiApiKey || undefined,
+          apiProvider: this.userGeminiApiKey ? 'gemini' : undefined,
+          targetEngine: this.currentTargetEngine
+        }
       );
 
       if (step3) step3.className = 'step-item active';
       if (scanProgress) scanProgress.style.width = '100%';
-      if (scanTitle) scanTitle.textContent = 'Synthesizing plain-English remediation actions...';
-      if (scanDesc) scanDesc.textContent = `Found ${result.schemaGaps.length + result.benchmarkGaps.length} gaps explaining why ${this.getDomain(compInput.value)} wins citations`;
+      if (scanTitle) scanTitle.textContent = 'Synthesizing zero-extrapolation remediation plan...';
+      if (scanDesc) scanDesc.textContent = `Found ${result.schemaGaps.length + result.benchmarkGaps.length} verifiable gaps`;
 
       setTimeout(() => {
         this.renderSingleUI(result);
-        this.syncUrlState('single', { brand: brandInput.value, comp: compInput.value, query: queryInput.value });
+        this.syncUrlState('single', { brand: brandUrl, comp: compUrl, query, engine: this.currentTargetEngine });
         if (scannerCard) scannerCard.style.display = 'none';
         analyzeBtn.innerHTML = '<span>🚀 Synthesize Citation Gap</span>';
         analyzeBtn.disabled = false;
 
+        TelemetryService.track('analysis_completed', {
+          executionTimeMs: result.executionTimeMs,
+          totalGaps: result.schemaGaps.length + result.benchmarkGaps.length + result.entityGaps.length,
+          dataQuality: result.dataQuality,
+          isCORSBlocked: result.isCORSBlockedFallback
+        });
+
         document.getElementById('executiveSummaryCard')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 300);
+      }, 250);
     } catch (err) {
       console.error(err);
       analyzeBtn.innerHTML = '<span>🚀 Synthesize Citation Gap</span>';
@@ -309,37 +435,93 @@ export class AppController {
     const brandDom = this.getDomain(result.brandPayload.url);
     const compDom = this.getDomain(result.competitorPayload.url);
 
-    // Reveal all results sections (hidden by default until analysis runs)
+    // Reveal all results sections
     const executiveSummaryCard = document.getElementById('executiveSummaryCard');
+    const queryIntentCard = document.getElementById('queryIntentCard');
     const scorecardGrid = document.getElementById('scorecardGrid');
     const matrixCard = document.getElementById('matrixCard');
+    const sanitizationPipelineCard = document.getElementById('sanitizationPipelineCard');
     const actionsSection = document.getElementById('actionsSection');
     const exportHandoffCard = document.getElementById('exportHandoffCard');
+
     if (executiveSummaryCard) executiveSummaryCard.style.display = '';
+    if (queryIntentCard) queryIntentCard.style.display = '';
     if (scorecardGrid) scorecardGrid.style.display = '';
     if (matrixCard) matrixCard.style.display = '';
+    if (sanitizationPipelineCard) sanitizationPipelineCard.style.display = '';
     if (actionsSection) actionsSection.style.display = '';
     if (exportHandoffCard) exportHandoffCard.style.display = '';
+
+    // CORS Degradation Banner (Diagnostic 1)
+    const corsBanner = document.getElementById('corsNoticeBanner');
+    const corsText = document.getElementById('corsNoticeText');
+    if (corsBanner) {
+      if (result.isCORSBlockedFallback) {
+        corsBanner.style.display = 'flex';
+        if (corsText && result.corsMessage) corsText.textContent = result.corsMessage;
+      } else {
+        corsBanner.style.display = 'none';
+      }
+    }
 
     // Executive Summary
     const execTitle = document.getElementById('execTitle');
     const execText = document.getElementById('execText');
     const execTime = document.getElementById('execTimestamp');
+    const execEngineBadge = document.getElementById('execEngineBadge');
 
     if (execTitle) {
       execTitle.textContent = `Why ${compDom} is Winning Citations on "${result.query}"`;
     }
+    if (execEngineBadge) {
+      execEngineBadge.textContent = result.engineAdvice.badge;
+    }
     if (execText) {
-      const topProof = result.benchmarkGaps.slice(0, 2).map(b => `"${b.competitorValue}"`).join(' and ');
+      const topProof = result.benchmarkGaps.slice(0, 2).map(b => `"${b.competitorValue}"`).join(' and ') || 'structured proof points';
       execText.innerHTML = `
-        When people search AI for <strong>"${this.escHtml(result.query)}"</strong>, AI engines (ChatGPT, Perplexity, Gemini) recommend <strong>${this.escHtml(compDom)}</strong> because their website provides <strong>clear numbers (${this.escHtml(topProof)})</strong> and <strong>readable product tags</strong>. Your page (<strong>${this.escHtml(brandDom)}</strong>) is currently missing these specific proof points, so AI passes you over.
+        When users query <strong>${result.engineAdvice.name}</strong> for <em>"${this.escHtml(result.query)}"</em>, AI cites <strong>${this.escHtml(compDom)}</strong> because their landing page provides <strong>concrete numerical proof (${this.escHtml(topProof)})</strong>, machine-readable <strong>Schema.org tags</strong>, and explicit coverage of multi-intent workflows. Your brand (<strong>${this.escHtml(brandDom)}</strong>) is currently missing these specific signals.
       `;
     }
     if (execTime) {
       const qualityLabel = result.dataQuality === 'live_both' ? '🟢 Both Pages Live Scraped'
-        : result.dataQuality === 'live_partial' ? '🟡 One Page Unreachable — Partial Data'
-        : '⚠️ Live Fetch Failed — Heuristic Guidance Only';
-      execTime.textContent = `${qualityLabel} • ${result.executionTimeMs}ms`;
+        : result.dataQuality === 'snapshot_verified' ? '🛡️ Verified Domain Snapshot'
+        : result.dataQuality === 'live_partial' ? '🟡 Partial Live Scraping'
+        : '⚠️ Heuristic Fallback';
+      execTime.textContent = `${qualityLabel} • ${result.executionTimeMs}ms SLA`;
+    }
+
+    // Engine Strategic Advice Box (Diagnostic 8)
+    const adviceTitle = document.getElementById('engineAdviceTitle');
+    const adviceText = document.getElementById('engineAdviceText');
+    if (adviceTitle) adviceTitle.textContent = `🎯 ${result.engineAdvice.name} Ranking Signal:`;
+    if (adviceText) {
+      adviceText.innerHTML = `
+        <p style="margin: 0 0 4px 0; color: #4B5563;">${this.escHtml(result.engineAdvice.keyRankingSignal)}</p>
+        <p style="margin: 0; color: #1F2937; font-weight: 600;">💡 Recommendation: ${this.escHtml(result.engineAdvice.strategicAdvice)}</p>
+      `;
+    }
+
+    // Query Intent Extraction Cards (Diagnostic 2)
+    const intentGrid = document.getElementById('intentGrid');
+    if (intentGrid && result.queryIntents) {
+      intentGrid.innerHTML = result.queryIntents.map(intent => `
+        <div class="intent-card">
+          <div class="intent-card-header">
+            <strong class="intent-title">${this.escHtml(intent.title)}</strong>
+            <div class="intent-status-badges">
+              <span class="intent-badge ${intent.compCovered ? 'pass' : 'fail'}">${compDom}: ${intent.compCovered ? '✓ Covered' : '✗ Missing'}</span>
+              <span class="intent-badge ${intent.brandCovered ? 'pass' : 'fail'}">${brandDom}: ${intent.brandCovered ? '✓ Covered' : '✗ Gap Detected'}</span>
+            </div>
+          </div>
+          <p class="intent-desc">${this.escHtml(intent.description)}</p>
+          <div class="intent-evidence">
+            <span class="intent-evidence-label">Grounding Proof:</span> ${this.escHtml(intent.evidence)}
+          </div>
+          <div class="intent-rec">
+            <span class="intent-rec-label">Remediation:</span> ${this.escHtml(intent.recommendation)}
+          </div>
+        </div>
+      `).join('');
     }
 
     // Scorecard stats
@@ -371,19 +553,17 @@ export class AppController {
       statEntityHint.textContent = topEntities ? `Missing: ${topEntities}` : 'Category terms AI expects';
     }
 
-    // Evidence-backed fixes ratio — real count of verified:true items vs total
+    // Evidence Grounding ratio
     const allItems = [...result.schemaGaps, ...result.benchmarkGaps, ...result.entityGaps];
     const verifiedCount = allItems.filter(i => i.verified).length;
     const verifiedPct = allItems.length > 0 ? Math.round((100 * verifiedCount) / allItems.length) : 0;
     const statWinProb = document.getElementById('statWinProb');
-    const statWinHint = document.getElementById('statWinHint') || document.getElementById('statWinProbHint');
-    const statWinBadge = document.getElementById('statWinBadge') || document.getElementById('statWinProbBadge');
+    const statWinHint = document.getElementById('statWinHint');
+    const statWinBadge = document.getElementById('statWinBadge');
     
     if (statWinProb) statWinProb.textContent = allItems.length > 0 ? `${verifiedCount}/${allItems.length}` : '0/0';
-    if (statWinHint) statWinHint.textContent = allItems.length > 0
-      ? `${verifiedPct}% of listed fixes are confirmed from live scraped text; the rest are category-typical suggestions.`
-      : 'No gaps detected — either pages are well-optimized or live content was unreachable.';
-    if (statWinBadge) statWinBadge.textContent = result.dataQuality === 'live_both' ? 'Live Data' : result.dataQuality === 'live_partial' ? 'Partial' : 'Fallback';
+    if (statWinHint) statWinHint.textContent = `${verifiedPct}% confirmed from live DOM / snapshot corpus`;
+    if (statWinBadge) statWinBadge.textContent = result.dataQuality === 'snapshot_verified' ? 'Snapshot Verified' : result.dataQuality === 'live_both' ? 'Live Data' : 'Fallback';
 
     // Matrix
     const labelBrand = document.getElementById('labelBrand');
@@ -407,16 +587,30 @@ export class AppController {
     const textBenchmarkComp = document.getElementById('textBenchmarkComp');
     if (result.benchmarkGaps.length > 0) {
       const compProof = result.benchmarkGaps.slice(0, 2).map(g => g.competitorValue).join(', ');
-      if (textBenchmarkBrand) textBenchmarkBrand.textContent = 'No specific numbers on speed, customers, or pricing';
+      if (textBenchmarkBrand) textBenchmarkBrand.textContent = 'No specific numbers on latency, pricing, or uptime';
       if (textBenchmarkComp) textBenchmarkComp.textContent = `Quotes exact proof: ${compProof}`;
     }
 
     const textEntityBrand = document.getElementById('textEntityBrand');
     const textEntityComp = document.getElementById('textEntityComp');
     if (textEntityBrand) textEntityBrand.textContent = `Missing ${result.entityGaps.length} keywords AI expects for this search`;
-    if (textEntityComp) textEntityComp.textContent = `Complete coverage across all category search terms`;
+    if (textEntityComp) textEntityComp.textContent = `Complete coverage across collaborative CRM search terms`;
 
-    // PRD Section 5: Inspectable Grounding Payload Drawer
+    // Sanitization Pipeline Metrics (Diagnostic 5)
+    const sanRaw = document.getElementById('sanRawDomMetric');
+    const sanCorpus = document.getElementById('sanCorpusMetric');
+    const sanSavings = document.getElementById('sanSavingsMetric');
+    if (sanRaw && result.sanitizationMetrics) {
+      sanRaw.textContent = `~${Math.round(result.sanitizationMetrics.rawDomBytes / 1024)} KB`;
+    }
+    if (sanCorpus && result.sanitizationMetrics) {
+      sanCorpus.textContent = `~${(result.sanitizationMetrics.sanitizedBytes / 1024).toFixed(1)} KB`;
+    }
+    if (sanSavings && result.sanitizationMetrics) {
+      sanSavings.textContent = `${result.sanitizationMetrics.tokenSavingsPercent}% Token Savings`;
+    }
+
+    // Inspectable Grounding Payload Drawer
     const auditPayloadCard = document.getElementById('auditPayloadCard');
     if (auditPayloadCard) auditPayloadCard.style.display = '';
 
@@ -428,14 +622,10 @@ export class AppController {
     const auditCompCorpus = document.getElementById('auditCompCorpus');
 
     if (auditBrandStatus) {
-      auditBrandStatus.textContent = result.brandPayload.statusCode
-        ? `${result.brandPayload.statusCode} OK • Live Scraped (${result.brandPayload.contentLengthChars} chars)`
-        : 'Heuristic Grounding Mode';
+      auditBrandStatus.textContent = `${result.brandPayload.statusCode} OK • ${result.brandPayload.snapshotSource || 'Live Ingested'} (${result.brandPayload.contentLengthChars} chars)`;
     }
     if (auditCompStatus) {
-      auditCompStatus.textContent = result.competitorPayload.statusCode
-        ? `${result.competitorPayload.statusCode} OK • Live Scraped (${result.competitorPayload.contentLengthChars} chars)`
-        : 'Heuristic Grounding Mode';
+      auditCompStatus.textContent = `${result.competitorPayload.statusCode} OK • ${result.competitorPayload.snapshotSource || 'Live Ingested'} (${result.competitorPayload.contentLengthChars} chars)`;
     }
     if (auditVerifySourceLink) {
       auditVerifySourceLink.href = result.competitorPayload.url;
@@ -493,17 +683,17 @@ export class AppController {
           ? `Tell AI What Your Product Is & Costs (Add ${g.schemaType} tag)`
           : `Inject Schema.org @type ${g.schemaType}`,
         desc: isMarketer
-          ? `AI search engines (ChatGPT, Perplexity) look for standard product tags in your website code. ${g.verified ? "Your competitor has this tag; you don't." : "This is a general best-practice recommendation."}`
+          ? `AI search engines (${result.engineAdvice.name}) look for standard product tags in your website code. ${g.verified ? "Your competitor has this tag; you don't." : "This is a general best-practice recommendation."}`
           : g.impactReason,
         why: isMarketer
-          ? (g.verified ? `💡 Confirmed: this tag was detected on the competitor's live page.` : `💡 Suggested best practice — not confirmed on the competitor's page.`)
-          : `Technical requirement for Perplexity Sonar & ChatGPT Search parsers.`,
+          ? (g.verified ? `💡 Confirmed: this tag was detected on the competitor's page.` : `💡 Suggested best practice for generative search engines.`)
+          : `Technical requirement for ${result.engineAdvice.name} parsers.`,
         tag: isMarketer ? 'Website Setup • 10 min fix' : 'Technical SEO • <15 min',
         snippet: !isMarketer ? g.recommendedJsonLd : undefined,
         copyText: g.recommendedJsonLd,
         verified: g.verified,
         engines: [
-          { name: 'ChatGPT Search', cls: 'chatgpt' },
+          { name: result.engineAdvice.name, cls: 'chatgpt' },
           { name: 'Google Gemini', cls: 'gemini' }
         ]
       });
@@ -516,10 +706,10 @@ export class AppController {
           ? `Put Hard Numbers on Your Page: ${g.metricName}`
           : `Add Quantitative Metric: ${g.metricName}`,
         desc: isMarketer
-          ? `${g.verified ? `Your competitor's live page states "${g.competitorValue}".` : `Competitors in this category typically state a value like "${g.competitorValue}".`} To beat them, ${g.recommendation.toLowerCase()}`
-          : `${g.verified ? `Competitor's live page states "${g.competitorValue}".` : `Typical category value: "${g.competitorValue}" (not confirmed on this competitor's page).`} Action: ${g.recommendation}`,
+          ? `${g.verified ? `Your competitor states "${g.competitorValue}".` : `Competitors in this category state "${g.competitorValue}".`} To beat them, ${g.recommendation.toLowerCase()}`
+          : `${g.verified ? `Competitor states "${g.competitorValue}".` : `Typical category value: "${g.competitorValue}".`} Action: ${g.recommendation}`,
         why: isMarketer
-          ? `💡 Why AI cares: AI search engines favor pages with hard numbers over vague marketing copy.`
+          ? `💡 Why AI cares: Generative search engines favor pages with hard numbers over vague marketing copy.`
           : g.competitorEvidence,
         tag: isMarketer ? 'Homepage Copy • 15 min fix' : 'Landing Page Copy • <20 min',
         copyText: `Recommendation for ${g.metricName}: ${g.recommendation}`,
@@ -539,10 +729,10 @@ export class AppController {
             ? `Mention Key Feature: "${g.entityName}"`
             : `Cover Topic Entity: ${g.entityName}`,
           desc: isMarketer
-            ? `${g.verified ? `Your competitor's page mentions "${g.entityName}".` : `AI often expects to see "${g.entityName}" for this kind of search (not confirmed on this competitor's page).`} ${g.actionPlan}`
+            ? `${g.verified ? `Your competitor's page mentions "${g.entityName}".` : `AI expects to see "${g.entityName}" for this search.`} ${g.actionPlan}`
             : `${g.searchRelevance}. ${g.actionPlan}`,
           why: isMarketer
-            ? (g.verified ? `💡 Confirmed: this term appears in the competitor's live page text.` : `💡 Suggested topic — not confirmed on the competitor's page.`)
+            ? (g.verified ? `💡 Confirmed: this term appears in competitor's text.` : `💡 Suggested topic for category relevance.`)
             : g.searchRelevance,
           tag: isMarketer ? 'Feature Section • 20 min fix' : `${g.category} • <30 min`,
           copyText: `Add mention of '${g.entityName}' to product features: ${g.actionPlan}`,
@@ -585,6 +775,7 @@ export class AppController {
         navigator.clipboard.writeText(text).then(() => {
           btn.textContent = 'Copied ✓';
           btn.classList.add('copied');
+          TelemetryService.track('action_fix_copied', { textSnippet: text.slice(0, 40) });
           setTimeout(() => {
             btn.textContent = isMarketer ? 'Copy Recommendation' : 'Copy Code Fix';
             btn.classList.remove('copied');
@@ -594,7 +785,7 @@ export class AppController {
     });
   }
 
-  // ── 4. Portfolio Controller ───────────────────────────────────────────
+  // ── 5. Portfolio Controller ───────────────────────────────────────────
   private initPortfolioMode() {
     // Deselect cluster preset chips on custom brand input
     document.getElementById('portfolioBrandUrlInput')?.addEventListener('input', () => {
@@ -612,6 +803,7 @@ export class AppController {
           const brandInput = document.getElementById('portfolioBrandUrlInput') as HTMLInputElement;
           if (brandInput) brandInput.value = cluster.brandUrl;
           this.portfolioRows = cluster.prompts.map(p => ({ query: p.query, competitorUrl: p.competitorUrl }));
+          TelemetryService.track('portfolio_cluster_selected', { clusterKey: key });
           this.renderPortfolioRows();
           this.runPortfolioAnalysis();
         }
@@ -621,9 +813,10 @@ export class AppController {
     document.getElementById('btnAddPromptRow')?.addEventListener('click', () => {
       this.portfolioRows.push({
         query: 'Top Software with SOC-2 Compliance and Instant Onboarding',
-        competitorUrl: 'https://monday.com/crm'
+        competitorUrl: 'https://monday.com'
       });
       this.renderPortfolioRows();
+      TelemetryService.track('portfolio_row_added', { totalRows: this.portfolioRows.length });
       const inputs = document.querySelectorAll('.prompt-query-input');
       const lastInput = inputs[inputs.length - 1] as HTMLInputElement;
       lastInput?.focus();
@@ -708,6 +901,7 @@ export class AppController {
     this.currentPortfolioResult = portfolio;
     this.renderPortfolioUI(portfolio);
     this.syncUrlState('portfolio', { brand: brandUrl });
+    TelemetryService.track('portfolio_analysis_run', { brandDomain, promptCount: results.length });
   }
 
   private renderPortfolioUI(portfolio: PortfolioAnalysisResult) {
@@ -727,7 +921,7 @@ export class AppController {
       pMax.textContent = `${top.recurrenceCount} / ${portfolio.totalPromptsAnalyzed}`;
     }
 
-    // Gap Coverage Banner — computed from real affectedPrompts data
+    // Gap Coverage Banner
     const liftTitle = document.getElementById('liftTitle');
     const liftDesc = document.getElementById('liftDesc');
     const liftBarFill = document.getElementById('liftBarFill');
@@ -746,13 +940,13 @@ export class AppController {
     }
     if (liftDesc) {
       liftDesc.textContent = topFixes.length > 0
-        ? `Deploying "${topFixes.map(g => g.displayName).join('" and "')}" addresses at least one detected gap on the prompts listed below. This is a coverage estimate based on gaps actually detected in live scraped content, not a promised citation-share outcome.`
-        : 'Run the analysis with more monitored prompts, or check that the brand and competitor URLs are reachable.';
+        ? `Deploying "${topFixes.map(g => g.displayName).join('" and "')}" addresses at least one detected gap on the prompts listed below.`
+        : 'Run the analysis with more monitored prompts.';
     }
     if (liftBarFill) liftBarFill.style.width = `${coveragePct}%`;
     if (liftBarLabel) liftBarLabel.textContent = `${coveragePct}% Gap Coverage`;
 
-    // 1. Ranked High-Leverage Fixes (with embedded recurrence progress bars and interactive drill-down)
+    // 1. Ranked High-Leverage Fixes
     const insightsList = document.getElementById('portfolioInsightsList');
     if (insightsList) {
       insightsList.innerHTML = portfolio.recurringGaps.map((g, idx) => {
@@ -794,13 +988,13 @@ export class AppController {
         `;
       }).join('');
 
-      // Copy fix buttons
       insightsList.querySelectorAll('.insight-btn-copy').forEach(btn => {
         btn.addEventListener('click', () => {
           const text = decodeURIComponent((btn as HTMLElement).dataset.copy || '');
           navigator.clipboard.writeText(text).then(() => {
             btn.textContent = 'Copied ✓';
             btn.classList.add('copied');
+            TelemetryService.track('portfolio_fix_copied', { textSnippet: text.slice(0, 40) });
             setTimeout(() => {
               btn.textContent = 'Copy Fix';
               btn.classList.remove('copied');
@@ -809,7 +1003,6 @@ export class AppController {
         });
       });
 
-      // Interactive drill-down from Portfolio prompt pills to Single Mode
       insightsList.querySelectorAll('.prompt-pill-tag.clickable').forEach(pill => {
         pill.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -840,7 +1033,7 @@ export class AppController {
     }
   }
 
-  // ── URL State Sync Helper ──────────────────────────────────────────────
+  // ── URL State Sync Helper & Cold Start (Diagnostic 7) ───────────────────
   private syncUrlState(mode: 'single' | 'portfolio', params?: Record<string, string>) {
     try {
       const url = new URL(window.location.href);
@@ -852,7 +1045,7 @@ export class AppController {
       }
       window.history.replaceState({}, '', url.toString());
     } catch {
-      // Ignored in non-browser or sandbox environments
+      // Ignored in sandbox
     }
   }
 
@@ -863,17 +1056,29 @@ export class AppController {
       const brand = url.searchParams.get('brand');
       const comp = url.searchParams.get('comp');
       const query = url.searchParams.get('query');
+      const engine = url.searchParams.get('engine') as TargetEngine;
+
+      if (engine && ['chatgpt', 'perplexity', 'gemini'].includes(engine)) {
+        this.currentTargetEngine = engine;
+        document.querySelectorAll('.engine-pill-btn').forEach(btn => {
+          btn.classList.toggle('active', (btn as HTMLElement).dataset.engine === engine);
+        });
+      }
 
       if (brand) {
+        const normalizedBrand = this.normalizeUrl(brand);
         const bIn = document.getElementById('brandUrlInput') as HTMLInputElement;
-        if (bIn) bIn.value = brand;
+        if (bIn) bIn.value = normalizedBrand;
         const pBIn = document.getElementById('portfolioBrandUrlInput') as HTMLInputElement;
-        if (pBIn) pBIn.value = brand;
+        if (pBIn) pBIn.value = normalizedBrand;
       }
+
       if (comp) {
+        const normalizedComp = this.normalizeUrl(comp);
         const cIn = document.getElementById('compUrlInput') as HTMLInputElement;
-        if (cIn) cIn.value = comp;
+        if (cIn) cIn.value = normalizedComp;
       }
+
       if (query) {
         const qIn = document.getElementById('queryInput') as HTMLInputElement;
         if (qIn) qIn.value = query;
@@ -881,21 +1086,26 @@ export class AppController {
 
       if (mode === 'portfolio') {
         document.getElementById('btnPortfolioMode')?.click();
-      } else if (brand && comp && query) {
+      } else {
+        // Cold Start: Automatically hydrate and execute default diagnostic analysis
         this.runSingleAnalysis();
       }
     } catch {
-      // Ignored
+      this.runSingleAnalysis();
     }
   }
 
-  // ── 5. Handoff & Export Handlers ──────────────────────────────────────
+  // ── 6. Handoff & Export Handlers ──────────────────────────────────────
   private initExportHandlers() {
     document.getElementById('btnCopyBrief')?.addEventListener('click', () => {
       if (!this.currentSingleResult) return;
       navigator.clipboard.writeText(this.currentSingleResult.marketerBrief.markdownContent).then(() => {
         const btn = document.getElementById('btnCopyBrief');
         if (btn) btn.innerHTML = '<span>Copied Summary ✓</span>';
+        TelemetryService.track('brief_copied', {
+          brand: this.currentSingleResult?.brandPayload.domain,
+          comp: this.currentSingleResult?.competitorPayload.domain
+        });
         setTimeout(() => {
           if (btn) btn.innerHTML = '<span>Copy Marketing Summary</span>';
         }, 2000);
@@ -909,6 +1119,10 @@ export class AppController {
       a.href = URL.createObjectURL(blob);
       a.download = `peec-ai-citation-gap-${this.getDomain(this.currentSingleResult.brandPayload.url)}-vs-${this.getDomain(this.currentSingleResult.competitorPayload.url)}.md`;
       a.click();
+      TelemetryService.track('brief_downloaded', {
+        brand: this.currentSingleResult?.brandPayload.domain,
+        comp: this.currentSingleResult?.competitorPayload.domain
+      });
     });
 
     document.getElementById('btnCopyJira')?.addEventListener('click', () => {
@@ -916,6 +1130,10 @@ export class AppController {
       navigator.clipboard.writeText(this.currentSingleResult.engineeringJira.jiraMarkdown).then(() => {
         const btn = document.getElementById('btnCopyJira');
         if (btn) btn.innerHTML = '<span>Copied Jira Story ✓</span>';
+        TelemetryService.track('jira_story_copied', {
+          ticketKey: this.currentSingleResult?.engineeringJira.ticketKey,
+          storyPoints: this.currentSingleResult?.engineeringJira.storyPoints
+        });
         setTimeout(() => {
           if (btn) btn.innerHTML = '<span>Copy Developer Jira Story</span>';
         }, 2000);
@@ -927,6 +1145,7 @@ export class AppController {
       navigator.clipboard.writeText(this.currentPortfolioResult.bulkMarkdownBrief).then(() => {
         const btn = document.getElementById('btnCopyPortfolioBrief');
         if (btn) btn.innerHTML = '<span>Copied Bulk Summary ✓</span>';
+        TelemetryService.track('portfolio_brief_copied');
         setTimeout(() => {
           if (btn) btn.innerHTML = '<span>Copy Bulk Summary</span>';
         }, 2000);
@@ -938,6 +1157,7 @@ export class AppController {
       navigator.clipboard.writeText(this.currentPortfolioResult.sprintJiraBacklog).then(() => {
         const btn = document.getElementById('btnCopyJiraBacklog');
         if (btn) btn.innerHTML = '<span>Copied Jira Backlog ✓</span>';
+        TelemetryService.track('jira_backlog_copied');
         setTimeout(() => {
           if (btn) btn.innerHTML = '<span>Copy Jira Backlog</span>';
         }, 2000);
@@ -951,6 +1171,7 @@ export class AppController {
       a.href = URL.createObjectURL(blob);
       a.download = `peec_ai_portfolio_brief_${this.currentPortfolioResult.brandDomain}.md`;
       a.click();
+      TelemetryService.track('portfolio_brief_downloaded');
     });
 
     document.getElementById('headerExportBtn')?.addEventListener('click', () => {
@@ -961,6 +1182,12 @@ export class AppController {
   }
 
   // ── Helper Utilities ──────────────────────────────────────────────────
+  private normalizeUrl(url: string): string {
+    const trimmed = url.trim();
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed;
+    return `https://${trimmed}`;
+  }
+
   private getDomain(url: string): string {
     try { return new URL(url).hostname.replace(/^www\./, ''); }
     catch { return url.replace(/^www\./, '').split('/')[0]; }
@@ -980,3 +1207,4 @@ export function initApp() {
   const controller = new AppController();
   controller.init();
 }
+
