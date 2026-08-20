@@ -72,13 +72,22 @@
           <path d="M0,140 Q120,130 250,145 T500,150" fill="none" stroke="#10B981" stroke-width="2"/>
         </svg>
 
-        <div class="chart-tooltip">
-          <div class="tooltip-title">March 2026</div>
-          <div class="tooltip-row"><span class="dot red"></span> Monday <span class="val">72%</span></div>
-          <div class="tooltip-row"><span class="dot blue"></span> Salesforce <span class="val">65%</span></div>
-          <div class="tooltip-row active"><span class="dot indigo"></span> Attio (You) <span class="val">54%</span></div>
-          <div class="tooltip-row"><span class="dot gold"></span> Zero <span class="val">33%</span></div>
-          <div class="tooltip-row"><span class="dot green"></span> Pipedrive <span class="val">28%</span></div>
+        <div class="chart-hover-regions" id="chartHoverRegions">
+          <div class="chart-col" data-month="Jan" data-left="10%" data-m="68%" data-s="61%" data-a="42%" data-z="29%" data-p="32%"></div>
+          <div class="chart-col" data-month="Feb" data-left="26%" data-m="70%" data-s="63%" data-a="46%" data-z="31%" data-p="30%"></div>
+          <div class="chart-col active" data-month="Mar" data-left="42%" data-m="72%" data-s="65%" data-a="54%" data-z="33%" data-p="28%"></div>
+          <div class="chart-col" data-month="Apr" data-left="58%" data-m="69%" data-s="64%" data-a="56%" data-z="34%" data-p="29%"></div>
+          <div class="chart-col" data-month="May" data-left="74%" data-m="67%" data-s="63%" data-a="58%" data-z="35%" data-p="27%"></div>
+          <div class="chart-col" data-month="Jun" data-left="90%" data-m="65%" data-s="62%" data-a="61%" data-z="36%" data-p="26%"></div>
+        </div>
+
+        <div class="chart-tooltip" id="interactiveChartTooltip">
+          <div class="tooltip-title" id="tooltipMonthTitle">March 2026</div>
+          <div class="tooltip-row"><span class="dot red"></span> Monday <span class="val" id="tooltipValMonday">72%</span></div>
+          <div class="tooltip-row"><span class="dot blue"></span> Salesforce <span class="val" id="tooltipValSalesforce">65%</span></div>
+          <div class="tooltip-row active"><span class="dot indigo"></span> Attio (You) <span class="val" id="tooltipValAttio">54%</span></div>
+          <div class="tooltip-row"><span class="dot gold"></span> Zero <span class="val" id="tooltipValZero">33%</span></div>
+          <div class="tooltip-row"><span class="dot green"></span> Pipedrive <span class="val" id="tooltipValPipedrive">28%</span></div>
         </div>
 
         <div class="chart-x-axis">
@@ -118,7 +127,7 @@
             <tr class="competitor-row">
               <td>1</td>
               <td class="brand-cell">
-                <span class="table-logo red">M</span>
+                <img class="table-brand-icon" src="https://www.google.com/s2/favicons?domain=monday.com&sz=64" alt="Monday.com" width="20" height="20" />
                 <strong>Monday.com</strong>
               </td>
               <td><span class="pill-stat">65%</span></td>
@@ -133,7 +142,7 @@
             <tr class="competitor-row">
               <td>2</td>
               <td class="brand-cell">
-                <span class="table-logo blue">S</span>
+                <img class="table-brand-icon" src="https://www.google.com/s2/favicons?domain=salesforce.com&sz=64" alt="Salesforce" width="20" height="20" />
                 <strong>Salesforce</strong>
               </td>
               <td><span class="pill-stat">62%</span></td>
@@ -148,7 +157,7 @@
             <tr class="competitor-row you-row">
               <td>3</td>
               <td class="brand-cell">
-                <span class="table-logo indigo">A</span>
+                <img class="table-brand-icon" src="https://www.google.com/s2/favicons?domain=attio.com&sz=64" alt="Attio" width="20" height="20" />
                 <strong>Attio (Your Brand)</strong>
               </td>
               <td><span class="pill-stat highlight">47%</span> <span class="trend up">↗ 0.3</span></td>
@@ -159,7 +168,7 @@
             <tr class="competitor-row">
               <td>4</td>
               <td class="brand-cell">
-                <span class="table-logo green">P</span>
+                <img class="table-brand-icon" src="https://www.google.com/s2/favicons?domain=pipedrive.com&sz=64" alt="Pipedrive" width="20" height="20" />
                 <strong>Pipedrive</strong>
               </td>
               <td><span class="pill-stat">41%</span> <span class="trend down">↘ 0.3</span></td>
@@ -174,7 +183,7 @@
             <tr class="competitor-row">
               <td>5</td>
               <td class="brand-cell">
-                <span class="table-logo black">Z</span>
+                <img class="table-brand-icon" src="https://www.google.com/s2/favicons?domain=zero.io&sz=64" alt="Zero" width="20" height="20" />
                 <strong>Zero</strong>
               </td>
               <td><span class="pill-stat">28%</span></td>
@@ -215,28 +224,40 @@
           <tbody>
             <tr>
               <td>1</td>
-              <td class="domain-cell">🔴 reddit.com</td>
+              <td class="domain-cell">
+                <img class="table-brand-icon" src="https://www.google.com/s2/favicons?domain=reddit.com&sz=64" alt="Reddit" width="16" height="16" />
+                reddit.com
+              </td>
               <td><span class="type-pill ugc">UGC</span></td>
               <td>32%</td>
               <td>41%</td>
             </tr>
             <tr>
               <td>2</td>
-              <td class="domain-cell">📰 techradar.com</td>
+              <td class="domain-cell">
+                <img class="table-brand-icon" src="https://www.google.com/s2/favicons?domain=techradar.com&sz=64" alt="TechRadar" width="16" height="16" />
+                techradar.com
+              </td>
               <td><span class="type-pill editorial">Editorial</span></td>
               <td>43%</td>
               <td>46%</td>
             </tr>
             <tr>
               <td>3</td>
-              <td class="domain-cell">📚 wikipedia.org</td>
+              <td class="domain-cell">
+                <img class="table-brand-icon" src="https://www.google.com/s2/favicons?domain=wikipedia.org&sz=64" alt="Wikipedia" width="16" height="16" />
+                wikipedia.org
+              </td>
               <td><span class="type-pill reference">Reference</span></td>
               <td>28%</td>
               <td>34%</td>
             </tr>
             <tr>
               <td>4</td>
-              <td class="domain-cell">▶️ youtube.com</td>
+              <td class="domain-cell">
+                <img class="table-brand-icon" src="https://www.google.com/s2/favicons?domain=youtube.com&sz=64" alt="YouTube" width="16" height="16" />
+                youtube.com
+              </td>
               <td><span class="type-pill ugc">UGC</span></td>
               <td>19%</td>
               <td>22%</td>

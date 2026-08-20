@@ -448,24 +448,41 @@ export class LiveSynthesizer {
     const elapsed = Math.round((performance.now() - startTime) * 10) / 10;
     const topCompProof = benchmarkGaps[0]?.competitorValue || comp.extractedStatistics[0] || comp.pricingClaims[0] || 'verified technical proof';
 
+    // Dynamic Citation Share estimation based on deficit severity
+    const totalGapsCount = schemaGaps.length + benchmarkGaps.length + entityGaps.length;
+    const brandEstimatedShare = Math.max(18, Math.min(48, 52 - totalGapsCount * 6));
+    const compEstimatedShare = Math.min(88, Math.max(60, 50 + totalGapsCount * 5));
+
+    // Dynamic Story Points based on technical tasks
+    const dynamicStoryPoints = Math.min(8, Math.max(1, (schemaGaps.length * 2) + benchmarkGaps.length + Math.floor(entityGaps.length / 2)));
+    
+    // Dynamic Ticket Key based on query hash
+    const queryHash = Math.abs(query.split('').reduce((acc, c) => acc + c.charCodeAt(0), 300)) % 700 + 100;
+    const ticketKey = `PEEC-${queryHash}`;
+
     const marketerMarkdown = `# 🎯 Peec AI Marketing Remediation Brief\n\n` +
       `* **Prompt Analyzed:** *"${query}"*\n` +
-      `* **Target Brand:** \`${brandDom}\`\n` +
-      `* **Winning Competitor:** \`${compDom}\`\n\n` +
+      `* **Target Brand:** \`${brandDom}\` (Estimated Share: ~${brandEstimatedShare}%)\n` +
+      `* **Winning Competitor:** \`${compDom}\` (Estimated Share: ~${compEstimatedShare}%)\n\n` +
       `## 🔍 Executive Takeaway\n` +
-      `When people ask AI engines (ChatGPT, Perplexity) about *"${query}"*, **${compDom}** wins citations because their website provides clear numbers (${topCompProof}) and machine-readable product tags. To win back citations, **${brandDom}** needs to publish equivalent proof points and add Schema.org tags.\n\n` +
+      `When people ask AI engines (ChatGPT, Perplexity, Gemini) about *"${query}"*, **${compDom}** wins citations because their website provides clear numbers (${topCompProof}) and machine-readable product tags. To win back citations, **${brandDom}** needs to publish equivalent proof points and add Schema.org tags.\n\n` +
       `## ⚡ High-Impact Fixes\n` +
-      schemaGaps.map((g, i) => `### ${i + 1}. Add Schema.org @type ${g.schemaType}\n${g.impactReason}\n\`\`\`json\n${g.recommendedJsonLd}\n\`\`\`\n`).join('\n');
+      schemaGaps.map((g, i) => `### ${i + 1}. Add Schema.org @type ${g.schemaType}\n${g.impactReason}\n\`\`\`json\n${g.recommendedJsonLd}\n\`\`\`\n`).join('\n') +
+      `\n## 📊 Benchmark Gaps to Match\n` +
+      benchmarkGaps.map((b, i) => `* **${b.metricName}:** Competitor states "${b.competitorValue}". ${b.recommendation}`).join('\n');
 
-    const jiraMarkdown = `h1. [PEEC-409] Implement Citation Gap Fixes: ${brandDom} vs ${compDom}\n\n` +
+    const jiraMarkdown = `h1. [${ticketKey}] Implement Citation Gap Fixes: ${brandDom} vs ${compDom}\n\n` +
       `*Summary:* Add missing Schema.org markup and quantitative proof points to win AI citations for "${query}".\n` +
-      `*Story Points:* 5\n\n` +
+      `*Story Points:* ${dynamicStoryPoints}\n` +
+      `*Priority:* ${totalGapsCount > 3 ? 'High' : 'Medium'}\n\n` +
       `*Acceptance Criteria:*\n` +
       `{code}\n` +
-      `Given the ${brandDom} landing page is deployed\n` +
-      `When Perplexity or ChatGPT crawls the HTML\n` +
-      `Then @type ${schemaGaps[0]?.schemaType || 'SoftwareApplication'} is verified in the DOM\n` +
-      `And key metric claims are explicitly stated.\n` +
+      `Scenario: AI Crawler Schema Ingestion\n` +
+      `  Given the ${brandDom} landing page is deployed\n` +
+      `  When Perplexity, Gemini, or ChatGPT crawls the HTML\n` +
+      `  Then @type ${schemaGaps[0]?.schemaType || 'SoftwareApplication'} is verified in the DOM\n` +
+      schemaGaps.slice(1).map(s => `  And @type ${s.schemaType} is present and valid\n`).join('') +
+      (benchmarkGaps.length > 0 ? `  And quantitative metric "${benchmarkGaps[0].metricName}" is explicitly rendered in the hero or features section\n` : '') +
       `{code}\n`;
 
     return {
@@ -482,17 +499,17 @@ export class LiveSynthesizer {
         promptQuery: query,
         brandDomain: brandDom,
         competitorDomain: compDom,
-        currentCitationShareBrand: "47%",
-        currentCitationShareCompetitor: "65%",
-        executiveSummary: `Competitor ${compDom} outranks ${brandDom} on "${query}" due to ${schemaGaps.length} missing schemas and unstated proof points.`,
+        currentCitationShareBrand: `${brandEstimatedShare}%`,
+        currentCitationShareCompetitor: `${compEstimatedShare}%`,
+        executiveSummary: `Competitor ${compDom} outranks ${brandDom} on "${query}" due to ${schemaGaps.length} missing schemas and ${benchmarkGaps.length} unstated proof points.`,
         markdownContent: marketerMarkdown,
         generatedAt: new Date().toISOString()
       },
       engineeringJira: {
-        ticketKey: "PEEC-409",
-        summary: `[SEO/GEO] Add Schema.org and proof points for "${query}" on ${brandDom}`,
-        storyPoints: 5,
-        priority: "High",
+        ticketKey,
+        summary: `[GEO/SEO] Add Schema.org and proof points for "${query}" on ${brandDom}`,
+        storyPoints: dynamicStoryPoints,
+        priority: totalGapsCount > 3 ? "High" : "Medium",
         jiraMarkdown,
         generatedAt: new Date().toISOString()
       },

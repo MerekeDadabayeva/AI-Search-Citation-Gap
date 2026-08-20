@@ -57,8 +57,15 @@
   <!-- Plain-English Executive Diagnosis Summary Card (hidden until analysis runs) -->
   <div class="card executive-summary-card" id="executiveSummaryCard" style="display: none;">
     <div class="summary-badge-row">
-      <span class="exec-badge">🎯 Live Marketing Diagnostic</span>
-      <span class="exec-time" id="execTimestamp"></span>
+      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+        <span class="exec-badge">🎯 Live Marketing Diagnostic</span>
+        <span class="exec-time" id="execTimestamp"></span>
+      </div>
+      <div class="exec-quick-actions">
+        <button class="btn-small-outline" id="btnTopCopyJira" title="Copy Developer Jira Story">⚡ Copy Jira Story</button>
+        <button class="btn-small-outline" id="btnTopCopyBrief" title="Copy Marketing Summary">📄 Copy Brief</button>
+        <button class="btn-small-outline" id="btnTopDownloadBrief" title="Download .md Report">⬇️ Download .md</button>
+      </div>
     </div>
     <h2 class="exec-title" id="execTitle"></h2>
     <p class="exec-text" id="execText"></p>
@@ -179,6 +186,51 @@
   </div>
 
   <div class="action-items-list" id="actionItemsList"></div>
+
+  <!-- Inspectable Grounding Payload Drawer (PRD Section 5: Data Provenance & Zero-Extrapolation Audit Trail) -->
+  <div class="card audit-payload-card" id="auditPayloadCard" style="display: none;">
+    <div class="audit-drawer-header" id="btnToggleAuditDrawer">
+      <div class="audit-header-left">
+        <span class="audit-badge">🛡️ Grounding &amp; Provenance</span>
+        <div class="audit-title">Inspect Scraped Grounding Payload &bull; Zero-Extrapolation Audit Trail</div>
+      </div>
+      <div class="audit-toggle-btn">
+        <span id="auditToggleText">Show Raw Payload ▾</span>
+      </div>
+    </div>
+
+    <div class="audit-drawer-content" id="auditDrawerContent" style="display: none;">
+      <div class="audit-meta-grid">
+        <div class="audit-meta-item">
+          <span class="audit-meta-label">Brand Fetch Status:</span>
+          <span class="audit-meta-val" id="auditBrandStatus">200 OK &bull; Live Scraped</span>
+        </div>
+        <div class="audit-meta-item">
+          <span class="audit-meta-label">Competitor Fetch Status:</span>
+          <span class="audit-meta-val" id="auditCompStatus">200 OK &bull; Live Scraped</span>
+        </div>
+        <div class="audit-meta-item">
+          <span class="audit-meta-label">Competitor Live Verification:</span>
+          <a href="#" target="_blank" rel="noopener noreferrer" class="audit-link" id="auditVerifySourceLink">Verify Competitor Source ↗</a>
+        </div>
+        <div class="audit-meta-item">
+          <span class="audit-meta-label">Audit Timestamp:</span>
+          <span class="audit-meta-val" id="auditTimestampText"></span>
+        </div>
+      </div>
+
+      <div class="audit-payload-sections">
+        <div class="audit-box">
+          <div class="audit-box-title">🏢 Attio (Your Page) Extracted Corpus:</div>
+          <pre><code id="auditBrandCorpus">Loading brand payload...</code></pre>
+        </div>
+        <div class="audit-box">
+          <div class="audit-box-title">🏆 Winning Competitor Extracted Corpus &amp; Claims:</div>
+          <pre><code id="auditCompCorpus">Loading competitor payload...</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Export & Handoff Bar (hidden until analysis runs) -->
   <div class="export-handoff-card" id="exportHandoffCard" style="display: none;">

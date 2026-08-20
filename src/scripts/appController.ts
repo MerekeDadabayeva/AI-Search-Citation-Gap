@@ -25,6 +25,7 @@ export class AppController {
     // Portfolio only: render rows and run analysis on load
     this.renderPortfolioRows();
     this.runPortfolioAnalysis();
+    this.restoreUrlState();
   }
 
   // ── 1. API Key Management ─────────────────────────────────────────────
@@ -85,6 +86,33 @@ export class AppController {
       });
     });
 
+    // Interactive Overview Chart Hover
+    const chartCols = document.querySelectorAll('#chartHoverRegions .chart-col');
+    const chartTooltip = document.getElementById('interactiveChartTooltip');
+    const titleEl = document.getElementById('tooltipMonthTitle');
+    const valM = document.getElementById('tooltipValMonday');
+    const valS = document.getElementById('tooltipValSalesforce');
+    const valA = document.getElementById('tooltipValAttio');
+    const valZ = document.getElementById('tooltipValZero');
+    const valP = document.getElementById('tooltipValPipedrive');
+
+    chartCols.forEach(col => {
+      const handleHover = () => {
+        chartCols.forEach(c => c.classList.remove('active'));
+        col.classList.add('active');
+        const el = col as HTMLElement;
+        if (chartTooltip && el.dataset.left) chartTooltip.style.left = el.dataset.left;
+        if (titleEl && el.dataset.month) titleEl.textContent = `${el.dataset.month} 2026`;
+        if (valM && el.dataset.m) valM.textContent = el.dataset.m;
+        if (valS && el.dataset.s) valS.textContent = el.dataset.s;
+        if (valA && el.dataset.a) valA.textContent = el.dataset.a;
+        if (valZ && el.dataset.z) valZ.textContent = el.dataset.z;
+        if (valP && el.dataset.p) valP.textContent = el.dataset.p;
+      };
+      col.addEventListener('mouseenter', handleHover);
+      col.addEventListener('click', handleHover);
+    });
+
     document.getElementById('openGapFromBanner')?.addEventListener('click', () => {
       const brandInput = document.getElementById('brandUrlInput') as HTMLInputElement;
       const compInput = document.getElementById('compUrlInput') as HTMLInputElement;
@@ -96,18 +124,22 @@ export class AppController {
       this.runSingleAnalysis();
     });
 
-    document.getElementById('btnGoToGap')?.addEventListener('click', () => switchView('view-gap'));
+    document.getElementById('btnGoToGap')?.addEventListener('click', () => {
+      switchView('view-gap');
+      document.getElementById('btnPortfolioMode')?.click();
+    });
 
     document.querySelectorAll('.table-diagnose-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const comp = (btn as HTMLElement).dataset.comp || 'monday.com';
+        const query = (btn as HTMLElement).dataset.query || 'best b2b crm for fast-growing startups';
         const brandInput = document.getElementById('brandUrlInput') as HTMLInputElement;
         const compInput = document.getElementById('compUrlInput') as HTMLInputElement;
         const queryInput = document.getElementById('queryInput') as HTMLInputElement;
         if (brandInput) brandInput.value = 'https://attio.com';
-        if (compInput) compInput.value = `https://${comp}`;
-        if (queryInput) queryInput.value = 'best b2b crm for fast-growing startups';
+        if (compInput) compInput.value = comp.startsWith('http') ? comp : `https://${comp}`;
+        if (queryInput) queryInput.value = query;
         switchView('view-gap');
         this.runSingleAnalysis();
       });
@@ -140,6 +172,17 @@ export class AppController {
   private initSingleMode() {
     const analyzeBtn = document.getElementById('analyzeBtn');
     analyzeBtn?.addEventListener('click', () => this.runSingleAnalysis());
+
+    // Top-Level Quick Export Shortcuts (solves scroll friction)
+    document.getElementById('btnTopCopyJira')?.addEventListener('click', () => {
+      document.getElementById('btnCopyJira')?.click();
+    });
+    document.getElementById('btnTopCopyBrief')?.addEventListener('click', () => {
+      document.getElementById('btnCopyBrief')?.click();
+    });
+    document.getElementById('btnTopDownloadBrief')?.addEventListener('click', () => {
+      document.getElementById('btnDownloadBrief')?.click();
+    });
 
     const btnMarketerView = document.getElementById('btnMarketerView');
     const btnDevView = document.getElementById('btnDevView');
@@ -181,6 +224,18 @@ export class AppController {
 
         this.runSingleAnalysis();
       });
+    });
+
+    // Audit Drawer toggle
+    document.getElementById('btnToggleAuditDrawer')?.addEventListener('click', () => {
+      const drawer = document.getElementById('auditDrawerContent');
+      const header = document.getElementById('btnToggleAuditDrawer');
+      const toggleText = document.getElementById('auditToggleText');
+      if (!drawer) return;
+      const isHidden = drawer.style.display === 'none';
+      drawer.style.display = isHidden ? 'block' : 'none';
+      header?.classList.toggle('open', isHidden);
+      if (toggleText) toggleText.textContent = isHidden ? 'Hide Raw Payload ▴' : 'Show Raw Payload ▾';
     });
   }
 
@@ -234,6 +289,7 @@ export class AppController {
 
       setTimeout(() => {
         this.renderSingleUI(result);
+        this.syncUrlState('single', { brand: brandInput.value, comp: compInput.value, query: queryInput.value });
         if (scannerCard) scannerCard.style.display = 'none';
         analyzeBtn.innerHTML = '<span>🚀 Synthesize Citation Gap</span>';
         analyzeBtn.disabled = false;
@@ -360,6 +416,57 @@ export class AppController {
     if (textEntityBrand) textEntityBrand.textContent = `Missing ${result.entityGaps.length} keywords AI expects for this search`;
     if (textEntityComp) textEntityComp.textContent = `Complete coverage across all category search terms`;
 
+    // PRD Section 5: Inspectable Grounding Payload Drawer
+    const auditPayloadCard = document.getElementById('auditPayloadCard');
+    if (auditPayloadCard) auditPayloadCard.style.display = '';
+
+    const auditBrandStatus = document.getElementById('auditBrandStatus');
+    const auditCompStatus = document.getElementById('auditCompStatus');
+    const auditVerifySourceLink = document.getElementById('auditVerifySourceLink') as HTMLAnchorElement;
+    const auditTimestampText = document.getElementById('auditTimestampText');
+    const auditBrandCorpus = document.getElementById('auditBrandCorpus');
+    const auditCompCorpus = document.getElementById('auditCompCorpus');
+
+    if (auditBrandStatus) {
+      auditBrandStatus.textContent = result.brandPayload.statusCode
+        ? `${result.brandPayload.statusCode} OK • Live Scraped (${result.brandPayload.contentLengthChars} chars)`
+        : 'Heuristic Grounding Mode';
+    }
+    if (auditCompStatus) {
+      auditCompStatus.textContent = result.competitorPayload.statusCode
+        ? `${result.competitorPayload.statusCode} OK • Live Scraped (${result.competitorPayload.contentLengthChars} chars)`
+        : 'Heuristic Grounding Mode';
+    }
+    if (auditVerifySourceLink) {
+      auditVerifySourceLink.href = result.competitorPayload.url;
+      auditVerifySourceLink.textContent = `Verify ${this.getDomain(result.competitorPayload.url)} Live Source ↗`;
+    }
+    if (auditTimestampText) {
+      auditTimestampText.textContent = result.competitorPayload.fetchTimestamp || new Date().toUTCString();
+    }
+    if (auditBrandCorpus) {
+      auditBrandCorpus.textContent = JSON.stringify({
+        sourceUrl: result.brandPayload.url,
+        pageTitle: result.brandPayload.title,
+        heading1: result.brandPayload.h1Tags,
+        schemasDetected: result.brandPayload.schemaTypes,
+        pricingExtracted: result.brandPayload.pricingClaims,
+        sampleScrapedText: result.brandPayload.cleanedText.slice(0, 320) + (result.brandPayload.cleanedText.length > 320 ? '...' : '')
+      }, null, 2);
+    }
+    if (auditCompCorpus) {
+      auditCompCorpus.textContent = JSON.stringify({
+        sourceUrl: result.competitorPayload.url,
+        pageTitle: result.competitorPayload.title,
+        heading1: result.competitorPayload.h1Tags,
+        schemasDetected: result.competitorPayload.schemaTypes,
+        statisticsExtracted: result.competitorPayload.extractedStatistics,
+        pricingExtracted: result.competitorPayload.pricingClaims,
+        complianceBadges: result.competitorPayload.complianceBadges,
+        sampleScrapedText: result.competitorPayload.cleanedText.slice(0, 320) + (result.competitorPayload.cleanedText.length > 320 ? '...' : '')
+      }, null, 2);
+    }
+
     this.renderActionFeed(result);
   }
 
@@ -368,7 +475,16 @@ export class AppController {
     if (!list) return;
 
     const isMarketer = this.currentViewMode === 'marketer';
-    const actions: Array<{ title: string; desc: string; why: string; tag: string; snippet?: string; copyText: string; verified: boolean }> = [];
+    const actions: Array<{ 
+      title: string; 
+      desc: string; 
+      why: string; 
+      tag: string; 
+      snippet?: string; 
+      copyText: string; 
+      verified: boolean;
+      engines: Array<{ name: string; cls: string }>;
+    }> = [];
 
     // 1. Schema Actions
     result.schemaGaps.forEach(g => {
@@ -385,7 +501,11 @@ export class AppController {
         tag: isMarketer ? 'Website Setup • 10 min fix' : 'Technical SEO • <15 min',
         snippet: !isMarketer ? g.recommendedJsonLd : undefined,
         copyText: g.recommendedJsonLd,
-        verified: g.verified
+        verified: g.verified,
+        engines: [
+          { name: 'ChatGPT Search', cls: 'chatgpt' },
+          { name: 'Google Gemini', cls: 'gemini' }
+        ]
       });
     });
 
@@ -403,7 +523,11 @@ export class AppController {
           : g.competitorEvidence,
         tag: isMarketer ? 'Homepage Copy • 15 min fix' : 'Landing Page Copy • <20 min',
         copyText: `Recommendation for ${g.metricName}: ${g.recommendation}`,
-        verified: g.verified
+        verified: g.verified,
+        engines: [
+          { name: 'Perplexity Sonar', cls: 'perplexity' },
+          { name: 'ChatGPT Search', cls: 'chatgpt' }
+        ]
       });
     });
 
@@ -422,7 +546,11 @@ export class AppController {
             : g.searchRelevance,
           tag: isMarketer ? 'Feature Section • 20 min fix' : `${g.category} • <30 min`,
           copyText: `Add mention of '${g.entityName}' to product features: ${g.actionPlan}`,
-          verified: g.verified
+          verified: g.verified,
+          engines: [
+            { name: 'Perplexity Sonar', cls: 'perplexity' },
+            { name: 'Google Gemini', cls: 'gemini' }
+          ]
         });
       }
     });
@@ -442,6 +570,7 @@ export class AppController {
           <div class="action-tags">
             <span class="action-tag">${act.tag}</span>
             <span class="action-tag" style="${act.verified ? 'background:rgba(16,185,129,0.15);color:#065F46;' : 'background:rgba(245,158,11,0.15);color:#92400E;'}">${act.verified ? '✓ Confirmed Live' : '~ Suggested'}</span>
+            ${act.engines.map(e => `<span class="engine-pill ${e.cls}">${e.name}</span>`).join('')}
           </div>
         </div>
         <button class="btn-copy-fix" data-copy="${encodeURIComponent(act.copyText)}">
@@ -578,6 +707,7 @@ export class AppController {
     const portfolio = PortfolioAggregator.aggregate(brandDomain, results);
     this.currentPortfolioResult = portfolio;
     this.renderPortfolioUI(portfolio);
+    this.syncUrlState('portfolio', { brand: brandUrl });
   }
 
   private renderPortfolioUI(portfolio: PortfolioAnalysisResult) {
@@ -622,7 +752,7 @@ export class AppController {
     if (liftBarFill) liftBarFill.style.width = `${coveragePct}%`;
     if (liftBarLabel) liftBarLabel.textContent = `${coveragePct}% Gap Coverage`;
 
-    // 1. Ranked High-Leverage Fixes (with embedded recurrence progress bars)
+    // 1. Ranked High-Leverage Fixes (with embedded recurrence progress bars and interactive drill-down)
     const insightsList = document.getElementById('portfolioInsightsList');
     if (insightsList) {
       insightsList.innerHTML = portfolio.recurringGaps.map((g, idx) => {
@@ -657,13 +787,14 @@ export class AppController {
             </div>
 
             <div class="insight-prompts">
-              <strong>Affected Search Queries:</strong>
-              ${g.affectedPrompts.map(p => `<span class="prompt-pill-tag">"${this.escHtml(p)}"</span>`).join(' ')}
+              <strong>Affected Search Queries (Click to diagnose):</strong>
+              ${g.affectedPrompts.map(p => `<span class="prompt-pill-tag clickable" data-query="${encodeURIComponent(p)}" title="Click to diagnose this search prompt in Single Mode">"${this.escHtml(p)}" ↗</span>`).join(' ')}
             </div>
           </div>
         `;
       }).join('');
 
+      // Copy fix buttons
       insightsList.querySelectorAll('.insight-btn-copy').forEach(btn => {
         btn.addEventListener('click', () => {
           const text = decodeURIComponent((btn as HTMLElement).dataset.copy || '');
@@ -675,6 +806,21 @@ export class AppController {
               btn.classList.remove('copied');
             }, 2000);
           });
+        });
+      });
+
+      // Interactive drill-down from Portfolio prompt pills to Single Mode
+      insightsList.querySelectorAll('.prompt-pill-tag.clickable').forEach(pill => {
+        pill.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const query = decodeURIComponent((pill as HTMLElement).dataset.query || '');
+          const brandInput = document.getElementById('brandUrlInput') as HTMLInputElement;
+          const queryInput = document.getElementById('queryInput') as HTMLInputElement;
+          if (queryInput) queryInput.value = query;
+          if (brandInput) brandInput.value = (document.getElementById('portfolioBrandUrlInput') as HTMLInputElement)?.value || 'https://attio.com';
+          
+          document.getElementById('btnSingleMode')?.click();
+          this.runSingleAnalysis();
         });
       });
     }
@@ -691,6 +837,55 @@ export class AppController {
           <td><span class="stat-badge amber">${b.schemaGapsCount + b.benchmarkGapsCount} Gaps Detected</span></td>
         </tr>
       `).join('');
+    }
+  }
+
+  // ── URL State Sync Helper ──────────────────────────────────────────────
+  private syncUrlState(mode: 'single' | 'portfolio', params?: Record<string, string>) {
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set('mode', mode);
+      if (params) {
+        Object.entries(params).forEach(([k, v]) => {
+          if (v) url.searchParams.set(k, v);
+        });
+      }
+      window.history.replaceState({}, '', url.toString());
+    } catch {
+      // Ignored in non-browser or sandbox environments
+    }
+  }
+
+  private restoreUrlState() {
+    try {
+      const url = new URL(window.location.href);
+      const mode = url.searchParams.get('mode');
+      const brand = url.searchParams.get('brand');
+      const comp = url.searchParams.get('comp');
+      const query = url.searchParams.get('query');
+
+      if (brand) {
+        const bIn = document.getElementById('brandUrlInput') as HTMLInputElement;
+        if (bIn) bIn.value = brand;
+        const pBIn = document.getElementById('portfolioBrandUrlInput') as HTMLInputElement;
+        if (pBIn) pBIn.value = brand;
+      }
+      if (comp) {
+        const cIn = document.getElementById('compUrlInput') as HTMLInputElement;
+        if (cIn) cIn.value = comp;
+      }
+      if (query) {
+        const qIn = document.getElementById('queryInput') as HTMLInputElement;
+        if (qIn) qIn.value = query;
+      }
+
+      if (mode === 'portfolio') {
+        document.getElementById('btnPortfolioMode')?.click();
+      } else if (brand && comp && query) {
+        this.runSingleAnalysis();
+      }
+    } catch {
+      // Ignored
     }
   }
 

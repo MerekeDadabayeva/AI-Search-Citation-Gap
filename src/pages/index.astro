@@ -55,34 +55,177 @@ import "../styles/global.css";
 
       <!-- View 3: Prompts Tab -->
       <main id="view-prompts" class="view-pane">
-        <div class="empty-state-card">
-          <h2>🎯 Monitored Search Prompts</h2>
-          <p>Tracking 24 prompts across ChatGPT Search, Perplexity AI, and Google Gemini.</p>
-          <button class="btn-primary-black" style="margin-top: 14px;" id="btnGoToGap">Run Citation Gap Analysis on Active Prompts →</button>
+        <div class="card" style="margin-bottom: 20px;">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">🎯 Attio's Monitored Search Prompts (6 Monitored)</h2>
+              <p class="card-subtitle">AI Citation Visibility tracked across ChatGPT Search, Perplexity AI, and Google Gemini</p>
+            </div>
+            <button class="btn-primary-black" id="btnGoToGap">Run Portfolio Analysis →</button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="peec-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Monitored Search Query</th>
+                  <th>Attio Citation Share</th>
+                  <th>Winning Competitor</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td><strong>Best B2B CRM for Fast-Growing Startups</strong></td>
+                  <td><span class="pill-stat">47%</span></td>
+                  <td><img class="table-brand-icon" src="https://www.google.com/s2/favicons?domain=monday.com&sz=64" alt="Monday" width="16" height="16" /> Monday.com (65%)</td>
+                  <td><button class="table-diagnose-btn" data-comp="monday.com" data-query="Best B2B CRM for Fast-Growing Startups">Diagnose Gap ⚡</button></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td><strong>Best Enterprise CRM with Real-time Data Sync &amp; APIs</strong></td>
+                  <td><span class="pill-stat">39%</span></td>
+                  <td><img class="table-brand-icon" src="https://www.google.com/s2/favicons?domain=salesforce.com&sz=64" alt="Salesforce" width="16" height="16" /> Salesforce (62%)</td>
+                  <td><button class="table-diagnose-btn" data-comp="salesforce.com" data-query="Best Enterprise CRM with Real-time Data Sync & APIs">Diagnose Gap ⚡</button></td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td><strong>Top CRM Software with GraphQL API &amp; Real-time Webhooks</strong></td>
+                  <td><span class="pill-stat">44%</span></td>
+                  <td><img class="table-brand-icon" src="https://www.google.com/s2/favicons?domain=hubspot.com&sz=64" alt="HubSpot" width="16" height="16" /> HubSpot (58%)</td>
+                  <td><button class="table-diagnose-btn" data-comp="hubspot.com" data-query="Top CRM Software with GraphQL API & Real-time Webhooks">Diagnose Gap ⚡</button></td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td><strong>Fastest Deal Tracking CRM for Modern Sales Teams</strong></td>
+                  <td><span class="pill-stat">35%</span></td>
+                  <td><img class="table-brand-icon" src="https://www.google.com/s2/favicons?domain=pipedrive.com&sz=64" alt="Pipedrive" width="16" height="16" /> Pipedrive (41%)</td>
+                  <td><button class="table-diagnose-btn" data-comp="pipedrive.com" data-query="Fastest Deal Tracking CRM for Modern Sales Teams">Diagnose Gap ⚡</button></td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td><strong>Top CRM Software with SOC-2 Compliance and SAML SSO</strong></td>
+                  <td><span class="pill-stat highlight">52%</span></td>
+                  <td><img class="table-brand-icon" src="https://www.google.com/s2/favicons?domain=salesforce.com&sz=64" alt="Salesforce" width="16" height="16" /> Salesforce (60%)</td>
+                  <td><button class="table-diagnose-btn" data-comp="salesforce.com" data-query="Top CRM Software with SOC-2 Compliance and SAML SSO">Diagnose Gap ⚡</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </main>
 
       <!-- View 4: Sources Tab -->
       <main id="view-sources" class="view-pane">
-        <div class="empty-state-card">
-          <h2>🌐 Citation Sources &amp; Domains</h2>
-          <p>Auditing 142 citation domains (UGC, Editorial, Industry Directories).</p>
+        <div class="card" style="margin-bottom: 20px;">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">🌐 AI Citation Sources Breakdown</h2>
+              <p class="card-subtitle">Where generative search engines find grounding content to recommend B2B CRMs</p>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="peec-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Citation Domain</th>
+                  <th>Source Category</th>
+                  <th>Engine Weight</th>
+                  <th>Attio Presence</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td><img class="table-brand-icon" src="https://www.google.com/s2/favicons?domain=reddit.com&sz=64" alt="Reddit" width="16" height="16" /> reddit.com/r/sales</td>
+                  <td><span class="type-pill ugc">UGC</span></td>
+                  <td><span class="stat-badge red">Very High (Perplexity)</span></td>
+                  <td><span class="stat-badge green">Active (84 Mentions)</span></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td><img class="table-brand-icon" src="https://www.google.com/s2/favicons?domain=g2.com&sz=64" alt="G2" width="16" height="16" /> g2.com/categories/crm</td>
+                  <td><span class="type-pill reference">Directory</span></td>
+                  <td><span class="stat-badge amber">High (ChatGPT)</span></td>
+                  <td><span class="stat-badge green">Verified (4.9 / 5.0)</span></td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td><img class="table-brand-icon" src="https://www.google.com/s2/favicons?domain=techradar.com&sz=64" alt="TechRadar" width="16" height="16" /> techradar.com/best-crm</td>
+                  <td><span class="type-pill editorial">Editorial</span></td>
+                  <td><span class="stat-badge purple">Medium (Gemini)</span></td>
+                  <td><span class="stat-badge amber">Top 5 Listed</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </main>
 
       <!-- View 5: Models Tab -->
       <main id="view-models" class="view-pane">
-        <div class="empty-state-card">
-          <h2>🤖 AI Engine Breakdown</h2>
-          <p>Comparing citation visibility across OpenAI ChatGPT-4o, Perplexity Sonar, and Google Gemini 1.5 Pro.</p>
+        <div class="card" style="margin-bottom: 20px;">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">🤖 AI Search Engine Breakdown</h2>
+              <p class="card-subtitle">Comparing citation visibility across generative search engines</p>
+            </div>
+          </div>
+          <div class="scorecard-grid">
+            <div class="card stat-box">
+              <div class="stat-top">
+                <span class="stat-label">ChatGPT Search (GPT-4o)</span>
+                <span class="stat-badge green">Active</span>
+              </div>
+              <div class="stat-number success">47%</div>
+              <div class="stat-hint">Favors Schema.org JSON-LD</div>
+            </div>
+            <div class="card stat-box">
+              <div class="stat-top">
+                <span class="stat-label">Perplexity Sonar</span>
+                <span class="stat-badge purple">Active</span>
+              </div>
+              <div class="stat-number purple">54%</div>
+              <div class="stat-hint">Favors UGC &amp; Comparison tables</div>
+            </div>
+            <div class="card stat-box">
+              <div class="stat-top">
+                <span class="stat-label">Google Gemini 1.5 Pro</span>
+                <span class="stat-badge amber">Active</span>
+              </div>
+              <div class="stat-number warning">39%</div>
+              <div class="stat-hint">Favors Entity consistency</div>
+            </div>
+          </div>
         </div>
       </main>
 
       <!-- View 6: Settings Tab -->
       <main id="view-settings" class="view-pane">
-        <div class="empty-state-card">
-          <h2>⚙️ Brand &amp; Workspace Settings</h2>
-          <p>Manage workspace team members, brand profiles, and webhook alerts.</p>
+        <div class="card" style="margin-bottom: 20px;">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">⚙️ Brand &amp; Ingestion Settings</h2>
+              <p class="card-subtitle">Configure workspace domain, proxy rotation, and developer webhooks</p>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 16px; max-width: 600px; margin-top: 10px;">
+            <div class="field">
+              <label class="label">🏢 Primary Brand Domain</label>
+              <input class="input" type="text" value="attio.com" readonly />
+            </div>
+            <div class="field">
+              <label class="label">🛡️ Scraping Ingestion Mode</label>
+              <input class="input" type="text" value="Dual Edge Proxy (Jina AI Reader + AllOrigins CORS)" readonly />
+            </div>
+            <div class="field">
+              <label class="label">🤖 AI Synthesizer Engine</label>
+              <input class="input" type="text" value="Zero-Extrapolation AST Diff Engine (Gemini 1.5 Pro Ready)" readonly />
+            </div>
+          </div>
         </div>
       </main>
     </div>
