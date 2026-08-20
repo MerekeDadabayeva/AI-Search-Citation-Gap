@@ -144,6 +144,13 @@ export class AppController {
       if (this.currentSingleResult) this.renderActionFeed(this.currentSingleResult);
     });
 
+    // Deselect preset chip when user manually types a custom URL or query
+    ['brandUrlInput', 'compUrlInput', 'queryInput'].forEach(id => {
+      document.getElementById(id)?.addEventListener('input', () => {
+        document.querySelectorAll('.chip[data-brand]').forEach(c => c.classList.remove('chip-active'));
+      });
+    });
+
     // Scenario preset chips
     document.querySelectorAll('.chip[data-brand]').forEach(chip => {
       chip.addEventListener('click', () => {
@@ -446,6 +453,11 @@ export class AppController {
 
   // ── 4. Portfolio Controller ───────────────────────────────────────────
   private initPortfolioMode() {
+    // Deselect cluster preset chips on custom brand input
+    document.getElementById('portfolioBrandUrlInput')?.addEventListener('input', () => {
+      document.querySelectorAll('.chip[data-cluster]').forEach(c => c.classList.remove('chip-active'));
+    });
+
     // Cluster preset chips
     document.querySelectorAll('.chip[data-cluster]').forEach(chip => {
       chip.addEventListener('click', () => {
@@ -596,37 +608,7 @@ export class AppController {
     if (liftBarFill) liftBarFill.style.width = `${coveragePct}%`;
     if (liftBarLabel) liftBarLabel.textContent = `${coveragePct}% Gap Coverage`;
 
-    const tbody = document.getElementById('perPromptTableBody');
-    if (tbody) {
-      tbody.innerHTML = portfolio.perPromptBreakdowns.map((b, i) => `
-        <tr>
-          <td>${i + 1}</td>
-          <td><strong>${this.escHtml(b.query)}</strong></td>
-          <td><span class="pill-stat">${this.escHtml(b.competitorDomain)}</span></td>
-          <td><span class="stat-badge red">${this.escHtml(b.topMissingSchema)}</span></td>
-          <td><span class="stat-badge amber">${b.schemaGapsCount + b.benchmarkGapsCount} Gaps Detected</span></td>
-        </tr>
-      `).join('');
-    }
-
-    const barsList = document.getElementById('recurrenceBarsList');
-    if (barsList) {
-      const total = portfolio.totalPromptsAnalyzed || 1;
-      barsList.innerHTML = portfolio.recurringGaps.map(g => {
-        const pct = Math.round((g.recurrenceCount / total) * 100);
-        const fillClass = g.citationWeight === 'CRITICAL' ? 'critical' : (g.citationWeight === 'HIGH' ? 'high' : '');
-        return `
-          <div class="bar-row">
-            <div class="bar-label" title="${this.escHtml(g.displayName)}">${this.escHtml(g.displayName)}</div>
-            <div class="bar-track">
-              <div class="bar-fill ${fillClass}" style="width: ${pct}%;"></div>
-            </div>
-            <div class="bar-val">${g.recurrenceCount} / ${total} (${pct}%)</div>
-          </div>
-        `;
-      }).join('');
-    }
-
+    // 1. Ranked High-Leverage Fixes (with embedded recurrence progress bars)
     const insightsList = document.getElementById('portfolioInsightsList');
     if (insightsList) {
       insightsList.innerHTML = portfolio.recurringGaps.map((g, idx) => {
@@ -639,7 +621,12 @@ export class AppController {
                 <span class="insight-rank-badge">#${idx + 1} HIGHEST ROI</span>
                 <span class="insight-title">${this.escHtml(g.displayName)}</span>
               </div>
-              <span class="insight-recur-badge ${isFull ? 'full' : ''}">Helps win back ${g.recurrenceCount} of ${portfolio.totalPromptsAnalyzed} Searches (${pct}% of losses)</span>
+              <div class="insight-recur-group">
+                <div class="insight-mini-bar-track" title="${pct}% of losses">
+                  <div class="insight-mini-bar-fill ${isFull ? 'full' : ''}" style="width: ${pct}%;"></div>
+                </div>
+                <span class="insight-recur-badge ${isFull ? 'full' : ''}">Resolves ${g.recurrenceCount} of ${portfolio.totalPromptsAnalyzed} Prompts (${pct}%)</span>
+              </div>
             </div>
             
             <div class="insight-meta">
@@ -676,6 +663,20 @@ export class AppController {
           });
         });
       });
+    }
+
+    // 2. Per-Prompt Loss Audit Breakdown Table
+    const tbody = document.getElementById('perPromptTableBody');
+    if (tbody) {
+      tbody.innerHTML = portfolio.perPromptBreakdowns.map((b, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td><strong>${this.escHtml(b.query)}</strong></td>
+          <td><span class="pill-stat">${this.escHtml(b.competitorDomain)}</span></td>
+          <td><span class="stat-badge red">${this.escHtml(b.topMissingSchema)}</span></td>
+          <td><span class="stat-badge amber">${b.schemaGapsCount + b.benchmarkGapsCount} Gaps Detected</span></td>
+        </tr>
+      `).join('');
     }
   }
 

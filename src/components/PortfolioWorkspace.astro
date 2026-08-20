@@ -102,12 +102,22 @@
       </div>
     </div>
 
-    <!-- Per-Prompt Loss Audit Table -->
+    <!-- Ranked Insights List (Primary High-ROI Actions) -->
+    <div class="action-feed-header">
+      <div>
+        <h2 class="feed-title">🔥 Ranked High-Leverage Fixes</h2>
+        <span class="feed-subtitle">Deploy Fix #1 first — it moves the needle across the largest share of losing search prompts</span>
+      </div>
+    </div>
+
+    <div class="portfolio-insights-list" id="portfolioInsightsList"></div>
+
+    <!-- Per-Prompt Loss Audit Breakdown Table (Secondary Evidence) -->
     <div class="card per-prompt-card">
       <div class="card-header">
         <div>
-          <h3 class="card-title">📋 Search Prompts Breakdown</h3>
-          <p class="card-subtitle">Why competitors outrank your brand on each individual query</p>
+          <h3 class="card-title">📋 Search Prompts Audit Breakdown</h3>
+          <p class="card-subtitle">Detailed per-query citation deficit report</p>
         </div>
       </div>
       <div class="table-responsive">
@@ -118,32 +128,13 @@
               <th>Search Query</th>
               <th>Winning Competitor</th>
               <th>Top Missing Tag</th>
-              <th>Status</th>
+              <th>Deficit Level</th>
             </tr>
           </thead>
           <tbody id="perPromptTableBody"></tbody>
         </table>
       </div>
     </div>
-
-    <!-- Recurrence Bar Chart Card -->
-    <div class="card recurrence-chart-card">
-      <div class="card-header">
-        <div>
-          <h3 class="card-title">📊 Fix Recurrence across Monitored Prompts</h3>
-          <p class="card-subtitle">Which fixes will help you win back the most search queries</p>
-        </div>
-      </div>
-      <div class="bars-container" id="recurrenceBarsList"></div>
-    </div>
-
-    <!-- Ranked Insights List -->
-    <div class="action-feed-header">
-      <h2 class="feed-title">🔥 Ranked Fixes (Fix Once, Win Multiple Searches)</h2>
-      <span class="feed-subtitle">Fix #1 first for the highest ROI</span>
-    </div>
-
-    <div class="portfolio-insights-list" id="portfolioInsightsList"></div>
 
     <!-- Bulk Export Bar -->
     <div class="export-handoff-card">
